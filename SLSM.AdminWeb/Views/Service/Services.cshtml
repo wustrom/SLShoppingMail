@@ -1,0 +1,78 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Title = "Services";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>工位管理</title>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/global.css" rel="stylesheet" />
+
+    <link href="~/Base/css/table.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=2.00"></script>
+    <script src="~/Current/Scripts/Service/Index.js?version=2.00"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+
+</head>
+<body>
+    <div class="hidden-div">
+    </div>
+    <div class="admin-main">
+        <blockquote class="layui-elem-quote">
+            <a href="javascript:;" class="layui-btn layui-btn-small" id="search">
+                <i class="layui-icon">&#xe615;</i> 搜索
+            </a>
+            <button type="button" class="layui-btn layui-btn-small" id="add">
+                <i class="fa fa-plus" aria-hidden="true"></i> 添加
+            </button>
+        </blockquote>
+        <fieldset class="layui-elem-field">
+            <legend>数据列表</legend>
+            <div class="layui-field-box layui-form">
+                <table class="layui-table admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>
+                            <th>编号</th>
+                            <th>姓名</th>
+                            <th>客服电话</th>
+                            <th>客服QQ</th>
+                            <th>阿里旺旺</th>
+                            <th>工作状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content"></tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="admin-table-page">
+            <div id="paged" class="page">
+            </div>
+        </div>
+    </div>
+    <!--模板-->
+    <script type="text/html" id="tpl">
+        {{# layui.each(d.list, function(index, item){ }}
+        <tr>
+            <td><input type="checkbox" lay-skin="primary"></td>
+            <td>{{ item.Id }}</td>
+            <td>{{ item.ServiceName }}</td>
+            <td>{{ item.ServicePhone }}</td>
+            <td>{{ item.ServiceQQ }}</td>
+            <td>{{ item.ServiceALWW }}</td>
+            <td>{{ item.IsService }}</td>
+            <td>
+                <a onclick="EditInfo({{ item.Id }})" class="layui-btn layui-btn-mini">修改</a>
+                <a onclick="DeleteInfo({{ item.Id }})" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+            </td>
+        </tr>
+        {{# }); }}
+    </script>
+</body>
+</html>
+

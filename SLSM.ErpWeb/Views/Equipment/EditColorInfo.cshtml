@@ -1,0 +1,118 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    Colorinfo colorInfo = ViewBag.ColorInfo == null ? new Colorinfo() : (Colorinfo)ViewBag.ColorInfo;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>表单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="~/plugins/layui/css/layui.css" media="all" />
+    <script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/jquery-form.js?version=20181017001"></script>
+
+    <style>
+        .checkbox-add span {
+            padding: 0;
+        }
+
+            .checkbox-add span input {
+                /*border:none;*/
+            }
+
+        .layui-form-selected span input {
+            width: 78px;
+            height: 22px;
+            /*vertical-align:middle;*/
+            line-height: 22px;
+            margin: 0;
+            margin-right: 2px;
+            margin-left: 2px;
+            margin-bottom: 2px;
+            /*font-size:22px;*/
+            /*line-height:33px;*/
+        }
+    </style>
+    <script>
+        $('input[name="HtmlCode"]').change(function () {
+            $('.HtmlBack').css("background", $(this).val());
+        })
+    </script>
+</head>
+
+
+
+<body>
+    <div style="margin: 15px;">
+        <form class="layui-form">
+            <div style="display:none">
+                <input type="hidden" name="ColorId" id="ColorId" value="@colorInfo.Id" />
+            </div>
+            @if (ViewBag.FatherInfo == null)
+            {
+                <div class="layui-form-item">
+                    <label class="layui-form-label">色系名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ChinaDescribe" lay-verify="required" class="layui-input" value="@colorInfo.ChinaDescribe">
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                var FatherInfo = (Colorinfo)ViewBag.FatherInfo;
+                <input type="hidden" name="FatherId" id="FatherId" value="@FatherInfo.Id" />
+                <div class="layui-form-item">
+                    <label class="layui-form-label">色系</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ChinaDescribeBase" lay-verify="required" autocomplete="off" class="layui-input" value="@FatherInfo.ChinaDescribe" disabled="disabled">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">颜色代码</label>
+                    <div class="layui-inline">
+                        <input type="text" name="HtmlCode" lay-verify="required" autocomplete="off" class="layui-input" value="@colorInfo.HtmlCode">
+                    </div>
+                    <div class="layui-inline">
+                        <div class="HtmlBack" style="width:38px;height:38px;background:@colorInfo.HtmlCode;border: 1px solid transparent;border-radius: 20px;">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标准色号</label>
+                    <div class="layui-input-block">
+
+                        <input type="text" name="StandardColor" lay-verify="required" autocomplete="off" class="layui-input" value="@colorInfo.StandardColor">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">中文描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ChinaDescribe" lay-verify="required" class="layui-input" value="@colorInfo.ChinaDescribe">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">英文描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="EngDescibe" lay-verify="required" class="layui-input" value="@colorInfo.EngDescibe">
+                    </div>
+                </div>
+            }
+
+            <button lay-filter="edit" lay-submit style="display: none;"></button>
+        </form>
+    </div>
+</body>
+
+</html>

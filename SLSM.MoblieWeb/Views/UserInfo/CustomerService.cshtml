@@ -1,0 +1,254 @@
+﻿
+@{
+    ViewBag.Title = "CustomerService";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = ViewBag.userinfo == null ? new DbOpertion.Models.User() : (DbOpertion.Models.User)ViewBag.userinfo;
+    string name;
+    string ServiceName;
+    int serviceId = 0;
+    int Id = 0;
+    if (user == null)
+    {
+        name = "注册";
+        Id = 0;
+    }
+    else
+    {
+        name = user.Name;
+        Id = user.Id;
+    }
+
+    var service = ViewBag.Service == null ? new DbOpertion.Models.Customerservice() : (DbOpertion.Models.Customerservice)ViewBag.Service;
+    if (service == null)
+    {
+        ServiceName = "";
+        serviceId = 0;
+    }
+    else
+    {
+        ServiceName = service.ServiceName;
+        serviceId = service.Id;
+    }
+}
+
+<style>
+    #ServiceMain {
+        display: none;
+    }
+
+    .webim {
+        top: 0 !important;
+        bottom: 0 !important;
+    }
+
+    .webim-chat {
+        max-height: inherit !important;
+        max-width: 100% !important;
+        min-width: inherit !important;
+        height: 17.7rem !important;
+    }
+
+    .webim-msg-container > div {
+        max-width: 80% !important;
+    }
+
+    .webim-msg-value {
+        min-width: 60% !important;
+    }
+
+    /*#components .webim-notify.error {
+        display: none;
+    }*/
+
+    .webim .webim-chat .webim-leftbar {
+        display: none;
+    }
+
+    .webim .webim-chat .webim-contact-wrapper {
+        display: none;
+    }
+
+    .webim .webim-chat .webim-chatwindow {
+        width: 100%;
+    }
+
+    .webim-chat .webim-chatwindow .webim-operations-icon.font.xsmaller {
+        display: none;
+    }
+
+    .webim-chatwindow .webim-send-wrapper ul {
+        left: 5px;
+    }
+
+    #components .webim-friend-options {
+        display: none;
+    }
+
+    .copyright {
+        display: none;
+    }
+
+    .titlepage {
+        height: 100%;
+        display: table;
+        text-align: center;
+        width: 100%;
+        font-size: 25px;
+        background-color: white;
+        height: 17.7rem !important;
+    }
+
+    #cell {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+
+
+    .webim-msg-container.rel .rel.right .right span:nth-child(3n+1) {
+        display: none;
+    }
+
+    .webim-msg-container .right .webim-msg-value {
+        margin: 6px 17px 0 0;
+    }
+</style>
+<div class="titlepage">
+    <div id="cell">
+        <div class="content">
+            <img src="~/plugins/web-im/demo/images/Customerservice.png" style="width: 5rem;margin-bottom: 0.4rem;margin-left: 2.8rem;" />
+            等待客服中......
+        </div>
+    </div>
+</div>
+<section id='ServiceMain' class='w100'>
+    <article id='demo'></article>
+    <article id='components'></article>
+    <div style="clear:both;"></div>
+</section>
+
+<!--config-->
+<script src="~/plugins/web-im/demo/javascript/dist/webim.config.js"></script>
+<script src="~/plugins/web-im/sdk/dist/strophe-1.2.8.min.js"></script>
+<!--sdk-->
+<script src="~/plugins/web-im/sdk/dist/websdk-1.4.13.js"></script>
+<script src="~/Base/js/jquery-2.1.4.min.js"></script>
+<!--webrtc-->
+<script>
+    var serverName = '@(service!=null ? service.ServiceName : "")';
+    var UserInfo = '@(user == null ? user.Phone: HttpContext.Current.Request.Cookies["UserGuid"] != null?HttpContext.Current.Request.Cookies["UserGuid"].Value.Replace("-",""):"")';
+    
+    if (WebIM.config.isWebRTC) {
+        document.write("<script src='../../../plugins/webrtc/web-im/webrtc/dist/adapter.js'><\/script>");
+        document.write("<script src='../../../plugins/webrtc/web-im/webrtc/dist/webrtc-1.4.13.js'><\/script>");
+    }
+    $(function () {
+        // #region 注册方法
+        var register = setInterval(register, 500);
+        function register() {
+            if ($('.webim').length != 0) {
+                if (!$('.webim .webim-sign').eq(0).hasClass('hide')) {
+                    $('.webim .webim-signup input').eq(0).val(UserInfo);
+                    $('.webim .webim-signup input').eq(1).val(UserInfo);
+                    $('.webim .webim-signup input').eq(2).val(UserInfo);
+                    $('.webim .webim-signup .webim-button.bg-color').trigger('click');
+                    clearInterval(register);
+                }
+            }
+        }
+        // #endregion
+
+        // #region 登入方法
+        var person;
+        var logininfo = setInterval(LoginOn, 500);
+        var count = 1;
+        function LoginOn() {
+            if ($('.webim').length != 0) {
+                if (!$('.webim .webim-sign').eq(0).hasClass('hide')) {
+                    $('.webim .webim-sign input[type="text"]').val(UserInfo);
+                    $('.webim .webim-sign input[type="password"]').val(UserInfo);
+                    $('.webim .webim-sign .webim-button.bg-color').eq(0).trigger('click');
+                }
+                else {
+                    person = setInterval(selectPerson, 500);
+                    clearInterval(logininfo);
+                }
+                if (!$('.webim .webim-loading').eq(0).hasClass('hide')) {
+                    count++;
+                }
+                if (count == 10) {
+                    location.reload();
+                }
+            }
+        }
+        // #endregion
+
+        // #region 选择用户
+        var personflag = true;
+        var MarginTopInfo;
+        function selectPerson() {
+            if (personflag) {
+                var wrapperFirst = $('.webim-chat .webim-contact-wrapper').children('div').eq(0);
+                var flag = true;
+                wrapperFirst.find('.webim-contact-item').each(function () {
+                    var username = $(this).find('.webim-contact-info .webim-contact-username').html();
+                    
+                    if (username == serverName) {
+                        wrapperFirst.find('.webim-contact-item:last').trigger('click');
+                        personflag = false;
+                        flag = false;
+                        $("#ServiceMain").show();
+                        $(".titlepage").hide();
+                        MarginTopInfo = setInterval(MarginTopFunc, 1);
+                    }
+                })
+                if (flag) {
+                    $('.webim-chat .webim-leftbar .webim-operations li:first').trigger('click');
+                    $('.webim-friend-options .webim-dialog .webim-input').val(serverName);
+                    $('.webim-friend-options .webim-dialog .webim-button.bg-color.webim-dialog-button').trigger('click');
+
+                }
+            }
+            else {
+                clearInterval(person);
+            }
+        }
+        // #endregion
+
+        // #region name
+        function MarginTopFunc() {
+
+            if ($(".webim-chatwindow-msg").children('div').length != 0) {
+                $('.webim').css("margin-top", "1.51rem");
+                clearInterval(MarginTopInfo);
+            }
+        }
+        // #endregion
+    })
+
+</script>
+<!--[if lte IE 9]>
+<script src="../../../demo/javascript/dist/swfupload/swfupload.min.js"></script>
+<![endif]-->
+<!--demo javascript-->
+<script src="~/plugins/web-im/demo/javascript/dist/demo-1.4.13.js"></script>
+<script src="~/plugins/web-im/demo/javascript/dist/browser-polyfill.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

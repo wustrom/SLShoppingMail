@@ -1,0 +1,23 @@
+﻿
+@{
+    Layout = null;
+}
+
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+
+<!DOCTYPE html>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="hidden" name="Id" value="@ViewBag.Id" class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">付款金额：</label>
+            <div class="layui-input-block">
+                <input type="text" name="WantMoney" placeholder="" lay-verify="required" autocomplete="off" class="layui-input" />
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

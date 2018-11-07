@@ -1,0 +1,520 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ViewModel = (Grade_Commodity_View)ViewBag.Commodity;
+    ViewModel.Sales = ViewModel.Sales == null ? 0 : ViewModel.Sales;
+    var StagePriceList = (List<Commodity_Stage_Price>)ViewBag.StagePriceList;
+    var TupleList = (List<Colorinfo>)ViewBag.TupleList;
+    List<Colorinfo> NewTupleList = new List<Colorinfo>() ;
+    TupleList = TupleList.Where(p => p != null).ToList();
+    var MinPrice = StagePriceList.OrderBy(p => p.StagePrice).FirstOrDefault().StagePrice;
+    var ZeroStagePrice = StagePriceList.Where(p => p.StageAmount == 0).FirstOrDefault();
+    if (ZeroStagePrice == null)
+    {
+        ZeroStagePrice = new Commodity_Stage_Price { StageAmount = 0, StagePrice = 0 };
+    }
+    var UserInfo = (User)ViewBag.UserInfo;
+    float DisCount = 1;
+    if (UserInfo != null)
+    {
+        DisCount = UserInfo.Discount == null ? 0 : UserInfo.Discount.Value;
+    }
+    string IsLike = ViewBag.IsLike == null ? "" : ViewBag.IsLike.ToString().ToLower();
+    var AdminUrl = ViewBag.AdminUrl;
+    ViewModel.Stars = ViewModel.Stars == null ? 5 : ViewModel.Stars;
+    Shopcart ShopCart = ViewBag.ShopCart == null ? new Shopcart() : (Shopcart)ViewBag.ShopCart;
+    //库存
+    var StockList = ViewBag.StockList == null ? new List<Materials_Stock_View>() : (List<Materials_Stock_View>)ViewBag.StockList;
+    var Material = ViewBag.Material == null ? new Raw_Materials() : (Raw_Materials)ViewBag.Material;
+    var TechnologyList = ViewBag.TechnologyList == null ? new List<Technology>() : (List<Technology>)ViewBag.TechnologyList;
+    List<string> CommdityInfoList = new List<string>();
+    if (ViewModel.CommodityInfo != null)
+    {
+        CommdityInfoList = ViewModel.CommodityInfo.Split('|').Where(p => !string.IsNullOrEmpty(p) && p.Contains(',')).Distinct().ToList();
+    }
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    //废弃代码
+    //var List_GradeAttr = (List<Grade_Attr>)ViewBag.GradeAttr;
+    //var count = (int)ViewBag.Count;
+    //var LikeCount = (int)ViewBag.LikeCount;
+    //var page = count % 5 > 0 ? (count / 5 + 1) : count / 5;
+}
+
+@section css{
+    <link rel="stylesheet" href="~/Base/css/dy-css.css">
+    <link rel="stylesheet" href="~/Base/css/style.css">
+    <style>
+        .cptwxq img {
+            width: 100%;
+        }
+
+        .customized-body {
+            display: none;
+        }
+
+            .customized-body.active {
+                display: block;
+            }
+        /*.Image {
+            border: 1px solid;
+        }*/
+
+        .variant__col-2___yF1uV .radio {
+            padding: 5px;
+        }
+
+            .variant__col-2___yF1uV .radio.active {
+                background-color: #DAF0EB;
+                border: 1px solid #008375;
+            }
+
+        .big-radio + label {
+            padding: 16px;
+        }
+
+        .regular-radio + label {
+            -webkit-appearance: none;
+            background-color: #fafafa;
+            border: 1px solid #cacece;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+            padding: 9px;
+            border-radius: 50px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .regular-radio {
+            display: none;
+        }
+
+            .regular-radio:checked + label {
+                background-color: #e9ecee;
+                color: #99a1a7;
+                border: 1px solid #adb8c0;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1), inset 0px 0px 10px rgba(0,0,0,0.1);
+            }
+
+        .big-radio:checked + label:after {
+            width: 24px;
+            height: 24px;
+            left: 4px;
+            top: 4px;
+        }
+
+        .regular-radio:checked + label:after {
+            content: ' ';
+            width: 12px;
+            height: 12px;
+            border-radius: 50px;
+            position: absolute;
+            top: 3px;
+            background: #99a1a7;
+            box-shadow: inset 0px 0px 10px rgba(0,0,0,0.3);
+            text-shadow: 0px;
+            left: 3px;
+            font-size: 32px;
+          
+        }
+    </style>
+    <link href="~/Current/css/commodity.css?version=201810251646" rel="stylesheet" />
+}
+
+@section js{
+    <script src="~/Base/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Current/js/Commodity/index.js?version=1.05"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+            $('.variant__colors___2w7uB').click(function () {
+                $('.variant__colors___2w7uB').removeClass('variant__active___pNFYa');
+                $(this).addClass('variant__active___pNFYa');
+                var ColorIndex = $(this).attr('ColorIndex');
+                var tabindex = undefined;
+                $('.stockNum').html($(this).children('div').children('span').attr('stockNum'));
+                $('.swiper-slide img').each(function () {
+                    var thisColorIndx = $(this).attr('ColorIndex');
+                    if (ColorIndex == thisColorIndx) {
+                        tabindex = $(this).attr('tabindex');
+                        $('.swiper-pagination li').eq(tabindex).trigger('click').trigger('click');
+                    }
+                });
+            })
+            //$('.variant__colors___2w7uB').eq(0).trigger("click");
+
+            $('.variant__col-2___yF1uV .radio').click(function () {
+                debugger;
+                $('.variant__col-2___yF1uV .radio').removeClass('active');
+                $(this).addClass('active');
+                $(this).children('input[type="radio"]')[0].checked = true;
+                var saleinfo = $(this).children('input[type="radio"]').attr("saleinfo");
+                var saleinfoarray = saleinfo.split('|');
+                for (var i = 0; i < saleinfoarray.length; i++) {
+                    var saleArray = saleinfoarray[i].split(",");
+                    
+                    $(".variant__col-2___yF1uV .shuliang.clearfix li h5").each(function () {
+                        if (saleArray[0].trim() == $(this).html().trim()) {
+                            $(this).parent().find("p label").html(saleArray[1]);
+                        }
+                    })
+                }
+                $('.variant__col-2___yF1uV .words').trigger('change');
+            })
+            $('.variant__col-2___yF1uV .radio').eq(0).trigger('click');
+        })
+
+    </script>
+}
+<div style="display:none" name="HiddenDiv">
+    <input type="hidden" id="discount" value="@DisCount" />
+    <input type="hidden" id="hidProvince" />
+    <input type="hidden" id="hidCity" />
+    <input type="hidden" id="hidArea" />
+    <input type="hidden" id="hidCommodityId" value="@ViewModel.Id" />
+    <input type="hidden" id="hidIsLike" value="@IsLike" />
+    <input type="hidden" id="hidShopCartId" value="@ShopCart.Id" />
+    <input type="hidden" id="disableSlideOut" value="true" />
+</div>
+
+<div id="normalWrap">
+    <div class="buy-button__cart-box___3SKm8 buy-button__has-tips___-7SF8">
+        <div class="buy-button__buy-info___CeqGh">
+            <div class="buy-button__btn___CQST_" style="float:left;">
+                <button class="button__btn___Uhwzq button__inline___1bO9Q buy-button__btn___CQST_" onclick="BuyImmediately()">
+                    <span>立即购买</span>
+                </button>
+            </div>
+            <div class="buy-button__btn___CQST_">
+                <button class="button__btn___Uhwzq button__inline___1bO9Q buy-button__btn___CQST_" onclick="ShopCartFunc()">
+                    <span>加入购物车</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="normal__content___K8c_o">
+        <div class="normal__product-info___Nz_Zg">
+            <div class="normal__slider___2KNa0">
+                <div class="base__slick-wrap___2DzUN" style="padding-bottom:66.66666666666666%;">
+                    <div class="slick-initialized">
+                        <div class="slick-list swiper-container2">
+                            <div class="swiper-wrapper">
+                                @if (ViewModel.ImageList != null)
+                                {
+                                    var Count = 0;
+                                    foreach (var item in ViewModel.ImageList.Split('|'))
+                                    {
+                                        if (item != null && item.Trim() != "")
+                                        {
+                                            <div class="slick-slide slick-cloned detail-slick-slide swiper-slide">
+                                                @if (item.Contains(';'))
+                                                {
+                                                    var color = TupleList.Where(p => p.Id.ToString() == item.Split(';')[0]).FirstOrDefault();
+                                                    if (color!=null)
+                                                    {
+                                                        NewTupleList.Add(color);
+                                                    }
+
+                                                    <img src="@AdminUrl@item.Split(';')[1]" style="width:100%;height:7.2rem;" tabindex="@Count" ColorIndex="@item.Split(';')[0]" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@AdminUrl@item" style="width:100%;height:7.2rem;" tabindex="@Count" />
+                                                }
+                                            </div>
+                                            Count++;
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <ul class="slick-dots swiper-pagination"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="overview__info___2P2Sa">
+                <div class="overview__item___2DGoW">
+                    <div>
+                        <div class="overview__name___1sy7u">@Material.ProductNo&nbsp;&nbsp;@ViewModel.Name</div>
+
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(ViewModel.FrontView) && ViewModel.FrontView != "/Image/Grade/noImg.svg")
+                {
+                    var array = ViewModel.FrontView.Split('|').Where(p => !string.IsNullOrEmpty(p)).Distinct().ToList();
+                    <div class="overview__item___2DGoW">
+                        <div class="overview__price-info___mbCGY" style="padding-bottom:10px !important;">
+                            @foreach (var item in array)
+                            {
+                                <img src="@ViewBag.AdminUrl@item" style="height:39px;margin-right:10px;float:left;margin-bottom:5px;" />
+                            }
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                }
+                <div class="overview__item___2DGoW">
+                    <div class="overview__price-info___mbCGY">
+                        @Material.ProductDesibe
+                    </div>
+                </div>
+                <div class="overview__item___2DGoW">
+                    <div class="overview__price-info___mbCGY" style="padding-bottom: 5px !important;">
+                        @{
+                            var attrArray = Material.TypeInfo == null ? new List<string>() : Material.TypeInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            for (int i = attrArray.Count; i < 6; i++)
+                            {
+                                attrArray.Add("");
+                            }
+                        }
+                        @(attrArray[0])@((attrArray[0] == "" && attrArray[1] == "") ? "" : "：")@(attrArray[1]) <br />
+                        @(attrArray[2])@((attrArray[3] == "" && attrArray[2] == "") ? "" : "：")@(attrArray[3])
+                    </div>
+                </div>
+            </div>
+            <div class="normal__select-variant___1_oov variant__variant___2v8-D" style="margin-bottom:.288rem;">
+                <div class="variant__product-attr___1K9bk">
+                    <p class="variant__product-attr-name___1U3eQ">选择商品颜色</p>
+                    <div class="variant__col-2___yF1uV">
+                        <ul class="variant__list-inline___2xLNP" style="margin-bottom:0px;">
+                            @foreach (var item in NewTupleList)
+                            {
+                                var checkedClass = "";
+                                if (item == NewTupleList[0])
+                                {
+                                    checkedClass = "variant__active___pNFYa";
+                                }
+                                var stock = StockList.Where(p => p.ColorId == item.Id).FirstOrDefault();
+                                stock = stock == null ? new Materials_Stock_View() : stock;
+                                <li class="variant__colors___2w7uB variant__disabled___1aMim @checkedClass" ColorIndex="@item.Id">
+                                    <div class="variant__color___fICCy">
+                                        <span stockNum="@(stock.available_stock!=null?stock.available_stock.Value:0)" style="background-color:@item.HtmlCode;"></span>
+                                    </div>
+                                    <i>@item.ChinaDescribe</i>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="normal__select-variant___1_oov variant__variant___2v8-D" style="margin-bottom:.288rem;">
+                <div class="variant__product-attr___1K9bk">
+                    <p class="variant__product-attr-name___1U3eQ">选择印刷方式</p>
+                    <div class="variant__col-2___yF1uV">
+                        @{
+                            var PrintFuncList = Material.PrintFuncInfo == null ? new List<string>() : Material.PrintFuncInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            var MoneyList = Material.SalesInfoList.Split(';').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            var percentageList = Material.PercentageInfo == null ? new List<string>() : Material.PercentageInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            var TipPercentList = Material.TipPercentInfo == null ? new List<string>() : Material.TipPercentInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            #region 工艺详情
+                            var PrintingList = new List<Tuple<string, List<List<string>>>>();
+                            if (Material.Printingdetail != null)
+                            {
+                                var array = Material.Printingdetail.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                foreach (var item in array)
+                                {
+                                    var printInfo = item.Split('(');
+                                    var ListListString = new List<List<string>>();
+                                    var printingDtailList = printInfo[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    foreach (var printingDetailInfo in printingDtailList)
+                                    {
+                                        var printingDetailArray = printingDetailInfo.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                        var ListString = new List<string>();
+                                        foreach (var printDetail in printingDetailArray)
+                                        {
+                                            ListString.Add(printDetail);
+                                        }
+                                        ListListString.Add(ListString);
+                                    }
+                                    PrintingList.Add(new Tuple<string, List<List<string>>>(item1: printInfo[0], item2: ListListString));
+                                }
+                            }
+                            #endregion
+                            var Intcount = 0;
+                        }
+                        @foreach (var item in PrintFuncList)
+                        {
+                            Intcount++;
+                            var array = item.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            var printfunc1 = PrintingList.Where(p => p.Item1.ToLower() == $"printfunc{Intcount}").FirstOrDefault();
+                            if (array.Count == 2)
+                            {
+                                var percentage = percentageList.Where(p => p.Contains(array[0])).FirstOrDefault();
+                                var TipPercent = TipPercentList.Where(p => p.Contains(array[0])).FirstOrDefault();
+                                var SaleInfo = "";
+                                foreach (var money in MoneyList)
+                                {
+                                    var moneyInfoList = money.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    SaleInfo = SaleInfo + moneyInfoList[0];
+                                    if (array[0] == "PrintFunc1")
+                                    {
+                                        SaleInfo = SaleInfo + "," + moneyInfoList[1];
+                                    }
+                                    else if (array[0] == "PrintFunc2")
+                                    {
+                                        SaleInfo = SaleInfo + "," + moneyInfoList[2];
+                                    }
+                                    else if (array[0] == "PrintFunc3")
+                                    {
+                                        SaleInfo = SaleInfo + "," + moneyInfoList[3];
+                                    }
+                                    SaleInfo = SaleInfo + "|";
+                                }
+                                var title = "";
+                                if (printfunc1 != null)
+                                {
+                                    if (printfunc1.Item2.Count != 0)
+                                    {
+                                        foreach (var funcitem in printfunc1.Item2)
+                                        {
+                                            var tech = TechnologyList.Where(p => p.Id.ToString() == funcitem[0]).FirstOrDefault();
+                                            title = $"{title}在{funcitem[1]}{tech.Name}不超过{funcitem[3]}的{funcitem[4]}内容，";
+                                        }
+                                    }
+                                }
+                                <a href="javascript:;" style="display:block;cursor:pointer;" title="@(title)@(TipPercent == null ? "" : $"{TipPercent.Split(':')[1]}")。">
+                                    <div class="radio">
+                                        <input id="radio-@item" type="radio" name="printFunc" value="@array[0]" checked="" class="regular-radio big-radio" SaleInfo="@SaleInfo" />
+                                        <label for="radio-@item" style="top:.05rem;"></label>
+                                        <label style="position: relative;top: -.05rem;display: inline-block;">
+                                            @(array[1])
+                                            @(percentage == null ? "" : $"{percentage.Split(':')[1]}")
+                                        </label>
+
+                                    </div>
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <section class="normal__select-bundle___3Rbnc" style="margin-bottom: 0.288rem;">
+                <p class="normal__product-attr-name___2iLac">选择商品数量</p>
+                <div class="product-list__list___wFig0">
+                    <div class="variant__col-2___yF1uV" style="font-size:.46rem;">
+                        @{
+                            var amount = ShopCart.Amount == null ? 1 : ShopCart.Amount;
+                        }
+                        <input type="number" pattern="\d*" class="words " value="@amount" style="height: .9rem;" />
+                        <em>×</em>
+                        <span>￥<label id="NowPrice">@ZeroStagePrice.StagePrice</label></span>
+                        <em>=</em>
+                        <input type="hidden" id="MemPrice" value="@ZeroStagePrice.StagePrice" />
+                        <span>￥<label id="TotalPrice">@ZeroStagePrice.StagePrice</label></span>
+                    </div>
+                    <div class="variant__col-2___yF1uV">
+                        <ul class="shuliang clearfix">
+                            @foreach (var item in StagePriceList)
+                            {
+                                if (item.StageAmount == 0)
+                                {
+                                    <li class="on">
+                                        <h5 style="font-size:.36rem;">无定制</h5>
+                                        <p style="font-size:.36rem;">￥<label>@item.StagePrice</label></p>
+                                        <input type="hidden" value="@item.StageAmount" id="hiddAmount" />
+                                        <input type="hidden" value="@item.Id" id="hiddId" />
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <h5 style="font-size:.36rem;">@item.StageAmount</h5>
+                                        <p style="font-size:.36rem;">￥<label>@item.StagePrice</label></p>
+                                        <input type="hidden" value="@item.StageAmount" id="hiddAmount" />
+                                        <input type="hidden" value="@item.Id" id="hiddId" />
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div class="normal__select-variant___1_oov variant__variant___2v8-D" style="margin-bottom:.288rem;">
+                <div class="variant__product-attr___1K9bk">
+                    <p class="variant__product-attr-name___1U3eQ">温馨提示</p>
+                    <div class="variant__col-2___yF1uV" style="padding: 0.1rem;background-color: #FFD966;">
+                        1，页面列出的印刷方式为大多数人选择的常规印刷方式，您如果有特殊印刷需求请联系客服 4008580505；<br />
+                        2，如需在下单前查看定制后的产品效果图，请联系我们客服，或将您的LOGO发送邮件至邮件至<a href="mailto:kefu@syloon.cn" style="color:blue;text-decoration:underline;">kefu@syloon.cn</a>, 并留下您的联系方式，我司客服人员会与您联系；<br />
+                        3，如果您在下单前需查看样品，请在购买数量框中输入所需样品数量，样品金额低于10元的我们免费提供样品，您只需支付快递费用，若所需样品数量较多金额大于10元的，我们会根据实际金额收取费用，您所购买的产品金额大于99元时我们提供免运费包邮服务。 <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (CommdityInfoList.Count != 0)
+        {
+            <div class="series__block___12ybZ">
+                <h3 class="series__header___2dPLn">
+                    <span>推荐搭配</span>
+                </h3>
+                <div class="series__item-block___3P3y9">
+                    <div class="series__scroll___3Gdfg">
+                        <ul class="recommend__list___21Jp6">
+                            @foreach (var item in CommdityInfoList)
+                            {
+                                var itemarray = item.Split(',').ToList();
+                                var commInfo = List_Comm.Where(p => p.Id.ToString() == itemarray[1]).FirstOrDefault();
+                                if (commInfo != null)
+                                {
+                                    <li class="recommend__item___1iuOi">
+                                        <a href="../../Commodity/Index?CommodityId=@commInfo.Id">
+                                            <div class="recommend__media___U7nO6">
+                                                <img class="recommend__media-img___rtqHJ lazyloaded" src="@ViewBag.AdminUrl@commInfo.Image">
+                                            </div>
+                                            <h3 class="recommend__price-title___2KAcf">@commInfo.Name</h3>
+                                            <p class="recommend__price-info___2SMdO">
+                                                <span class="recommend__price___3MQyL">¥@commInfo.minPrice</span>
+                                            </p>
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="detail__product-info___1Hdjk">
+            <div class="tabbar__tabbar___OHq8Z detail__tab___JUdmB">
+                <div class="tabbar__item___Ix_Yw tabbar__active___2_PfK">产品概览</div>
+                <div class="tabbar__active-bar___2-dyj" style="left:0%;right:0%;"></div>
+            </div>
+            <section class="detail__content___3NmRs">
+                <div class="detail__content-item___1Rykg detail__active___1BsRv" style="height:auto;">
+                    <article>
+                        @Html.Raw(ViewModel.Content)
+                    </article>
+                </div>
+            </section>
+            <div class="detail__btns___3yJwP">
+                <a href="../../Main/Index" class="detail__footer-link___1PQDN">浏览全部商品 &gt;</a>
+            </div>
+        </div>
+        <div class="product-help" style="display:none;">
+            <h2 class="help-title container">服务与支持</h2>
+            <div class="container help-detail hidepanel">
+                <div class="detail-ctn">
+                    <div>
+                        <h3 class="region-name">中国大陆</h3>
+                        <p class="region-number">
+                            <a href="tel:4007000303">4007000303</a>
+                        </p>
+                        <p class="region-time">周一至周日 9:00-21:00 (北京时间)</p>
+                    </div>
+                </div>
+            </div>
+            <ul class="help-list container clearfix">
+                <li class="help-icon-ctn email">
+                    <a href="mailto:onlinesales@dji.com" class="help-link">邮箱</a>
+                </li>
+                <li class="help-icon-ctn chat">
+                    <a href="https://kefu.easemob.com/webim/im.html?configId=1154d2cc-7177-41fd-85b3-076fb71950ea" class="help-link">在线交谈</a>
+                </li>
+                <li class="help-icon-ctn phone">
+                    <a href="tel:4008580505" class="help-link">电话</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

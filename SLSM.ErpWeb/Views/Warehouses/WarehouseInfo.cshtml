@@ -1,0 +1,82 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .tables {
+            width: 100%;
+        }
+
+            .tables tr {
+                border-bottom: 1px solid #f2f2f2;
+            }
+
+        #content td:last-child i {
+            color: #009688;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/global.css" rel="stylesheet" />
+
+    <link href="~/Base/css/btable.css" rel="stylesheet" />
+    <link href="~/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/Warehouses/Warehouse.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+</head>
+<body>
+    <div class="hidden-div">
+    </div>
+    <div class="admin-main">
+        <div class="layui-field-box layui-form">
+            <table class="tables">
+                <thead>
+                    <tr>
+                        <th style="width: 30px;"><input class="a1" type="checkbox" lay-filter="allselector" lay-skin="primary"></th>
+                        <th style="width:25%;">
+                            <a class="layui-btn layui-btn-small layui-btn-danger" style="float:left;" onclick="ListDel()">删除</a>
+                            <a href="javascript:;" style="float:left;" class="layui-btn layui-btn-small" id="add">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </a>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="content"></tbody>
+            </table>
+        </div>
+        <div class="admin-table-page">
+            <div id="paged" class="page">
+            </div>
+        </div>
+    </div>
+    <!--模板-->
+    <script type="text/html" id="tpl">
+        {{# layui.each(d.list, function(index, item){ }}
+        <tr>
+            <td>
+                <input type="checkbox" name="Id" lay-skin="primary" value="{{ item.Id }}">
+            </td>
+            <td style="width:80px;">{{ item.Name }}</td>
+            <td>
+                <a onclick="EditInfo({{ item.Id }})">
+                    <img src="../Current/Icon/GreenPan.png" />
+                </a>&nbsp; &nbsp; &nbsp;
+                <a onclick="DeleteInfo({{ item.Id }})">
+                    <img src="../Current/Icon/Delete.png" />
+                </a>
+            </td>
+        </tr>
+        {{# }); }}
+    </script>
+</body>
+</html>
+

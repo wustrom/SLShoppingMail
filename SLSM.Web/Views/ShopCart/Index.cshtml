@@ -1,0 +1,164 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var ListHisdesign = (List<SLSM.Web.Models.Response.Address.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+    var colorList = ViewBag.ColorList == null ? new List<Colorinfo>() : (List<Colorinfo>)ViewBag.ColorList;
+}
+<script src="~/Current/script/ShopCart/ShopCart.js?version=1.04"></script>
+<link href="~/Current/css/ShopCart/ShopCart.css?version=1.04" rel="stylesheet" />
+<div class="ShopCartMain">
+    <div class="pull-bottom">
+        <div class="wide">
+            <section class="page-top-order">
+                <div class="store-header">
+                    <div class="containerInfo">
+                        <div class="store-masthead">
+                            <h2>我的购物车</h2>
+
+                        </div>
+                        <div class="store-navigation">
+                            <div class="header-help-center">
+                                <div class="dropdown">
+                                    <a class="btn-cart" href="javascript:;" target="_blank">
+                                        <div class="help-title">
+                                            <i class="fa fa-question-circle"></i>
+                                            <span>购买指南</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="flash_messages">
+            <div class="container wide">
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div id="empty-cart" class="ng-hide">
+                <p class="text-center">
+                    购物车为空
+                    <br>
+                    <br>
+                    <a class="btn-primary-lg" href="../../Main/Index">继续购物</a>
+                    <div style="clear:both;"></div>
+                </p>
+                <hr class="light">
+            </div>
+            <table class="shop_table cart ">
+                <thead>
+                    <tr>
+                        <th style="padding-left: 20px;">
+                            <input type="checkbox" class="AllcheckboxInfo" style="position: absolute;margin-left: -20px;margin-top: 5px;" />
+                            商品
+                        </th>
+                        <th>&nbsp;</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                        <th>金额</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ListHisdesign)
+                    {
+                        var thisColor = colorList.Where(p => p.ChinaDescribe == item.Color && p.ParentId != 0).FirstOrDefault();
+                        var ImageList = item.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList();
+                        string Image = "";
+                        foreach (var ImageInfo in ImageList)
+                        {
+                            var ImageArray = ImageInfo.Split(';');
+                            if (ImageArray[0] == $"{thisColor.Id}")
+                            {
+                                Image = ImageArray[1];
+                            }
+                        }
+                        var PrintingMethod = "暂无";
+                        if (item.PrintingMethod != null && item.PrintFuncInfo != null)
+                        {
+                            var printInfo = item.PrintFuncInfo.Split('|').Where(p => p.ToLower().Contains(item.PrintingMethod.ToLower())).FirstOrDefault();
+                            var printArray = printInfo.Split(':');
+                            PrintingMethod = printArray[1];
+                        }
+                        <!-- ngRepeat: cart_item in cart.items -->
+                        <tr class="cart_table_item">
+                            <td class="product-thumbnail" style="width:16.5%;">
+                                <a href="../../Diy/Index?CommodityId=@item.CommodityId">
+                                    <input type="checkbox" class="checkboxInfo" style="position: absolute;margin-left: -20px;margin-top: 47px;" checked />
+                                    <img style="height: 110px;" src="@ViewBag.AdminUrl@Image">
+                                    <input type="hidden" class="hidShopCartId" value="@item.ShopCartId" />
+                                </a>
+                            </td>
+                            <td style="max-width:460px;">
+                                <a class="name-normal ng-binding" href="../../Diy/Index?CommodityId=@item.CommodityId&ShopCartId=@item.ShopCartId">商品货号：@(item.ProduceNo) </a><br />
+                                商品名称：@(item.CommodityName) <br />
+                                商品颜色：@(item.Color) <br />
+                                印刷方式：@(PrintingMethod)
+                            </td>
+                            <td>
+                                <div class="price-normal ng-binding">¥<label class="onePrice"> @Math.Round(item.OnePrice.Value, 2)</label></div>
+                            </td>
+                            <td class="product-quantity">
+                                <div class="quantity ng-scope">
+                                    <input class="minus" type="button" value="-">
+                                    <input class="qty" type="text" value="@item.Amount">
+                                    <input class="plus" type="button" value="+">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="price-normal ng-binding ">¥<label class="sumPrice">@Math.Round(item.Price.Value, 2)</label></div>
+                            </td>
+                            <td class="cart-actions" style="text-align:right;">
+                                <a class="removeInfo" href="javascript:;" title="移除"><i class="fa fa-trash-o"></i></a>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td class="actions" colspan="6">
+                            <div class="pull-right">
+                                <div class="text-right">
+                                    总计（不包括运费）  : &nbsp;
+                                    <strong class="price-normal ng-binding">¥<label class="sumAllPrice"> 20.00</label></strong>
+                                </div>
+                                @*<div class="shop-installment block-right">
+                                        由于第十八次上海合作组织峰会的召开，6月11日前山东省全面禁止收寄无人机产品（不含手持云台类产品），在此期间购买无人机及相关零配件请选择山东省以外的收货地址。
+                                    </div>*@
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="actions" colspan="3"></td>
+                        <td class="actions" colspan="3">
+                            <div class="actions-continue">
+                                <a class="btn-default-lg" href="../../Main/Index">
+                                    <i class="fa fa-angle-left"></i>&nbsp;继续购物
+                                </a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a class="btn-primary-lg" href="javascript:;">
+                                    <strong>
+                                        去结算&nbsp;
+                                        <i class="fa fa-angle-right"></i>
+                                    </strong>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="actions ng-hide" colspan="6" ng-show="cart.disabled_checkout">
+                            <p style="color: red; text-align: right">由于敬请谅解。</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr class="light">
+        </div>
+    </div>
+</div>

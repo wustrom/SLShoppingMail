@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="channellist">
+    <div class="w1242">
+        <div class="position">
+            > 查看所有分类
+        </div>
+        <div class="list">
+            @{List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes> listGrade = ViewBag.listGrade;
+                int i = 0;
+                foreach (var item in listGrade)
+                {
+                    <div class="model">
+                        <h2 class="h2tit">   <input type="hidden" name="gradeId" value="@item.id" /><a href="/commoditylist/index?gradeid=@item.id">@item.name</a></h2>
+                        <ul>
+                            @{
+                                if (item.listGrade != null)
+                                {
+                                    foreach (var item2 in item.listGrade)
+                                    {
+                                        <li>
+                                            <h3 class="h3tit">
+                                                <input type="hidden" name="gradeId" value="@item2.id" />
+                                                <a href="/commoditylist/index?gradeid=@item2.id">
+                                                    @item2.name
+                                                </a>
+                                            </h3>
+                                            <dl>
+                                                @{
+                                                    if (item2.listGrade != null)
+                                                    {
+                                                        foreach (var item3 in item2.listGrade)
+                                                        {
+                                                <dd>
+                                                    <input type="hidden" name="gradeId" value="@item3.id" />
+                                                    <a href="/commoditylist/index?gradeid=@item3.id">@item3.name</a>
+                                                </dd>
+                                                        }
+                                                    }
+                                                }
+                                            </dl>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                    i++;
+                    if (i % 3 == 0)
+                    {
+                        <div class="clear"></div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+
+

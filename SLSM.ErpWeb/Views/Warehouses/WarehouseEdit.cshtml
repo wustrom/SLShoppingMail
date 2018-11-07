@@ -1,0 +1,30 @@
+﻿
+@{
+    Layout = null;
+    var Warehouse = ViewBag.WarehouseFullInfo == null ? new DbOpertion.Models.Warehouse(): (DbOpertion.Models.Warehouse)ViewBag.WarehouseFullInfo;
+}
+
+<!DOCTYPE html>
+<style>
+    .layui-layer-setwin a:nth-child(1) {
+        display: none;
+    }
+
+    .layui-layer-setwin a:nth-child(2) {
+        display: none;
+    }
+</style>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="hidden" name="Id" value="@Warehouse.Id" class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">仓库名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" placeholder="请输入仓库名称" lay-verify="required" autocomplete="off" class="layui-input" value="@Warehouse.Name" />
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none; background-color:#f2f2f2"></button>
+    </form>
+</div>

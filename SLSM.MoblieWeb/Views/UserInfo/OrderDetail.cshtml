@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "OrderDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SLSM.MoblieWeb.Models.Response.Order.OrderInfoResponse order = ViewBag.Order;
+    var List_OrderDetail = (SLSM.MoblieWeb.Models.Response.Order.OrderInfoResponse)ViewBag.OrderDetail;
+    DbOpertion.Models.Address addr = ViewBag.Address;
+    var Address = (string)ViewBag.AddressFull;
+    var Express = (Common.ThirdParty.KdGold.KdApiResult)ViewBag.Express;
+    var ExpressCompany = "暂无订单号";
+    if (order != null)
+    {
+        ExpressCompany = order.ExpressCompany == null ? "暂无订单号" : order.ExpressCompany;
+        order.Invoice = order.Invoice == null ? "个人" : order.Invoice;
+    }
+}
+
+<div id="panel" class="public-content-box" style="background:#f4f4f4;">
+    <!--面包屑-->
+    <div class="public-crumbs bgfff border-b1s-ccc">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="../../UserInfo/Index">个人中心</a></li>
+            <li><a href="../../UserInfo/MyOrderList">我的订单</a></li>
+            <li><a href="./../UserInfo/OrderDetail">订单详情</a></li>
+        </ul>
+    </div>
+    <div class="order-details">
+        <div class="public-title title-bg">
+            <span>订单详情</span>
+        </div>
+        <div class="public-title order-time-info">
+            <span>订单编号：@order.OrderNo</span> <span>@order.OrderTime</span>
+            @if (order.Status == "待付款")
+            {
+                <em class="sussce" style="color:#ff0000">@order.Status</em>
+            }
+            else if (order.Status == "待评价")
+            {
+                <em class="sussce" style="color:#fbc400">@order.Status</em>
+
+            }
+            else if (order.Status == "待收货")
+            {
+                <em class="sussce" style="color:#669933">@order.Status</em>
+            }
+            else if (order.Status == "退款成功")
+            {
+                <em class="sussce" style="color:#7d6666">@order.Status</em>
+            }
+
+            else if (order.Status == "评价成功")
+            {
+                <em class="sussce" style="color:#adedf1">@order.Status</em>
+            }
+            else
+            {
+                <em class="sussce" style="color:red">@order.Status</em>
+            }
+
+        </div>
+        <div class="order-details-list">
+            <ul>
+                @foreach (var item in List_OrderDetail.ListDetail)
+                {
+                    <li>
+                        <div class="img">
+                            <img src="@ViewBag.AdminUrl@item.FrontImage" alt="">
+                        </div>
+                        <div class="info">
+                            <h6>@item.Name</h6>
+                            <p><lable>@item.Color</lable>/属性a</p>
+                            <p>@item.Amount</p>
+                            <p>￥ @item.PayMoney</p>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="order-receipt">
+        @if (Address != null)
+        {
+            var area = Address.Split(' ');
+            var AddrAreas = "";
+            if (area.Count() == 4)
+            {
+                AddrAreas = area[0] + " " + area[1] + " " + area[2];
+            }
+            <p><span>收货人信息 :</span> <span>@order.BuyName</span>&nbsp; &nbsp;<span>@order.Phone</span></p>
+            <p class="address">@AddrAreas &nbsp; @area[3]</p>
+        }
+        else if (addr.AddrArea != null)
+        {
+            var area = addr.AddrArea.Split(',');
+            if (area.Count() == 3)
+            {
+                addr.AddrArea = area[0] + " " + area[1] + " " + area[2];
+            }
+            <p><span>收货人信息 :</span> <span>@addr.ContactName</span>&nbsp; &nbsp;<span>@addr.ContactPhone</span></p>
+            <p class="address">@addr.AddrArea &nbsp; @addr.AddrDetail</p>
+        }
+        <p>付款信息：线下支付</p>
+        <p>发票信息：普通发票  @order.Invoice  办公用品 <a href="#">查看发票</a></p>
+        <p>配送信息：普通快递</p>
+        @if (Express != null)
+        {
+            <p>快递信息：</p>
+        }
+
+    </div>
+    <div class="express-info">
+        <ul>
+            @if (Express != null)
+            {
+                var Traces = Express.Traces.OrderByDescending(p => p.AcceptTime).ToList();
+                var first = true;
+                foreach (var item in Traces)
+                {
+                    if (first)
+                    {
+                        first = false;
+                        <li class="active"><div class="box"><i class="dot"></i><p>@item.AcceptTime @item.AcceptStation</p></div></li>
+                    }
+                    else
+                    {
+                        <li><div class="box"><i class="dot"></i><p>@item.AcceptTime @item.AcceptStation</p></div></li>
+                    }
+
+                }
+
+            }
+        </ul>
+    </div>
+</div>

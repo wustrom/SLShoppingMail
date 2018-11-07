@@ -1,0 +1,362 @@
+﻿@using DbOpertion.Models;
+@using SLSM.DBOpertion.Model.Extend.Response.ColorRes;
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    Layout = null;
+    var raw_materials = ViewBag.Material == null ? new Raw_Materials() : (Raw_Materials)ViewBag.Material;
+
+    List<ColorRes> listColorRes = ViewBag.ColorList == null ? new List<ColorRes>() : (List<ColorRes>)ViewBag.ColorList;
+    List<Producer> ProducerList = ViewBag.ProducerList == null ? new List<Producer>() : (List<Producer>)ViewBag.ProducerList;
+    //List<Materials_Colorinfo> MyColorInfoList = ViewBag.MyColorInfoList == null ? new List<Materials_Colorinfo>() : (List<Materials_Colorinfo>)ViewBag.MyColorInfoList;
+    List<Materials_Producer> MyProducerList = ViewBag.MyProducerList == null ? new List<Materials_Producer>() : (List<Materials_Producer>)ViewBag.MyProducerList;
+    List<GradeRes> gradeList = ViewBag.GradeList == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.GradeList;
+}
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <input type="hidden" value="@raw_materials.Id" name="MaterialId" />
+        <input type="hidden" value="@ViewBag.ColorId" name="ColorInfo_SKU" />
+        <fieldset class="layui-elem-field ProInfo tableList">
+            <legend>供应商</legend>
+            <div class="layui-field-box">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">供应商代码</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label produceName">供应商名称</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">工厂货号</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">采购单价</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">报价日期</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">生产周期</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">最小起订量</label>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">价格标识</label>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_ProdecerCode" autocomplete="off" class="layui-input" disabled="disabled" style="display:none;">
+                        <input type="text" name="producerList_ProdecerCodeNo" autocomplete="off" class="layui-input" disabled="disabled">
+                    </div>
+                    <div class="layui-inline produceName">
+                        <select name="producerList_ProdecerName" lay-filter="Prodecer" lay-verify="selectItem">
+                            <option value="">请选择供应商</option>
+                            @foreach (var item in MyProducerList)
+                            {
+                                var producer = ProducerList.Where(p => p.Id == item.ProducerId).FirstOrDefault();
+                                <option value="@item.ProducerId" FactoryNumber="@item.FactoryNumber" ProdecerCode="@item.Id" ProdecerCodeNo="@producer.ProducerCode" PurchasePrice="@item.PurchasePrice" QuotationDate="@(item.QuotationDate!=null?item.QuotationDate.Value.ToString("yyyy-MM-dd"):"")" ProCycle="@item.ProCycle" MinQuantity="@item.MinQuantity" PriceTag="@item.ProCycle">@producer.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_FactoryNumber" autocomplete="off" class="layui-input" lay-verify="required">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_PurchasePrice" autocomplete="off" class="layui-input" lay-verify="float">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_QuotationDate" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})" lay-verify="date" value="">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_ProCycle" autocomplete="off" class="layui-input" lay-verify="required">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_MinQuantity" autocomplete="off" class="layui-input" lay-verify="required">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" name="producerList_PriceTag" autocomplete="off" class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding-top:10px;">购买数量</label>
+            <div class="layui-input-block" style="width:auto;">
+                <input type="text" name="BuyerNum" value="" lay-verify="number" autocomplete="off" class="layui-input" style="width:100%;">
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=20181017001"></script>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form(),
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            },
+            pass: [/(.+){6,12}$/, '密码必须6到12位'],
+            float: function (value) {
+                if (isNaN(value)) {
+                    return '只能填写数字';
+                }
+                else if (value < 0) {
+                    return '填写数字请不小于0';
+                }
+            },
+            nannum: function (value) {
+                if (value != "" && value != undefined) {
+                    if (isNaN(value)) {
+                        return '只能填写数字';
+                    }
+                    else if (value < 0) {
+                        return '填写数字请不小于0';
+                    }
+                    else if (parseInt(value) != value) {
+                        return '请输入整数';
+                    }
+                }
+            },
+            nanfloat: function (value) {
+                if (value != "" && value != undefined) {
+                    if (isNaN(value)) {
+                        return '只能填写数字';
+                    }
+                    else if (value < 0) {
+                        return '填写数字请不小于0';
+                    }
+                }
+            },
+            selectItem: function (value) {
+                if (value == "" || value == undefined) {
+                    return '请进行选择';
+                }
+            }
+        });
+    });
+    $(function () {
+        layui.use('form', function () {
+            var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+
+            form.on('select(Prodecer)', function (data) {
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProdecerCode"]').val(data.elem.selectedOptions[0].value);
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProdecerCodeNo"]').val($(data.elem.selectedOptions[0]).attr('ProdecerCodeNo'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_FactoryNumber"]').val($(data.elem.selectedOptions[0]).attr('FactoryNumber'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_PurchasePrice"]').val($(data.elem.selectedOptions[0]).attr('PurchasePrice'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_QuotationDate"]').val($(data.elem.selectedOptions[0]).attr('QuotationDate'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProCycle"]').val($(data.elem.selectedOptions[0]).attr('ProCycle'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_MinQuantity"]').val($(data.elem.selectedOptions[0]).attr('MinQuantity'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_PriceTag"]').val($(data.elem.selectedOptions[0]).attr('PriceTag'));
+            });
+        });
+
+        $(".layui-inline.produceName dl dd").eq(0).trigger('click');
+    })
+</script>
+
+<style>
+    .layui-textarea {
+        resize: none;
+    }
+
+    .layui-form-item {
+        margin-bottom: 0px;
+    }
+
+    .layui-form-label {
+        width: 70px;
+        padding-top: 5px;
+        padding-bottom: 0px;
+    }
+
+    .layui-input-block {
+        margin-left: 83px;
+        width: 100px;
+        min-height: 28px;
+    }
+
+    .layui-elem-field.baseInfo .layui-input-block {
+        width: 300px;
+    }
+
+    .layui-elem-field.baseInfo .layui-inline {
+        margin-right: 35px;
+    }
+
+    .layui-elem-field .layui-input {
+        height: 28px;
+        line-height: 28px;
+    }
+    /*表格css*/
+    .layui-elem-field.tableList .layui-form-item {
+        border: 1px solid #e2e2e2;
+        padding-top: 5px;
+        padding-left: 5px;
+        border-bottom: none;
+    }
+
+        .layui-elem-field.tableList .layui-form-item:first-child {
+            border: none;
+            padding-top: 0px;
+        }
+
+        .layui-elem-field.tableList .layui-form-item:last-child {
+            border-bottom: 1px solid #e2e2e2;
+        }
+    /*表格css*/
+    /*颜色详情css*/
+    .layui-elem-field.ColorDetail .layui-form-label {
+        width: 85px;
+        text-align: center;
+        padding-left: 0px;
+    }
+
+        .layui-elem-field.ColorDetail .layui-form-label.Colour {
+            width: 130px;
+        }
+
+        .layui-elem-field.ColorDetail .layui-form-label.SKU {
+            width: 130px;
+        }
+
+    .layui-elem-field.ColorDetail .layui-input {
+        width: 85px;
+    }
+
+        .layui-elem-field.ColorDetail .layui-input.Colour {
+            width: 130px;
+        }
+
+    .layui-elem-field.ColorDetail .layui-inline.Colour input {
+        width: 130px;
+    }
+
+    .layui-elem-field.ColorDetail .layui-input.SKU {
+        padding-left: 5px;
+    }
+
+    .layui-elem-field.ColorDetail .layui-inline img {
+        height: 28px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    /*颜色详情css*/
+    /*包装明细css*/
+    .layui-elem-field.PackingDetail .layui-form-label {
+        width: 101px;
+        text-align: center;
+        padding-left: 0px;
+    }
+
+    .layui-elem-field.PackingDetail .layui-input {
+        width: 101px;
+    }
+
+    /*包装明细css*/
+    /*采购信息css*/
+    .layui-elem-field.ProInfo .layui-form-label {
+        width: 82px;
+        text-align: left;
+        padding-left: 0px;
+    }
+
+        .layui-elem-field.ProInfo .layui-form-label.produceName {
+            width: 140px;
+        }
+
+    .layui-elem-field.ProInfo .layui-input {
+        width: 80px;
+        padding-left: 5px;
+    }
+
+        .layui-elem-field.ProInfo .layui-input.produceName {
+            width: 140px;
+        }
+
+    .layui-elem-field.ProInfo .layui-inline.produceName .layui-input {
+        width: 140px;
+    }
+    /*包装明细css*/
+
+    /*销售信息css*/
+    .layui-elem-field.SalesInfo .layui-form-item {
+        width: 420px;
+        float: left;
+    }
+
+        .layui-elem-field.SalesInfo .layui-form-item:first-child {
+            width: 100%;
+        }
+
+    .layui-elem-field.SalesInfo .layui-form-label {
+        width: 80px;
+        text-align: center;
+        padding-left: 0px;
+    }
+
+    .layui-elem-field.SalesInfo .layui-input {
+        width: 80px;
+    }
+
+    .layui-elem-field.SalesInfo .layui-textarea {
+        margin-left: 10px;
+        height: 190px;
+        width: 400px;
+    }
+    /*销售信息css*/
+    .layui-form-item .layui-inline {
+        margin-right: 0px;
+    }
+
+    .printLabel {
+        margin-top: 6px;
+        padding-left: 30px;
+    }
+
+    .printType {
+        padding-top: 6px;
+        padding-left: 30px;
+    }
+
+    .layui-inline input[type="checkbox"] {
+        margin-left: 16px;
+    }
+
+    .printMianji {
+        width: 100px;
+        margin-top: -5px;
+        margin-right: 10px;
+    }
+
+    .AddBtn {
+        float: right;
+        width: 25px;
+        height: 25px;
+        background-image: url('../../Content/Image/Add.png');
+        background-size: 100% 100%;
+        margin-right: -15px;
+        cursor: pointer;
+    }
+
+    .DeleteBtn {
+        float: right;
+        width: 25px;
+        height: 25px;
+        background-image: url('../../Content/Image/Delete.png');
+        background-size: 100% 100%;
+        margin-right: -15px;
+        cursor: pointer;
+    }
+</style>

@@ -1,0 +1,20 @@
+﻿.layui-form.title-part .layui-form-item:first-child {
+    margin: 0;
+    float: left;
+    clear: initial;
+}
+
+    .layui-form.title-part .layui-form-item:first-child label {
+        width: 60px;
+        padding-left: 0px;
+    }
+
+.layui-form.title-part .layui-form-item:last-child {
+    margin: 0;
+    float: right;
+    clear: initial;
+}
+
+.layui-form.title-part .layui-form-item:first-child .layui-input-block {
+    margin-left: 80px;
+}

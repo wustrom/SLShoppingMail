@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = null;
+    var Carousel = (DbOpertion.Models.Carousel_Image)ViewBag.Carousel;
+}
+<script src="~/Current/Scripts/MainShow/DetailCarousel.js?version=2.00"></script>
+<script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<div style="margin: 15px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择图片</label>
+        <div class="layui-input-block">
+            @if (Carousel != null)
+            {
+                <img id="btn-img" src="@Carousel.Image" alt="暂无图片" style="width:333px;height:100px;">
+            }
+            else
+            {
+                <img id="btn-img" src="/Image/Grade/noImg.svg" alt="暂无图片" style="width:200px;height:100px;">
+            }
+            <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="visibility: hidden">
+                <input name="upImg" type="file" id="upImg" onchange="filechange(event)" accept=".png,.jpg,.jpeg">
+                <input id="testSubmit" type="submit" value="上传">
+            </form>
+        </div>
+    </div>
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">跳转地址</label>
+            <div class="layui-input-block">
+                @if (Carousel != null)
+                {
+                    <input type="tel" name="ImgAddress" placeholder="请输入地址" lay-verify="url" autocomplete="off" class="layui-input" value="@Carousel.AUrl">
+                    <input type="hidden" name="CarouselID" id="CarouselID" value="@Carousel.Id" />
+                    <input type="hidden" name="Image" id="Image" value="@Carousel.Image" />
+                    <input type="hidden" name="OrderID" id="OrderID" value="@Carousel.OrderID" />
+                }
+                else
+                {
+                    <input type="tel" name="ImgAddress" placeholder="请输入地址" lay-verify="url" autocomplete="off" class="layui-input">
+                    <input type="hidden" name="CarouselID" id="CarouselID" value="" />
+                    <input type="hidden" name="Image" id="Image" value="" />
+                    <input type="hidden" name="OrderID" id="OrderID" value="@ViewBag.Num" />
+                }
+                  <input type="hidden" name="IsPC" id="IsPC" value="@(ViewBag.IsPC.ToString())" />
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

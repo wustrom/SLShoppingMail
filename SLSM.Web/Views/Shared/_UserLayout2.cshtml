@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "_UserLayout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Base/js/prettify.js"></script>
+<script src="~/Base/js/jquery.scrollbar.js"></script>
+
+<link href="~/Base/css/application.css" rel="stylesheet" />
+<script src="~/Base/js/jquery.SuperSlide.2.1.1.js"></script>
+<script src="~/Base/js/jquery.raty.min.js"></script>
+@*<link href="~/Base/css/globle.css" rel="stylesheet" />*@
+<script src="~/Base/js/webuploader.min.js"></script>
+<script src="~/Base/js/diyUpload.js"></script>
+
+
+<div class="shopmain">
+    <div class="w1242">
+        <div class="position">
+            @RenderSection("bannner", required: false)
+        </div>
+        <div class="title">
+            我的订单
+        </div>
+        <div class="myorder">
+            <div class="mylist">
+                <ul>
+                    <li>
+                        <a href="~/userinfo/Info">个人资料</a>
+                    </li>
+                    <li>
+                        <a href="~/userinfo/Message">消息</a>
+                    </li>
+                    <li>
+                        <a href="~/userinfo/Address">地址管理</a>
+                    </li>
+                    <li class="current">
+                        <a href="~/userinfo/MyOrderList">我的订单</a>
+                    </li>
+                    @*<li>
+                        <a href="~/userinfo/UserLike">我的收藏</a>
+                    </li>*@
+                    <li>
+                        <a href="~/userinfo/InvoiceInfo">发票管理</a>
+                    </li>
+                    <li>
+                        <a href="~/userinfo/CustomerService">客户服务</a>
+                    </li>
+                </ul>
+            </div>
+            @RenderBody()
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+@RenderSection("AfterBody", required: false)

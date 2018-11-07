@@ -1,0 +1,124 @@
+﻿#order-refund {
+    padding-left: 0px;
+    padding-right: 0px
+}
+
+    #order-refund .modal-body {
+        padding-top: 10px
+    }
+
+    #order-refund .modal-dialog {
+        padding: 0px;
+        position: relative;
+        bottom: 0px;
+        top: 55px;
+        height: 100%;
+        width: 100%;
+        display: table;
+        background: #fff
+    }
+
+    #order-refund .modal-content {
+        border: none;
+        border-radius: 0px;
+        text-align: left;
+        box-shadow: 0 0 0 0
+    }
+
+.reason-refund-wrap .reason-form .reason-title {
+    font-size: 14px !important;
+    color: #333;
+    margin-top: 0px
+}
+
+.reason-refund-wrap .reason-select-label {
+    font-size: 12px;
+    padding-top: 4px;
+    padding-right: 20px;
+    float: left;
+    color: #999
+}
+
+.reason-refund-wrap .form-group {
+    padding-left: 0px !important;
+    padding-right: 0px !important
+}
+
+.reason-refund-wrap #reason-select {
+    border-radius: 0px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url("https://asset1.djicdn.com/uploads/image/44701/refunds_down_icon.jpg") 95% no-repeat;
+    height: 40px;
+    padding-left: 15px;
+    width: 100%;
+    padding-right: 43px;
+    font-size: 12px;
+    color: #999
+}
+
+.reason-refund-wrap .reason-textarea {
+    height: 100px !important;
+    float: right;
+    border-radius: 0px;
+    margin-bottom: 10px
+}
+
+.reason-refund-wrap .cancel-note ul {
+    padding-left: 0px
+}
+
+    .reason-refund-wrap .cancel-note ul li {
+        list-style: none;
+        padding-bottom: 5px;
+        font-size: 12px;
+        color: #999
+    }
+
+.reason-refund-wrap .cancal-bar {
+    position: fixed;
+    bottom: 60px;
+    width: 100%;
+    padding: 0 20px
+}
+
+    .reason-refund-wrap .cancal-bar .btn {
+        font-size: 14px !important;
+        border-radius: 2px;
+        padding: 10px 21px;
+        width: 40%
+    }
+
+    .reason-refund-wrap .cancal-bar .btn-default {
+        margin-right: 20px;
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        color: #666 !important;
+        float: left
+    }
+
+    .reason-refund-wrap .cancal-bar .btn-primary {
+        background: #008374 !important
+    }
+
+.cancel-note {
+    text-align: left
+}
+
+    .cancel-note .cancal-bar {
+        text-align: right
+    }
+
+        .cancel-note .cancal-bar .btn-default {
+            margin-right: 20px
+        }
+
+.red {
+    border: 1px solid #f04848 !important
+}
+
+.error, .error-other {
+    color: #f04848;
+    font-size: 14px;
+    margin-top: 10px
+}

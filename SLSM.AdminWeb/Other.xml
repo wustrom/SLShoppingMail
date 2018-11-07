@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EnumType>
+  <colors>
+    <color name="红色" id="1" code="#e23432"/>
+    <color name="橘色" id="2" code="#ee9604"/>
+    <color name="黄色" id="3" code="#f8f200"/>
+    <color name="绿色" id="4" code="#00a33a"/>
+    <color name="青绿色" id="5" code="#21B7C8"/>
+    <color name="蓝色" id="6" code="#2e4596"/>
+    <color name="紫色" id="7" code="#a93389"/>
+    <color name="黑色" id="8" code="#070604"/>
+    <color name="浅蓝色" id="10" code="#00a8ec"/>
+    <color name="酒红色" id="11" code="#87001E"/>
+    <color name="草绿色" id="14" code="#79BC28"/>
+    <color name="紫罗兰色" id="17" code="#40107b"/>
+    <color name="灰色" id="19" code="#767475"/>
+    <color name="枪灰色" id="20" code="#545047"/>
+    <color name="银色" id="21" code="#B4B5B5"/>
+    <color name="白色" id="22" code="#FFFFFF"/>
+    <color name="粉色" id="23" code="#EF92B1"/>
+    <color name="金色" id="24" code="#AF9C5F"/>
+    <color name="玫瑰金色" id="25" code="#F2D3A1"/>
+    <color name="香槟金色" id="26" code="#FFF9B1"/>
+    <color name="棕色" id="28" code="#B25800"/>
+    <color name="黄绿（双色）" id="29" code="#C8FF39"/>
+  </colors>
+  <CompanyTypes>
+    <Company name="国有企业" id="国有企业"/>
+    <Company name="集体企业" id="集体企业"/>
+    <Company name="联营企业" id="联营企业"/>
+    <Company name="股份合作制企业" id="股份合作制企业"/>
+    <Company name="私营企业" id="私营企业"/>
+    <Company name="个体户" id="个体户"/>
+    <Company name="合伙企业" id="合伙企业"/>
+    <Company name="有限责任公司" id="有限责任公司"/>
+    <Company name="股份有限公司" id="股份有限公司"/>
+  </CompanyTypes>
+</EnumType>

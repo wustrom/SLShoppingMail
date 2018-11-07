@@ -1,0 +1,37 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var CommShow = (Commshow)ViewBag.CommShow;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.List_Comm;
+    var ID = CommShow == null ? 0 : CommShow.Id;
+    List_Comm = List_Comm == null ? new List<Commodity_Stageprice_View>() : List_Comm;
+}
+<script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择商品</label>
+            <div class="layui-input-block">
+                <select name="CommId">
+                    <option>请选择</option>
+                    @foreach (var item in List_Comm)
+                    {
+                        if (CommShow != null && item.Id == CommShow.CommId)
+                        {
+                            <option value="@item.Id" selected="selected">@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+                <input type="hidden" name="Id" value="@ID" />
+                <input type="hidden" name="OrderId" value="@ViewBag.OrderId" />
+                <input type="hidden" name="GradeId" value="@ViewBag.GradeId" />
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

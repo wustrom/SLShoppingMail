@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9D8593A7-7E07-4C9C-9BD7-85BFDDC884EB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SLSM.DBOpertion</RootNamespace>
+    <AssemblyName>SLSM.DBOpertion</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="aliyun-net-sdk-dysmsapi">
+      <HintPath>..\AliyunHelper\dll\aliyun-net-sdk-dysmsapi.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DbOpertion.Extend\ErpuserOper.cs" />
+    <Compile Include="DbOpertion.Extend\CommodityOper.cs" />
+    <Compile Include="DbOpertion.Extend\Commodity_Stageprice_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Commodity_Stage_PriceOper.cs" />
+    <Compile Include="DbOpertion.Extend\GradefindparentOper.cs" />
+    <Compile Include="DbOpertion.Extend\Grade_AttrOper.cs" />
+    <Compile Include="DbOpertion.Extend\Hisdesigninfo_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Order_AllinfoOper.cs" />
+    <Compile Include="DbOpertion.Extend\Order_InfoOper .cs" />
+    <Compile Include="DbOpertion.Extend\GradeOper.cs" />
+    <Compile Include="DbOpertion.Extend\Order_Detail_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Order_DetailOper.cs" />
+    <Compile Include="DbOpertion.Extend\Buyer_Producer_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\ProducerInvoiceOper.cs" />
+    <Compile Include="DbOpertion.Extend\ProducerOper.cs" />
+    <Compile Include="DbOpertion.Extend\Deliver_Buyer_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Production_Orderdetail_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\InspectionOper.cs" />
+    <Compile Include="DbOpertion.Extend\ChangeStorageOper.cs" />
+    <Compile Include="DbOpertion.Extend\Receive_Order_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Erplogin_Role_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Materials_Storage_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Storage_ViewOper.cs" />
+    <Compile Include="DbOpertion.Extend\Raw_MaterialsOper.cs" />
+    <Compile Include="DbOpertion.Extend\ShopcartOper.cs" />
+    <Compile Include="DbOpertion.Extend\ServiceOper.cs" />
+    <Compile Include="DbOpertion.Extend\UserOper.cs" />
+    <Compile Include="DbOpertion\AddressOper.cs" />
+    <Compile Include="DbOpertion\BuyerOper.cs" />
+    <Compile Include="DbOpertion\Buyer_Producer_ViewOper.cs" />
+    <Compile Include="DbOpertion\Carousel_ImageOper.cs" />
+    <Compile Include="DbOpertion\ChangestorageOper.cs" />
+    <Compile Include="DbOpertion\ColorinfoOper.cs" />
+    <Compile Include="DbOpertion\Commdity_Materials_ViewOper.cs" />
+    <Compile Include="DbOpertion\CommodityOper.cs" />
+    <Compile Include="DbOpertion\CommodityspviewOper.cs" />
+    <Compile Include="DbOpertion\Commodity_Stageprice_ViewOper.cs" />
+    <Compile Include="DbOpertion\Commodity_Stage_PriceOper.cs" />
+    <Compile Include="DbOpertion\CommrecommendOper.cs" />
+    <Compile Include="DbOpertion\CommshowOper.cs" />
+    <Compile Include="DbOpertion\Comm_DiscountOper.cs" />
+    <Compile Include="DbOpertion\CustomerserviceOper.cs" />
+    <Compile Include="DbOpertion\DeliverOper.cs" />
+    <Compile Include="DbOpertion\Deliver_Buyer_ViewOper.cs" />
+    <Compile Include="DbOpertion\DistributionOper.cs" />
+    <Compile Include="DbOpertion\Distribution_Production_ViewOper.cs" />
+    <Compile Include="DbOpertion\ErploginuerOper.cs" />
+    <Compile Include="DbOpertion\Erplogin_Role_ViewOper.cs" />
+    <Compile Include="DbOpertion\ErpuserOper.cs" />
+    <Compile Include="DbOpertion\EvalinfoOper.cs" />
+    <Compile Include="DbOpertion\EvaluateOper.cs" />
+    <Compile Include="DbOpertion\GradefindparentOper.cs" />
+    <Compile Include="DbOpertion\GradeOper.cs" />
+    <Compile Include="DbOpertion\Grade_AttrOper.cs" />
+    <Compile Include="DbOpertion\Grade_Commodity_ViewOper.cs" />
+    <Compile Include="DbOpertion\Hisdesigninfo_ViewOper.cs" />
+    <Compile Include="DbOpertion\HisdesignOper.cs" />
+    <Compile Include="DbOpertion\Hot_SearchOper.cs" />
+    <Compile Include="DbOpertion\InvoiceOper.cs" />
+    <Compile Include="DbOpertion\Materials_ColorinfoOper.cs" />
+    <Compile Include="DbOpertion\Materials_ProducerOper.cs" />
+    <Compile Include="DbOpertion\Materials_Stock_ViewOper.cs" />
+    <Compile Include="DbOpertion\MessageOper.cs" />
+    <Compile Include="DbOpertion\Message_GrantOper.cs" />
+    <Compile Include="DbOpertion\Message_Grant_ViewOper.cs" />
+    <Compile Include="DbOpertion\NewsOper.cs" />
+    <Compile Include="DbOpertion\OrderdetaildesignOper.cs" />
+    <Compile Include="DbOpertion\Order_AllinfoOper.cs" />
+    <Compile Include="DbOpertion\Order_DetailOper.cs" />
+    <Compile Include="DbOpertion\Order_Detail_ViewOper.cs" />
+    <Compile Include="DbOpertion\Order_InfoOper.cs" />
+    <Compile Include="DbOpertion\PlatalinkOper.cs" />
+    <Compile Include="DbOpertion\ProducerconectinfoOper.cs" />
+    <Compile Include="DbOpertion\ProducerinvoiceOper.cs" />
+    <Compile Include="DbOpertion\ProducerOper.cs" />
+    <Compile Include="DbOpertion\Producer_Invoice_ViewOper.cs" />
+    <Compile Include="DbOpertion\ProductionOper.cs" />
+    <Compile Include="DbOpertion\Production_Orderdetail_ViewOper.cs" />
+    <Compile Include="DbOpertion\Raw_MaterialsOper.cs" />
+    <Compile Include="DbOpertion\ReceiveOper.cs" />
+    <Compile Include="DbOpertion\Receive_MaterialsOper.cs" />
+    <Compile Include="DbOpertion\Receive_Order_ViewOper.cs" />
+    <Compile Include="DbOpertion\Receive_Raw_ViewOper.cs" />
+    <Compile Include="DbOpertion\ReplyOper.cs" />
+    <Compile Include="DbOpertion\Sales_ReturnOper.cs" />
+    <Compile Include="DbOpertion\ShopcartOper.cs" />
+    <Compile Include="DbOpertion\ShowgradeinfoOper.cs" />
+    <Compile Include="DbOpertion\StorageOper.cs" />
+    <Compile Include="DbOpertion\Storage_ViewOper.cs" />
+    <Compile Include="DbOpertion\TechnologyOper.cs" />
+    <Compile Include="DbOpertion\TipsOper.cs" />
+    <Compile Include="DbOpertion\TodayorderOper.cs" />
+    <Compile Include="DbOpertion\TodaysuccessorderOper.cs" />
+    <Compile Include="DbOpertion\Userlike_Commodity_ViewOper.cs" />
+    <Compile Include="DbOpertion\UserOper.cs" />
+    <Compile Include="DbOpertion\User_LikeOper.cs" />
+    <Compile Include="DbOpertion\User_TipsOper.cs" />
+    <Compile Include="DbOpertion\WarehouseOper.cs" />
+    <Compile Include="Function.Extend\ErpuserFunc.cs" />
+    <Compile Include="Function.Extend\DistributionFunc.cs" />
+    <Compile Include="Function.Extend\ProducerinvoiceFunc.cs" />
+    <Compile Include="Function.Extend\Raw_MaterialsFunc.cs" />
+    <Compile Include="Function.Extend\BuyerDetailedFunc.cs" />
+    <Compile Include="Function.Extend\ColorinfoFunc.cs" />
+    <Compile Include="Function.Extend\InspectionFunc.cs" />
+    <Compile Include="Function.Extend\InvoiceFunc.cs" />
+    <Compile Include="Function.Extend\DeliverFunc.cs" />
+    <Compile Include="Function.Extend\ProductionFunc.cs" />
+    <Compile Include="Function.Extend\ProducerFunc.cs" />
+    <Compile Include="Function.Extend\OrderDetailDesignFunc.cs" />
+    <Compile Include="Function.Extend\ReceiveFunc.cs" />
+    <Compile Include="Function.Extend\MaterialFunc.cs" />
+    <Compile Include="Function.Extend\BuyerFunc.cs" />
+    <Compile Include="Function.Extend\Carousel_ImageFunc.cs" />
+    <Compile Include="Function.Extend\ChangesFunc.cs" />
+    <Compile Include="Function.Extend\CustomerserviceFunc.cs" />
+    <Compile Include="Function.Extend\OrderFunc.cs" />
+    <Compile Include="Function.Extend\CommpanyTypeFunc.cs" />
+    <Compile Include="Function.Extend\ServiceFun.cs" />
+    <Compile Include="Function.Extend\ShopCartFunc.cs" />
+    <Compile Include="Function.Extend\EvaluateFunc.cs" />
+    <Compile Include="Function.Extend\HisdesignFunc.cs" />
+    <Compile Include="Function.Extend\MessageFunc.cs" />
+    <Compile Include="Function.Extend\NewsFunc.cs" />
+    <Compile Include="Function.Extend\PayTypeFunc.cs" />
+    <Compile Include="Function.Extend\StatusFunc.cs" />
+    <Compile Include="Function.Extend\ColorFunc.cs" />
+    <Compile Include="Function.Extend\CommodityFunc.cs" />
+    <Compile Include="Function.Extend\CommodityPriceFunc.cs" />
+    <Compile Include="Function.Extend\DiyFunc.cs" />
+    <Compile Include="Function.Extend\GradeFunc.cs" />
+    <Compile Include="Function.Extend\OrderListFunc.cs" />
+    <Compile Include="Function.Extend\AddressFunc.cs" />
+    <Compile Include="Function.Extend\Erplogin_Role_ViewFunc.cs" />
+    <Compile Include="Function.Extend\StorageFunc.cs" />
+    <Compile Include="Function.Extend\TechnologyFunc.cs" />
+    <Compile Include="Function.Extend\UserFunc.cs" />
+    <Compile Include="Function.Extend\UserLikeFunc.cs" />
+    <Compile Include="Function.Extend\WarehouseFunc.cs" />
+    <Compile Include="Function\AddressFunc.cs" />
+    <Compile Include="Function\BuyerFunc.cs" />
+    <Compile Include="Function\Buyer_Producer_ViewFunc.cs" />
+    <Compile Include="Function\Carousel_ImageFunc.cs" />
+    <Compile Include="Function\ChangestorageFunc.cs" />
+    <Compile Include="Function\ColorinfoFunc.cs" />
+    <Compile Include="Function\Commdity_Materials_ViewFunc.cs" />
+    <Compile Include="Function\CommodityFunc.cs" />
+    <Compile Include="Function\CommodityspviewFunc.cs" />
+    <Compile Include="Function\Commodity_Stageprice_ViewFunc.cs" />
+    <Compile Include="Function\Commodity_Stage_PriceFunc.cs" />
+    <Compile Include="Function\CommrecommendFunc.cs" />
+    <Compile Include="Function\CommshowFunc.cs" />
+    <Compile Include="Function\Comm_DiscountFunc.cs" />
+    <Compile Include="Function\CustomerserviceFunc.cs" />
+    <Compile Include="Function\DeliverFunc.cs" />
+    <Compile Include="Function\Deliver_Buyer_ViewFunc.cs" />
+    <Compile Include="Function\DistributionFunc.cs" />
+    <Compile Include="Function\Distribution_Production_ViewFunc.cs" />
+    <Compile Include="Function\ErploginuerFunc.cs" />
+    <Compile Include="Function\Erplogin_Role_ViewFunc.cs" />
+    <Compile Include="Function\ErpuserFunc.cs" />
+    <Compile Include="Function\EvalinfoFunc.cs" />
+    <Compile Include="Function\EvaluateFunc.cs" />
+    <Compile Include="Function\GradefindparentFunc.cs" />
+    <Compile Include="Function\GradeFunc.cs" />
+    <Compile Include="Function\Grade_AttrFunc.cs" />
+    <Compile Include="Function\Grade_Commodity_ViewFunc.cs" />
+    <Compile Include="Function\HisdesignFunc.cs" />
+    <Compile Include="Function\Hisdesigninfo_ViewFunc.cs" />
+    <Compile Include="Function\Hot_SearchFunc.cs" />
+    <Compile Include="Function\InvoiceFunc.cs" />
+    <Compile Include="Function\Materials_ColorinfoFunc.cs" />
+    <Compile Include="Function\Materials_ProducerFunc.cs" />
+    <Compile Include="Function\Materials_Stock_ViewFunc.cs" />
+    <Compile Include="Function\MessageFunc.cs" />
+    <Compile Include="Function\Message_GrantFunc.cs" />
+    <Compile Include="Function\Message_Grant_ViewFunc.cs" />
+    <Compile Include="Function\NewsFunc.cs" />
+    <Compile Include="Function\OrderdetaildesignFunc.cs" />
+    <Compile Include="Function\Order_AllinfoFunc.cs" />
+    <Compile Include="Function\Order_DetailFunc.cs" />
+    <Compile Include="Function\Order_Detail_ViewFunc.cs" />
+    <Compile Include="Function\Order_InfoFunc.cs" />
+    <Compile Include="Function\PlatalinkFunc.cs" />
+    <Compile Include="Function\ProducerconectinfoFunc.cs" />
+    <Compile Include="Function\ProducerFunc.cs" />
+    <Compile Include="Function\ProducerinvoiceFunc.cs" />
+    <Compile Include="Function\Producer_Invoice_ViewFunc.cs" />
+    <Compile Include="Function\ProductionFunc.cs" />
+    <Compile Include="Function\Production_Orderdetail_ViewFunc.cs" />
+    <Compile Include="Function\Raw_MaterialsFunc.cs" />
+    <Compile Include="Function\ReceiveFunc.cs" />
+    <Compile Include="Function\Receive_MaterialsFunc.cs" />
+    <Compile Include="Function\Receive_Order_ViewFunc.cs" />
+    <Compile Include="Function\Receive_Raw_ViewFunc.cs" />
+    <Compile Include="Function\ReplyFunc.cs" />
+    <Compile Include="Function\Sales_ReturnFunc.cs" />
+    <Compile Include="Function\ShopcartFunc.cs" />
+    <Compile Include="Function\ShowgradeinfoFunc.cs" />
+    <Compile Include="Function\StorageFunc.cs" />
+    <Compile Include="Function\Storage_ViewFunc.cs" />
+    <Compile Include="Function\TechnologyFunc.cs" />
+    <Compile Include="Function\TipsFunc.cs" />
+    <Compile Include="Function\TodayorderFunc.cs" />
+    <Compile Include="Function\TodaysuccessorderFunc.cs" />
+    <Compile Include="Function\UserFunc.cs" />
+    <Compile Include="Function\Userlike_Commodity_ViewFunc.cs" />
+    <Compile Include="Function\User_LikeFunc.cs" />
+    <Compile Include="Function\User_TipsFunc.cs" />
+    <Compile Include="Function\WarehouseFunc.cs" />
+    <Compile Include="Model.Extend\Request\CommodityList\CommodityListReq.cs" />
+    <Compile Include="Model.Extend\Request\DistributionRequest.cs" />
+    <Compile Include="Model.Extend\Request\EditProducerRequest.cs" />
+    <Compile Include="Model.Extend\Request\MaterInfo.cs" />
+    <Compile Include="Model.Extend\Request\EditMaterialRequest.cs" />
+    <Compile Include="Model.Extend\Request\Purchasing\PurchasingSubmenuRequest.cs" />
+    <Compile Include="Model.Extend\Response\ColorRes\ColorRes.cs" />
+    <Compile Include="Model.Extend\Response\CommodityRes\CommodityRes.cs" />
+    <Compile Include="Model.Extend\Response\GradeRes\GradeRes.cs" />
+    <Compile Include="Model.Extend\Response\UserInfoRes\UserInfoRes.cs" />
+    <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\Buyer.cs" />
+    <Compile Include="Model\Buyer_Producer_View.cs" />
+    <Compile Include="Model\Carousel_Image.cs" />
+    <Compile Include="Model\Changestorage.cs" />
+    <Compile Include="Model\Colorinfo.cs" />
+    <Compile Include="Model\Commdity_Materials_View.cs" />
+    <Compile Include="Model\Commodity.cs" />
+    <Compile Include="Model\Commodityspview.cs" />
+    <Compile Include="Model\Commodity_Stageprice_View.cs" />
+    <Compile Include="Model\Commodity_Stage_Price.cs" />
+    <Compile Include="Model\Commrecommend.cs" />
+    <Compile Include="Model\Commshow.cs" />
+    <Compile Include="Model\Comm_Discount.cs" />
+    <Compile Include="Model\Customerservice.cs" />
+    <Compile Include="Model\Deliver.cs" />
+    <Compile Include="Model\Deliver_Buyer_View.cs" />
+    <Compile Include="Model\Distribution.cs" />
+    <Compile Include="Model\Distribution_Production_View.cs" />
+    <Compile Include="Model\Erploginuer.cs" />
+    <Compile Include="Model\Erplogin_Role_View.cs" />
+    <Compile Include="Model\Erpuser.cs" />
+    <Compile Include="Model\Evalinfo.cs" />
+    <Compile Include="Model\Evaluate.cs" />
+    <Compile Include="Model\Grade.cs" />
+    <Compile Include="Model\Gradefindparent.cs" />
+    <Compile Include="Model\Grade_Attr.cs" />
+    <Compile Include="Model\Grade_Commodity_View.cs" />
+    <Compile Include="Model\Hisdesign.cs" />
+    <Compile Include="Model\Hisdesigninfo_View.cs" />
+    <Compile Include="Model\Hot_Search.cs" />
+    <Compile Include="Model\Invoice.cs" />
+    <Compile Include="Model\Materials_Colorinfo.cs" />
+    <Compile Include="Model\Materials_Producer.cs" />
+    <Compile Include="Model\Materials_Stock_View.cs" />
+    <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\Message_Grant.cs" />
+    <Compile Include="Model\Message_Grant_View.cs" />
+    <Compile Include="Model\News.cs" />
+    <Compile Include="Model\Orderdetaildesign.cs" />
+    <Compile Include="Model\Order_Allinfo.cs" />
+    <Compile Include="Model\Order_Detail.cs" />
+    <Compile Include="Model\Order_Detail_View.cs" />
+    <Compile Include="Model\Order_Info.cs" />
+    <Compile Include="Model\Platalink.cs" />
+    <Compile Include="Model\Producer.cs" />
+    <Compile Include="Model\Producerconectinfo.cs" />
+    <Compile Include="Model\Producerinvoice.cs" />
+    <Compile Include="Model\Producer_Invoice_View.cs" />
+    <Compile Include="Model\Production.cs" />
+    <Compile Include="Model\Production_Orderdetail_View.cs" />
+    <Compile Include="Model\Raw_Materials.cs" />
+    <Compile Include="Model\Receive.cs" />
+    <Compile Include="Model\Receive_Materials.cs" />
+    <Compile Include="Model\Receive_Order_View.cs" />
+    <Compile Include="Model\Receive_Raw_View.cs" />
+    <Compile Include="Model\Reply.cs" />
+    <Compile Include="Model\Sales_Return.cs" />
+    <Compile Include="Model\Shopcart.cs" />
+    <Compile Include="Model\Showgradeinfo.cs" />
+    <Compile Include="Model\Storage.cs" />
+    <Compile Include="Model\Storage_View.cs" />
+    <Compile Include="Model\Technology.cs" />
+    <Compile Include="Model\Tips.cs" />
+    <Compile Include="Model\Todayorder.cs" />
+    <Compile Include="Model\Todaysuccessorder.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\Userlike_Commodity_View.cs" />
+    <Compile Include="Model\User_Like.cs" />
+    <Compile Include="Model\User_Tips.cs" />
+    <Compile Include="Model\Warehouse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AliyunHelper\AliyunHelper.csproj">
+      <Project>{c64fa6e4-f74f-468a-9692-bbda8f55dc29}</Project>
+      <Name>AliyunHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{81030aab-08dd-4cd9-833c-65fdab99cb0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

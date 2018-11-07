@@ -1,0 +1,151 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Commrecommend = ViewBag.Commrecommend == null ? new Commrecommend() : (Commrecommend)ViewBag.Commrecommend;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.List_Comm;
+    var ID = Commrecommend == null ? 0 : Commrecommend.Id;
+    List_Comm = List_Comm == null ? new List<Commodity_Stageprice_View>() : List_Comm;
+    var AttrList = new List<string>();
+    string attr1 = "", attr2 = "", attr3 = "";
+    var FrontImage = Commrecommend.FrontImage == null ? "/Image/Grade/noImg.svg" : Commrecommend.FrontImage;
+    var BehindImage = Commrecommend.BehindImage == null ? "/Image/Grade/noImg.svg" : Commrecommend.BehindImage;
+    if (Commrecommend != null && Commrecommend.AttrSpan != null)
+    {
+        AttrList = Commrecommend.AttrSpan.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+        if (AttrList.Count >= 3)
+        {
+            attr1 = AttrList[0];
+            attr2 = AttrList[1];
+            attr3 = AttrList[2];
+        }
+        else if (AttrList.Count == 2)
+        {
+            attr1 = AttrList[0];
+            attr2 = AttrList[1];
+        }
+        else if (AttrList.Count == 1)
+        {
+            attr1 = AttrList[0];
+        }
+    }
+}
+<script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<script>
+    function btnimgClick(that) {
+        $(that).parent().parent().find('#upImg').val('');
+        $(that).parent().parent().find('#upImg').click();
+        $('#HiddenItem').val(that);
+    }
+
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+
+        $(that).parent().ajaxSubmit(function (res) {
+            $(that).parent().parent().find('#btn-img').attr('src', res);
+            $('#' + $(that).parent().find('#hiddenImage').val()).val(res);
+        });
+    }
+</script>
+<style>
+    .layui-input-block #btn-img {
+        width: 120px;
+        height: 80px;
+        border: 1px solid #e2e2e2;
+    }
+</style>
+<div style="margin: 15px;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">正面图片</label>
+            <div class="layui-input-block">
+                <img id="btn-img" src="@FrontImage" onclick="btnimgClick(this)" />
+            </div>
+            <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+                <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+                <input type="hidden" id="hiddenImage" value="FrontView" />
+                <input id="testSubmit" type="submit" value="上传">
+            </form>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">背面图片</label>
+            <div class="layui-input-block">
+                <img id="btn-img" src="@BehindImage" alt="暂无图片" onclick="btnimgClick(this)" />
+            </div>
+            <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+                <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+                <input type="hidden" id="hiddenImage" value="BackView" />
+                <input id="testSubmit" type="submit" value="上传">
+            </form>
+        </div>
+    </div>
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="FrontView" id="FrontView" value="@Commrecommend.FrontImage" />
+            <input type="hidden" name="BackView" id="BackView" value="@Commrecommend.BehindImage" />
+            <input type="hidden" name="CommId" id="CommId" value="@Commrecommend.Id" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择商品</label>
+            <div class="layui-input-block">
+                <select name="CommId">
+                    <option>请选择</option>
+                    @foreach (var item in List_Comm)
+                    {
+                        if (Commrecommend != null && item.Id == Commrecommend.CommId)
+                        {
+                            <option value="@item.Id" selected="selected">@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+                <input type="hidden" name="OrderId" value="@ViewBag.OrderId" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">特性1</label>
+            <div class="layui-input-block">
+
+                <input type="text" name="Attr1" lay-verify="required" autocomplete="off" class="layui-input" value="@attr1">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">特性2</label>
+            <div class="layui-input-block">
+                <input type="text" name="Attr2" lay-verify="required" class="layui-input" value="@attr2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">特性3</label>
+            <div class="layui-input-block">
+                <input type="text" name="Attr3" lay-verify="required" class="layui-input" value="@attr3">
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

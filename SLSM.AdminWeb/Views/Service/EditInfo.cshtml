@@ -1,0 +1,110 @@
+﻿
+@{
+    Layout = null;
+    var Service = (DbOpertion.Models.Customerservice)ViewBag.ServiceInfo;
+    var str = "111";
+}
+<div>
+    <input type="hidden" id="HiddenItem" />
+    <form id="formColorChange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+        <input name="upImg" type="file" id="upImg" onchange="fileColorchange(this)" accept=".png,.jpg,.jpeg">
+    </form>
+</div>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="hidden" name="Id" value="@Service.Id" class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="ServiceName" placeholder="请输入昵称" lay-verify="required" autocomplete="off" class="layui-input" value="@Service.ServiceName" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客服电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="ServicePhone" placeholder="请输入客服电话" lay-verify="required" autocomplete="off" class="layui-input" value="@Service.ServicePhone">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客服QQ</label>
+            <div class="layui-input-block">
+                <input type="text" name="ServiceQQ" placeholder="请输入客服QQ" lay-verify="required" autocomplete="off" class="layui-input" value="@Service.ServiceQQ">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">阿里旺旺</label>
+            <div class="layui-input-block">
+                <input type="text" name="ServiceALWW" placeholder="请输入客服阿里旺旺" lay-verify="required" autocomplete="off" class="layui-input" value="@Service.ServiceALWW">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">微信二维码</label>
+                <div class="layui-input-block">
+                    <img id="btn-img" src="@Service.ServiceWechat" alt="暂无图片" onclick="btnImgClick(this)"  style="max-height: 100px;"/>
+                    <input type="hidden" name="ServiceWechat" value="@Service.ServiceWechat" />
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工作状态</label>
+            <div class="layui-input-block">
+                @if (Service.IsService == true)
+                {
+                    <input type="radio" name="IsService" value="false" title="繁忙">
+                    <input type="radio" name="IsService" value="true" title="工作中" checked>
+                }
+                else
+                {
+                    <input type="radio" name="IsService" value="false" title="繁忙" checked>
+                    <input type="radio" name="IsService" value="true" title="工作中">
+
+                }
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<script>
+
+    var HiddenItem = null;
+    function btnImgClick(that) {
+
+        $('#formColorChange #upImg').val('');
+        $('#formColorChange #upImg').click();
+        HiddenItem = that;
+    }
+
+    function fileColorchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(HiddenItem).attr('src', res);
+            $(HiddenItem).parent().find('input').val(res);
+        });
+    }
+</script>

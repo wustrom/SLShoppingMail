@@ -1,0 +1,28 @@
+﻿.layui-elem-field.carousel-content {
+    width: 31%;
+    padding-right: 1%;
+    float: left;
+    height: 300px;
+}
+
+    .layui-elem-field.carousel-content .layui-field-box .left-part {
+        height: 250px;
+        width: 75%;
+        float: left;
+    }
+    .layui-elem-field.carousel-content .layui-field-box .left-part img {
+        width:100%;
+        height:100%;
+    }
+
+    .layui-elem-field.carousel-content .layui-field-box .right-part {
+        height: 250px;
+        width: 23%;
+        float: right;
+    }
+
+        .layui-elem-field.carousel-content .layui-field-box .right-part button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            float: right;
+        }

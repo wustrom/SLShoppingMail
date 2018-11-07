@@ -1,0 +1,229 @@
+﻿
+@{
+    ViewBag.Title = "OrderDetail";
+    Layout = "~/Views/Shared/_UserLayout2.cshtml";
+
+    SLSM.Web.Models.Response.Order.OrderInfoResponse order = ViewBag.Order;
+    var List_OrderDetail = (SLSM.Web.Models.Response.Order.OrderInfoResponse)ViewBag.OrderDetail;
+    DbOpertion.Models.Address addr = ViewBag.Address;
+    var Address = (string)ViewBag.AddressFull;
+    var Express = (Common.ThirdParty.KdGold.KdApiResult)ViewBag.Express;
+    var ExpressCompany = "暂无订单号";
+    if (order != null)
+    {
+        ExpressCompany = order.ExpressCompany == null ? "暂无订单号" : order.ExpressCompany;
+        order.Invoice = order.Invoice == null ? "个人" : order.Invoice;
+    }
+}
+@section bannner{
+    &nbsp; >&nbsp;  <a href="../../UserInfo/Index">我的</a>&nbsp; >&nbsp; <a href="../../UserInfo/MyOrderList">我的订单</a>&nbsp; >&nbsp; <a href="../../UserInfo/OrderDetail?OrderId=@order.Id">订单详情</a>
+}
+<script src="~/Current/script/UserInfo/OrderInfo.js"></script>
+<div class="ricont">
+    <div class="ztitem">
+        <div class="s1">
+            订单编号: @order.OrderNo &nbsp;&nbsp;&nbsp;@order.OrderTime
+            &nbsp;
+            @if (order.Status == "待付款")
+            {
+                <span class="color2" style="color:#ff0000">@order.Status</span>
+            }
+            else if (order.Status == "待评价")
+            {
+                <span class="color2" style="color:#fbc400">@order.Status</span>
+
+            }
+            else if (order.Status == "待收货")
+            {
+                <span class="color2" style="color:#669933">@order.Status</span>
+            }
+            else if (order.Status == "退款成功")
+            {
+                <span class="color2" style="color:#7d6666">@order.Status</span>
+            }
+
+            else if (order.Status == "评价成功")
+            {
+                <span class="color2" style="color:#adedf1">@order.Status</span>
+            }
+            else
+            {
+                <span class="color2" style="color:red">@order.Status</span>
+            }
+
+        </div>
+    </div>
+
+    <div class="orderde">
+        @foreach (var item in List_OrderDetail.ListDetail)
+        {
+            <div class="model">
+                <div class="imgbox">
+                    <a href="#">
+                        <img src="@ViewBag.AdminUrl@item.Image" alt="" />
+                    </a>
+                </div>
+                <div class="content">
+                    <h2 class="h2tit">
+                        <a href="#">@item.Name</a>
+                    </h2>
+                    <div class="type">
+                        <label>@item.Color</label> /@item.Attribute
+                    </div>
+                    <a onclick="designImg(this)" class="pen">定制效果</a>
+                    <input type="hidden" class="hidBackView" value="@item.BackImage" />
+                    <input type="hidden" class="hidForntView" value="@item.FrontImage" />
+                </div>
+            </div>
+        }
+    </div>
+    @if (Address != null)
+    {
+        var area = Address.Split(' ');
+        var AddrAreas = "";
+        if (area.Count() == 4)
+        {
+            AddrAreas = area[0] + " " + area[1] + " " + area[2];
+        }
+        <div class="orderdetail">
+            <p>
+                收货人信息: @order.BuyName
+                @AddrAreas
+                @area[3]
+                @order.Phone
+            </p>
+            <p>
+                付款信息：货到付款
+            </p>
+            <p>
+                发票信息：普通发票 @order.Invoice 办公用品    <a>查看发票</a>
+            </p>
+            <p>
+                配送信息：@ExpressCompany
+            </p>
+        </div>
+    }
+    else
+    {
+        if (addr.AddrArea != null)
+        {
+            var area = addr.AddrArea.Split(',');
+            if (area.Count() == 3)
+            {
+                addr.AddrArea = area[0] + " " + area[1] + " " + area[2];
+            }
+        }
+        <div class="orderdetail">
+            <p>
+                收货人信息: @addr.ContactName
+                @addr.AddrArea
+                @addr.AddrDetail
+                @addr.ContactPhone
+            </p>
+            <p>
+                付款信息：货到付款
+            </p>
+            <p>
+                发票信息：普通发票   办公用品    <a href="#">查看发票</a>
+            </p>
+            <p>
+                配送信息：普通快递
+            </p>
+        </div>
+    }
+
+    @if (Express != null)
+    {
+        var Traces = Express.Traces.OrderByDescending(p => p.AcceptTime).ToList();
+        <div class="wllist">
+            <i></i>
+            <div class="scrollbar-macosx">
+                <ul>
+                    @foreach (var item in Traces)
+                    {
+                        <li>
+                            @item.AcceptTime @item.AcceptStation
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    @*}*@
+</div>
+<div id="tong" class="hide" style="display:none;">
+    <div class="designContainer" id="designContainer">
+        <div class="skuimgs">
+            <div class="designImg">
+                <img class="itemImg sku_img_checked" src="#">
+                <label style="display: block;font-size:12px;">正面定制</label>
+            </div>
+            <div class="designImg">
+                <img class="itemImg" src="#">
+                <label style="display: block;font-size:12px;">背面定制</label>
+            </div>
+        </div>
+        <div style="float: left; position: relative;" id="imgbox" class="imgbox">
+            <img style="width: 480px; height: 480px;border: 1px solid #dcdcdc" id="showImg" src="#">
+        </div>
+    </div>
+</div>
+<style>
+    #tong {
+        background-color: white;
+    }
+
+
+        #tong .designContainer {
+            width: 650px !important;
+            border: none;
+            top: 0px;
+            min-height: 500px;
+        }
+
+            #tong .designContainer .skuimgs {
+                clear: both;
+                padding-top: 12px;
+                /* margin-left: 71px; */
+                position: absolute;
+            }
+
+                #tong .designContainer .skuimgs .designImg {
+                    width: 80px;
+                    height: 120px;
+                    float: left;
+                    margin-right: 16px;
+                    text-align: center;
+                    clear: both;
+                    margin-left: 15px;
+                }
+
+                    #tong .designContainer .skuimgs .designImg .sku_img_checked {
+                        border: 1px solid #f15a48 !important;
+                    }
+
+                    #tong .designContainer .skuimgs .designImg .itemImg {
+                        width: 80px;
+                        height: 80px;
+                        border: 1px solid white;
+                        cursor: pointer;
+                    }
+
+            #tong .designContainer .imgbox {
+                margin-top: 10px !important;
+                margin-left: 120px !important;
+                width: 478px;
+                height: 478px;
+                background-repeat: no-repeat;
+                background-size: cover;
+                border: 1px solid #ccc;
+            }
+</style>
+<div class="clear"></div>
+<script>
+    jQuery(document).ready(function () {
+        jQuery('.scrollbar-macosx').scrollbar();
+    });
+</script>
+

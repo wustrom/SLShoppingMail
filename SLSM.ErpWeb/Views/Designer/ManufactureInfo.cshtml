@@ -1,0 +1,48 @@
+﻿
+@{
+    Layout = null;
+    var OrderText = ViewBag.OrderText;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/btable.css" rel="stylesheet" />
+    <link href="~/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Current/css/Table/Table.css" rel="stylesheet" />
+</head>
+
+<body style="">
+
+    <div style="margin:0px; background-color: white; margin:0 10px;min-width:1450px;">
+        <blockquote class="layui-elem-quote">
+            <form class="layui-form title-part" style="">
+                <div class="layui-inline">
+                    <select name="Production" lay-verify="" lay-search class="layui-input">
+                        <option value="0">全部订单</option>
+                        <option value="待生产确认">待生产确认</option>
+                        <option value="待生产">待生产</option>
+                        <option value="生产中">生产中</option>
+                        <option value="生产已完成">生产已完成</option>
+                    </select>
+                </div>
+
+            </form>
+            <div style="clear:both;"></div>
+        </blockquote>
+        <div id="content" style="width: 100%;height: 533px;"></div>
+        <input type="hidden" id="OrderText" value="@OrderText" />
+    </div>
+    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/Production/Production.js?version=20181017001"></script>
+</body>
+</html>

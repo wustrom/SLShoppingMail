@@ -1,0 +1,566 @@
+﻿@using DbOpertion.Models;
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    var user = (DbOpertion.Models.User)ViewBag.UserInfo;
+    var ShowgradeList = ViewBag.ShowgradeList == null ? new List<Showgradeinfo>() : (List<Showgradeinfo>)ViewBag.ShowgradeList;
+    var ListGrade = ViewBag.listGradeOfTitleInfo == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.listGradeOfTitleInfo;
+    var ListScence = ViewBag.listScence == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.listScence;
+    ShowgradeList = ShowgradeList.OrderBy(p => p.OrderCount).ToList();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="lsl" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="generator" content="webstorm" />
+    <!--移动端响应式-->
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no" />
+    <!--支持IE的兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit" />
+    <!--页面style css-->
+    <title>赛龙商城</title>
+    <link rel="stylesheet" href="~/Base/css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/Base/css/ydui.css?version=1.22" />
+    <link rel="stylesheet" type="text/css" href="~/Base/css/public.css?version=20181012" />
+    <link rel="stylesheet" href="~/Base/css/dy-css.css?version=1.07">
+    <link rel="stylesheet" href="~/Base/css/style.css?version=1.14">
+    <link href="~/Base/font/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Base/css/dajiangBasecss.css?version=201810251602" rel="stylesheet" />
+    <script src="~/Base/js/jquery-2.1.4.min.js"></script>
+    <style>
+
+
+        .aColor1 {
+            border: 2px solid rgb(0, 131, 115) !important;
+        }
+
+        .aColor2 {
+            border: medium none;
+        }
+
+        .ddStars1 {
+            /*background-color:red;*/
+        }
+        /*.span-check-on{
+            background-image:url("../Base/images/checked-on.png");
+            width:10px;
+            display:block;
+        }*/
+        .en-tick {
+            width: 0.45rem;
+            height: 0.45rem;
+            display: inline-block;
+            background: url(../current/images/icon/箭头.png) no-repeat center center;
+            vertical-align: middle;
+        }
+
+        .ddPrice1 {
+            color: rgb(0, 131, 115)
+        }
+
+        .layui-layer-btn .layui-layer-btn0 {
+            border-color: #008376 !important;
+            background-color: #008376 !important;
+            color: white !important;
+        }
+
+        .style__menu-item___28erN a {
+            background-color: transparent;
+        }
+
+        img {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+
+        .style__menu-item___28erN_parent {
+            margin: 0 -20px;
+        }
+
+            .style__menu-item___28erN_parent .style__menu-item___28erN {
+                margin: 0 20px;
+            }
+
+            .style__menu-item___28erN_parent:active {
+                background-color: #D9D9D9;
+            }
+
+        .s-btn.s-primary-btn.ItemActive {
+            background: #D9D9D9;
+        }
+
+        button.button__btn___Uhwzq.ItemActive {
+            background: #D9D9D9;
+        }
+
+        .quark-collapse-header-inner:active {
+            background: #d9d9d9;
+        }
+
+        .style__collapse-group___3pt3d li:active {
+            background: #d9d9d9;
+        }
+
+        .style__nav-item___3GmcR:active {
+            background: #d9d9d9;
+        }
+    </style>
+
+    @RenderSection("css", required: false)
+</head>
+<body style="overflow-x: hidden;">
+    <div id="panel" class="public-content-box bgfff " style="@RenderSection("overflow", required: false)">
+        <!--头部-->
+        <header class="public-head">
+            <span class="toggle-button menu"></span>
+            <span class="logo"><a></a></span>
+            <div class="right-box">
+                <ul class="clearfix">
+                    <li class="icon2" style="background: url(../../Base/images/se.png) no-repeat center/.66rem .59rem;">
+                        <a onclick="$('.index__search-panel___2Bs8-').addClass('index__open___2DgPH')"></a>
+                    </li>
+                    <li class="icon4" style="">
+                        <em>@ViewBag.HisdesignCount</em>
+                        <a href="../../ShopCart/Index"></a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!--头部  end-->
+        <div class="cart_tck" style="z-index:50;top: inherit;">
+            <ul>
+                @{
+                    var ListHisdesign = (List<SLSM.MoblieWeb.Models.Response.ShopCart.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+                    foreach (var item in ListHisdesign)
+                    {
+                        <li>
+                            <a onclick="window.location.href='../../Commodity/index?commodityId=@item.CommodityId&ShopCartId=@item.ShopCartId'">
+                                <img src="@ViewBag.AdminUrl@item.CommodityImg" alt="" />
+                                <dl>
+                                    <dd><strong>@item.CommodityName</strong></dd>
+                                    <dd><em></em><i>@item.Amount</i><label>@item.Color/@item.Attr</label></dd>
+                                    <dd><span class="s2">￥@item.Price</span></dd>
+                                </dl>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+            <p class="zj" onclick="fCharge()">总计:$@ViewBag.HisdesignPrice</p>
+            <a class="look_cart" onclick="window.location.href='../../ShopCart/Index'">查看购物车</a>
+        </div>
+        <div class="page-content">
+            @RenderBody()
+        </div>
+        <div class="Message-content" style="display:none;">
+            <div id="MessageInfo2" style="display: block;">
+                <div class="tz_sj">
+                    <strong> 优惠活动：2018年开通会员送礼包。</strong>
+                    <p>2018-01-19 18:26:17</p>
+                </div>
+                <div class="my_info">
+                    已实名认证的会员可以获得全年360元运费券礼包；礼包每月5日发放，优惠券领取及使用有效期截至每月20日，若有效期内未领取，则视为您放弃该项权益且不再补发；礼包在会员首页“我的礼包”里领取。
+                </div>
+                <div class="xz_btn">
+                    <a class="retern" onclick="$('.Message-content').hide();$('.page-content').show();">返回</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="style__nav-menu-ctn___1GbgE" style="display:none;">
+            <div class="typepage">
+                <div class="style__nav-items___1DXft">
+                    <div class="style__menu-item___28erN_parent">
+                        <div class="style__menu-item___28erN">
+                            @if (user != null)
+                            {
+                                <a href="../../userInfo/Index">我的帐号</a>
+                            }
+                            else
+                            {
+                                <a href="../Login/Index">登录</a>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="style__nav-subtitle___3PB9B">商品分类</div>
+                        <ul class="style__nav-menu-list___1dAMS">
+                            @foreach (var item in ShowgradeList)
+                            {
+                                var grade = ListGrade.Where(p => p.id == item.GradeId).FirstOrDefault();
+                                if (grade != null)
+                                {
+                                    <li class="style__menu-item___28erN_parent">
+                                        <div class="style__menu-item___28erN">
+                                            <a href="../../CommodityList/Index?gradeId=@grade.id">
+                                                <p class="style__menu-item-title___284s3">@grade.name</p>
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                            @foreach (var item in ListGrade)
+                            {
+                                var showgrade = ShowgradeList.Where(p => p.GradeId == item.id).FirstOrDefault();
+                                if (showgrade == null)
+                                {
+                                    <li class="style__menu-item___28erN_parent">
+                                        <div class="style__menu-item___28erN">
+                                            <a href="../../CommodityList/Index?gradeId=@item.id">
+                                                <p class="style__menu-item-title___284s3">@item.name</p>
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="style__nav-subtitle___3PB9B">应用场景</div>
+                        <ul class="style__nav-menu-list___1dAMS">
+                            @foreach (var item in ShowgradeList)
+                            {
+                                var scence = ListScence.Where(p => p.id == item.GradeId && !p.name.Contains("#")).FirstOrDefault();
+                                if (scence != null)
+                                {
+                                    <li class="style__menu-item___28erN_parent">
+                                        <div class="style__menu-item___28erN">
+                                            <a href="../../CommodityList/Index?gradeId=@scence.id">
+                                                <p class="style__menu-item-title___284s3">@scence.name</p>
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                            @foreach (var item in ListScence)
+                            {
+                                var showgrade = ShowgradeList.Where(p => p.GradeId == item.id).FirstOrDefault();
+                                if (showgrade == null && !item.name.Contains("#"))
+                                {
+                                    <li class="style__menu-item___28erN_parent">
+                                        <div class="style__menu-item___28erN">
+                                            <a href="../../CommodityList/Index?gradeId=@item.id">
+                                                <p class="style__menu-item-title___284s3">@item.name</p>
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="style__nav-subtitle___3PB9B">工艺介绍</div>
+                    </div>
+                    <div>
+                        <div class="style__nav-subtitle___3PB9B">关于我们</div>
+                        <ul class="style__nav-menu-list___1dAMS">
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/AboutUs?tabname=company_profile">
+                                        <span class="style__menu-item-title___284s3">公司介绍</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/AboutUs?tabname=exhibition">
+                                        <span class="style__menu-item-title___284s3">展会信息</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/AboutUs?tabname=news">
+                                        <span class="style__menu-item-title___284s3">最新动态</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/AboutUs?tabname=contact_the_salon">
+                                        <span class="style__menu-item-title___284s3">联系赛龙</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="style__nav-subtitle___3PB9B">购买指南</div>
+                        <ul class="style__nav-menu-list___1dAMS">
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/PurchaseGuide?tabname=account_management">
+                                        <span class="style__menu-item-title___284s3">账号管理</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/PurchaseGuide?tabname=shopping_guide">
+                                        <span class="style__menu-item-title___284s3">购物帮助</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/PurchaseGuide?tabname=payment_method">
+                                        <span class="style__menu-item-title___284s3">支付方式与发票</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/PurchaseGuide?tabname=order_info">
+                                        <span class="style__menu-item-title___284s3">订单帮助</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/PurchaseGuide?tabname=shipping_and_delivery">
+                                        <span class="style__menu-item-title___284s3">物流与发货</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="style__menu-item___28erN_parent">
+                                <div class="style__menu-item___28erN">
+                                    <a href="../../Helper/PurchaseGuide?tabname=refund_and_return_policy">
+                                        <span class="style__menu-item-title___284s3">退换货条款</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="style__product-help___3Gyhs">
+                    <h2 class="style__help-title___zoK6x">服务与支持</h2>
+                    <div class="style__help-detail___1D17m style__hidepanel___1UHci">
+                        <div class="style__detail-ctn___1KnlW">
+                            <div>
+                                <h3 class="region-name">中国大陆</h3>
+                                <p class="region-number">
+                                    <a href="tel:4008580505">4008580505</a>
+                                </p>
+                                <p class="region-time">周一至周日 9:00-21:00 (北京时间)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="style__help-list___1BPpg">
+                        <li class="style__help-icon-ctn___1ycOr style__email___Y3He-">
+                            <a href="mailto:event@syloon.com" class="style__help-link___3-Tsp"><div>邮箱</div></a>
+                        </li>
+                        <li class="style__help-icon-ctn___1ycOr style__chat___3pAlC">
+                            <a href="https://kefu.easemob.com/webim/im.html?configId=1154d2cc-7177-41fd-85b3-076fb71950ea" class="style__help-link___3-Tsp">在线交谈</a>
+                        </li>
+                        <li class="style__help-icon-ctn___1ycOr style__phone___2QnmG">
+                            <a href="tel:4008580505" class="style__help-link___3-Tsp">电话</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="style__nav-change-country___3Vbtg" style="display:none;">
+                    <a href="/cn/countries?refer=%2Fcn%2F">
+                        <span>更改国家或地区</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="../../commoditylist/search">
+        <div class="index__search-panel___2Bs8-">
+            <div class="index__form___Hbc83">
+                <div class="input__form___1xihR" action="">
+                    <label for="headerSearch" class="input__label___2tZ8q">
+                        <span class="input__search-icon___3jmiv">
+                            <i class="m-1zeNg m-3c0Qz" style="font-family: quark-mobile;"></i>
+                        </span>
+                        <input class="input__input___2dO9m" type="search" name="stext" placeholder="搜索产品" id="headerSearchInfo" value="">
+                        <input class="btn btn-searchInfo" type="button" value="" style="display:none;" />
+                    </label>
+                    <a role="presentation" class="input__cancel___3397w" onclick="$('.index__search-panel___2Bs8-').removeClass('index__open___2DgPH')">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <input type="hidden" id="HiddenAdminUrl" value="@ViewBag.AdminUrl" />
+    <script src="~/Base/js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/slideout.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/ydui.flexible.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/ydui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/public.js?version=20181911" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Current/js/jquery.easyui.mobile.js"></script>
+    <script src="~/Current/js/jquery.easyui.min.js"></script>
+    <script src="~/Current/js/easyloader.js"></script>
+    <script src="~/Current/js/ajax.js?version=1.0"></script>
+    <script src="~/plugins/layer/layer.js"></script>
+    <script src="~/Current/js/_Layout.js?version=1.11"></script>
+    @*<script src="https://kefu.easemob.com/webim/im.html?configId=71d8e16d-732a-4736-b6af-9f50986ece12"></script>*@
+    <script>
+        $('body').click(function () {
+            //$('.cart_tck,.icon4').click(function () {
+            //    $(this).css('background-color', '#e3e4e8');
+            //    $('.cart_tck').show();
+            //    return false;
+            //});
+            //$('.cart_tck').hide();
+            //$('.cart_tck,.icon4').css('background-color', '');
+        });
+        function DealertShow(that) {
+            $('.Message-content').show();
+            $('.page-content').hide();
+            $('.dealert .detailcontent .content .title1').html($(that).find('a').html().trim());
+            $('.dealert .detailcontent .content .time1').html($(that).find('span').html().trim());
+            $('.dealert .detailcontent .content .desc').html($(that).find('.dealert').val());
+        }
+        $(function () {
+            $('.public-side-box').show();
+            $('.toggle-button.menu').click(function () {
+                $('.page-content').toggle();
+                $('.style__nav-menu-ctn___1GbgE').toggle();
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
+                }
+                else {
+                    $(this).addClass('active');
+                }
+            })
+
+            $('.login-out .login-out-btn').click(function () {
+                jQuery.axpost('../../api/Home/ExitUserLogin', '{}', function (data) {
+                    layer.load(1);
+                    window.location.href = "../../Main/Index";
+                });
+            });
+        })
+    </script>
+    <!-- 消息框 -->
+    <script>
+        // #region 微信页面获取信息初始化
+    $(function () {
+        if (is_weixnHome()){
+            var vCode = getQueryString("code");
+            var access_token = "@Session["access_token"]";
+            if (access_token == "" || access_token == null) {
+                if (vCode != "" && vCode != null) {
+                    $.ajax({
+                        type: 'post',
+                        data: {
+                            code: vCode
+                        },
+                        url: '/Home/getWxInfo',
+                        success: function (sjson) {
+                            //layer.msg('欢迎您来到赛龙商城。');
+                        }
+                    })
+                }
+                else {
+                    $.ajax({
+                        type: 'post',
+                        url: '/Home/getCode',
+                        success: function (sjson) {
+                            if (sjson != "url为空。") {
+                                location.href = sjson;
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    })
+
+
+    function is_weixnHome(){
+        var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //获取url的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    // #endregion
+
+/*回到顶部*/
+
+    (function () {
+        var timeOutId;
+        $(window).scroll(function () {
+            var sc = $(window).scrollTop();
+
+            var rwidth = $(window).width();
+
+            if (sc > 0) {
+                $(".go-top").css("display", "block");
+                //设置30S后执行添加a标签点击事件
+                clearTimeout(timeOutId);
+                timeOutId = setTimeout(" $('.go-top').css('display', 'none');", 2000)
+            } else {
+                $(".go-top").css("display", "none");
+            }
+        })
+        $(".go-top").click(function () {
+
+            $('body,html,.gundong').animate({ scrollTop: 0 }, 500);
+            var sec = 1; //time
+            var interval = setInterval(function () {
+                sec--;
+                if (sec == 0) {
+                    var h = $("html,body,.gundong").scrollTop();
+                    //	          	console.log(h);
+                    if (h != 0) {
+                        $("html,body,.gundong").scrollTop(0);
+                    }
+                    clearInterval(interval); //close
+                };
+            }, 500);
+        })
+    })();
+
+
+    </script>
+
+    @*<script>
+            var selectedItem = null;
+            var selectedFlag = false;
+            $(function () {
+                $(".style__menu-item___28erN a").mousedown(function () {
+                    $(this).parent().parent().addClass("ItemActive");
+                    selectedItem = $(this);
+                    selectedFlag = true;
+                    setTimeout(function () {
+                        selectedFlag = false;
+                    }, 500);
+                });
+
+                $(".style__menu-item___28erN a").mouseup(function () {
+                    if (selectedFlag) {
+                        location.href = $(this).attr('href');
+                    }
+                    $(selectedItem).parent().parent().removeClass("ItemActive");
+                });
+
+            })
+        </script>*@
+    @RenderSection("js", required: false)
+    <script type="text/javascript" src="//js.users.51.la/19729317.js"></script>
+</body>
+</html>

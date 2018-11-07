@@ -1,0 +1,515 @@
+﻿@using DbOpertion.Models;
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var List_Commoditys = ViewBag.commodity == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.commodity;
+    var List_Grade = ViewBag.Grade == null ? new List<Grade>() : (List<Grade>)ViewBag.Grade;
+    var List_Images = ViewBag.Images == null ? new List<Carousel_Image>() : (List<Carousel_Image>)ViewBag.Images;
+    var AdminUrl = ViewBag.AdminUrl;
+    var List_Comm = ViewBag.listCommdity == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    var List_Commrecommends = ViewBag.Commrecommend == null ? new List<Commrecommend>() : (List<Commrecommend>)ViewBag.Commrecommend;
+    List_Commrecommends = List_Commrecommends.OrderBy(p => p.OrderID).ToList();
+    var ListGrade = ViewBag.listGradeOfTitleInfo == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.listGradeOfTitleInfo;
+    var ListScence = ViewBag.listScence == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.listScence;
+    var ListCommShow = ViewBag.CommShowList == null ? new List<Commshow>() : (List<Commshow>)ViewBag.CommShowList;
+    var ShowgradeList = ViewBag.ShowgradeList == null ? new List<Showgradeinfo>() : (List<Showgradeinfo>)ViewBag.ShowgradeList;
+    ShowgradeList = ShowgradeList.OrderBy(p => p.OrderCount).ToList();
+    List<Grade> AllListGrade = ViewBag.AllListGrade == null ? new List<Grade>() : (List<Grade>)ViewBag.AllListGrade;
+}
+
+@section css{
+    <link rel="stylesheet" href="~/Base/css/dy-css.css?Version=1.02" />
+    <style>
+        .swiper-slide {
+            overflow: hidden;
+        }
+
+        .swiper-slide-active {
+            overflow: auto !important;
+        }
+
+        img {
+            display: block;
+        }
+
+        .page-good-banner img {
+            height: 2.0rem;
+        }
+
+        .quark-collapse-header-icon.m-3c0Qz {
+            right: 0.3rem;
+        }
+
+        .index__product___2o7DE .Item__product___2gc66:active {
+            background-color: white;
+            opacity: 0.3;
+        }
+    </style>
+}
+
+@section js{
+    <script type="text/javascript" charset="utf-8">
+        function swiperTool() {
+            var swiperIndex = new Swiper('.page-banner-box', {
+                loop: true,
+                speed: 300,
+                autoplay: {
+                    delay: 3000
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+            });
+            var swiperGood = new Swiper('.page-good-banner .swiper-container', {
+                slidesPerView: 3,
+                spaceBetween: "2%",
+            });
+
+        };
+        swiperTool();
+        $('.quark-collapse-header').click(function () {
+            if ($(this).parent().hasClass('quark-collapse-item-active')) {
+                $(this).parent().find('.quark-collapse-content').removeClass('quark-collapse- content-active').addClass('quark-collapse-content-inactive');
+                $(this).parent().removeClass('quark-collapse-item-active');
+            }
+            else {
+                //$('.quark-collapse-item-active').removeClass('quark-collapse-item-active');
+                //$('.quark-collapse-content').removeClass('quark-collapse-content-active').addClass('quark-collapse-content-inactive')
+                $(this).parent().find('.quark-collapse-content').addClass('quark-collapse-content-active').removeClass('quark-collapse-content-inactive');
+                $(this).parent().addClass('quark-collapse-item-active');
+            }
+        })
+        function ShowDetail(that) {
+            $(that).hide();
+            $(that).parent().find('.index__product___2o7DE.index__product-small___39Ei3').each(function () {
+                $(this).show();
+            })
+        }
+
+        $("#top").click(function () {
+            $('body,html').animate({
+                scrollTop: 0
+            },
+                1000);
+            return false;
+        });
+
+
+        $(function () {
+            //$(".index__product___2o7DE .Item__product___2gc66").mousedown(function () {
+            //    $(this).addClass("ItemActive");
+            //    selectedItem = $(this);
+            //    setTimeout(function () {
+            //        $(selectedItem).removeClass("ItemActive");
+            //    }, 200);
+            //});
+
+            //$(".index__product___2o7DE .Item__product___2gc66").mouseup(function () {
+            //    if ($(this).hasClass("ItemActive")) {
+            //        location.href = $(this).attr('href');
+            //    }
+            //});
+        })
+    </script>
+}
+<!--大图轮播-->
+<div class="swiper-container page-banner-box">
+    <div class="swiper-wrapper">
+        @foreach (var item in List_Images)
+        {
+            <div class="swiper-slide">
+                <a href="@item.AUrl">
+                    <img src="@AdminUrl@item.Image" style="height:4.8rem;width:100%;">
+                </a>
+            </div>
+        }
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+<!--大图轮播 end-->
+<!--产品分类-->
+@foreach (var item in ShowgradeList)
+{
+    var Grade = AllListGrade.Where(p => p.Id == item.GradeId).FirstOrDefault();
+    var commShowList = ListCommShow.Where(p => p.GradeId == item.GradeId).ToList();
+    commShowList = commShowList.OrderBy(p => p.OrderId).ToList();
+    List<Commodity_Stageprice_View> CommList = new List<Commodity_Stageprice_View>();
+    if (Grade != null)
+    {
+        if (Grade.IsScene == true)
+        {
+            var ListCommId = commShowList.Select(p => p.CommId).ToList();
+            CommList = List_Comm.Where(p => !ListCommId.Contains(p.Id) && p.ScenceIds != null && p.ScenceIds.Contains($",{item.GradeId}|")).ToList();
+        }
+        else
+        {
+            List<int> childIdList = new List<int>();
+            childIdList.Add(Grade.Id);
+            var gradeFirstList = List_Grade.Where(p => p.ParentId == Grade.Id);
+            foreach (var gradeFirst in gradeFirstList)
+            {
+                childIdList.Add(gradeFirst.Id);
+                var gradeSecondList = List_Grade.Where(p => p.ParentId == gradeFirst.Id).ToList();
+                foreach (var gradeSecond in gradeSecondList)
+                {
+                    childIdList.Add(gradeSecond.Id);
+                }
+            }
+            var ListCommId = commShowList.Select(p => p.CommId).ToList();
+            CommList = List_Comm.Where(p => !ListCommId.Contains(p.Id) && childIdList.Contains(p.GradeId.Value)).ToList();
+        }
+        if (CommList.Count > 0)
+        {
+            <div>
+                <div class="plpr20 page-goods-class pt40">
+                    <h2 class="public-box-title">@(Grade.IsScene != true ? Grade.Name : Grade.Name.Replace("#", ""))</h2>
+                </div>
+                @{
+                    var count = 0;
+                    foreach (var commShow in commShowList)
+                    {
+                        var comm = List_Comm.Where(p => p.Id == commShow.CommId).FirstOrDefault();
+                        if (comm != null)
+                        {
+                            count++;
+                            <li class="index__product___2o7DE index__product-small___39Ei3">
+                                <a href="../../Commodity/Index?CommodityId=@comm.Id" class="Item__product___2gc66 Item__product-small___1t73E">
+                                    <div class="Item__image-holder___HhoSf">
+                                        <img class="Item__image___3NVC9" src="@ViewBag.AdminUrl@comm.Image">
+                                    </div>
+                                    <div class="Item__info___3VZYt">
+                                        <div class="Item__title___3Q70F">@comm.Name</div>
+                                        <div class="Price__info___1vzHs Price__visible___3735J">
+                                            <span class="Price__price___334ig">¥@comm.minPrice</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                    foreach (var comm in CommList)
+                    {
+                        var commShow = commShowList.Where(p => p.CommId == comm.Id).FirstOrDefault();
+                        if (commShow == null)
+                        {
+                            if (count < 8)
+                            {
+                                count++;
+                                <li class="index__product___2o7DE index__product-small___39Ei3">
+                                    <a href="../../Commodity/Index?CommodityId=@comm.Id" class="Item__product___2gc66 Item__product-small___1t73E">
+                                        <div class="Item__image-holder___HhoSf">
+                                            <img class="Item__image___3NVC9" src="@ViewBag.AdminUrl@comm.Image">
+                                        </div>
+                                        <div class="Item__info___3VZYt">
+                                            <div class="Item__title___3Q70F">@comm.Name</div>
+                                            <div class="Price__info___1vzHs Price__visible___3735J">
+                                                <span class="Price__price___334ig">¥@comm.minPrice</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                count++;
+                                <li class="index__product___2o7DE index__product-small___39Ei3" style="display:none;">
+                                    <a href="../../Commodity/Index?CommodityId=@comm.Id" class="Item__product___2gc66 Item__product-small___1t73E">
+                                        <div class="Item__image-holder___HhoSf">
+                                            <img class="Item__image___3NVC9" src="@ViewBag.AdminUrl@comm.Image">
+                                        </div>
+                                        <div class="Item__info___3VZYt">
+                                            <div class="Item__title___3Q70F">@comm.Name</div>
+                                            <div class="Price__info___1vzHs Price__visible___3735J">
+                                                <span class="Price__price___334ig">¥@comm.minPrice</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    }
+                    if (count > 8)
+                    {
+                        <a href="javascript:;" class="index__more___3eQow" onclick="ShowDetail(this)">
+                            更多...
+                        </a>
+                    }
+                    <div style="clear:both;"></div>
+                }
+            </div>
+        }
+    }
+
+}
+
+<!--产品分类 end -->
+<section class="index__block-components___23WS3 m-1UGWW m-1xBz7">
+    <div class="">
+        <div class="index__large___2J6PC">
+            <nav class="style__footer-navigation___qh98d">
+                <div class="quark-collapse quark-collapse-tight style__collapse-nav___38YSk" role="tablist">
+                    <div class="quark-collapse-item">
+                        <div class="quark-collapse-header" role="tab" tabindex="0" aria-expanded="false">
+                            <div class="quark-collapse-header-inner">
+                                <div class="quark-collapse-header-title">
+                                    <span class="style__title___1YACv">
+                                        我的账号
+                                    </span>
+                                </div>
+                                <div class="quark-collapse-quark-collapse-header-icon">
+                                    <i class="m-627K0 quark-collapse-header-icon quark-collapse-header-icon-minus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                    <i class="m-34X92 quark-collapse-header-icon quark-collapse-header-icon-plus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quark-collapse-content quark-collapse-content-inactive" role="tabpanel">
+                            <div class="quark-collapse-content-box">
+                                <ul class="style__collapse-group___3pt3d">
+                                    <li>
+                                        <a href="../../UserInfo/Info">
+                                            <span class="style__title___1YACv">我的帐号</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../../UserInfo/MyOrderList">
+                                            <span class="style__title___1YACv">我的订单</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quark-collapse-item quark-collapse-item-active">
+                        <div class="quark-collapse-header" role="tab" tabindex="0">
+                            <div class="quark-collapse-header-inner">
+                                <div class="quark-collapse-header-title">
+                                    <span class="style__title___1YACv">商品分类</span>
+                                </div>
+                                <div class="quark-collapse-quark-collapse-header-icon">
+                                    <i class="m-627K0 quark-collapse-header-icon quark-collapse-header-icon-minus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                    <i class="m-34X92 quark-collapse-header-icon quark-collapse-header-icon-plus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quark-collapse-content quark-collapse-content-active" role="tabpanel">
+                            <div class="quark-collapse-content-box">
+                                <ul class="style__collapse-group___3pt3d">
+                                    @foreach (var item in ShowgradeList)
+                                    {
+                                        var grade = ListGrade.Where(p => p.id == item.GradeId).FirstOrDefault();
+                                        if (grade != null)
+                                        {
+                                            <li>
+                                                <a href="../../CommodityList/Index?gradeId=@grade.id">
+                                                    <span class="style__title___1YACv">@grade.name</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                    @foreach (var item in ListGrade)
+                                    {
+                                        var showgrade = ShowgradeList.Where(p => p.GradeId == item.id).FirstOrDefault();
+                                        if (showgrade == null)
+                                        {
+                                            <li>
+                                                <a href="../../CommodityList/Index?gradeId=@item.id">
+                                                    <span class="style__title___1YACv">@item.name</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quark-collapse-item quark-collapse-item-active">
+                        <div class="quark-collapse-header" role="tab" tabindex="0">
+                            <div class="quark-collapse-header-inner">
+                                <div class="quark-collapse-header-title">
+                                    <span class="style__title___1YACv">应用场景</span>
+                                </div>
+                                <div class="quark-collapse-quark-collapse-header-icon">
+                                    <i class="m-627K0 quark-collapse-header-icon quark-collapse-header-icon-minus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                    <i class="m-34X92 quark-collapse-header-icon quark-collapse-header-icon-plus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quark-collapse-content quark-collapse-content-active " role="tabpanel">
+                            <div class="quark-collapse-content-box">
+                                <ul class="style__collapse-group___3pt3d">
+                                    @foreach (var item in ShowgradeList)
+                                    {
+                                        var scence = ListScence.Where(p => p.id == item.GradeId).FirstOrDefault();
+                                        if (scence != null && !scence.name.Contains("#"))
+                                        {
+                                            <li>
+                                                <a href="../../CommodityList/Index?gradeId=@scence.id">
+                                                    <span class="style__title___1YACv">@scence.name</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                    @foreach (var item in ListScence)
+                                    {
+                                        var showgrade = ShowgradeList.Where(p => p.GradeId == item.id).FirstOrDefault();
+                                        if (showgrade == null && !item.name.Contains("#"))
+                                        {
+                                            <li>
+                                                <a href="../../CommodityList/Index?gradeId=@item.id">
+                                                    <span class="style__title___1YACv">@item.name</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quark-collapse-item">
+                        <div class="quark-collapse-header" role="tab" tabindex="0">
+                            <div class="quark-collapse-header-inner">
+                                <div class="quark-collapse-header-title">
+                                    <span class="style__title___1YACv">
+                                        工艺介绍
+                                    </span>
+                                </div>
+                                <div class="quark-collapse-quark-collapse-header-icon">
+                                    <i class="m-627K0 quark-collapse-header-icon quark-collapse-header-icon-minus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                    <i class="m-34X92 quark-collapse-header-icon quark-collapse-header-icon-plus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quark-collapse-content quark-collapse-content-inactive" role="tabpanel">
+                            <div class="quark-collapse-content-box">
+                                <ul class="style__collapse-group___3pt3d">
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="style__title___1YACv">工艺介绍</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quark-collapse-item">
+                        <div class="quark-collapse-header" role="tab" tabindex="0">
+                            <div class="quark-collapse-header-inner">
+                                <div class="quark-collapse-header-title">
+                                    <span class="style__title___1YACv">
+                                        关于我们
+                                    </span>
+                                </div>
+                                <div class="quark-collapse-quark-collapse-header-icon">
+                                    <i class="m-627K0 quark-collapse-header-icon quark-collapse-header-icon-minus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                    <i class="m-34X92 quark-collapse-header-icon quark-collapse-header-icon-plus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quark-collapse-content quark-collapse-content-inactive" role="tabpanel">
+                            <div class="quark-collapse-content-box">
+                                <ul class="style__collapse-group___3pt3d">
+                                    <li>
+                                        <a href="../../Helper/AboutUs?tabname=company_profile">
+                                            <span class="style__title___1YACv">公司介绍</span>
+                                        </a>
+                                        <a href="../../Helper/AboutUs?tabname=exhibition">
+                                            <span class="style__title___1YACv">展会信息</span>
+                                        </a>
+                                        <a href="../../Helper/AboutUs?tabname=recruitment_elites">
+                                            <span class="style__title___1YACv">招聘精英</span>
+                                        </a>
+                                        <a href="../../Helper/AboutUs?tabname=news">
+                                            <span class="style__title___1YACv">最新动态</span>
+                                        </a>
+                                        <a href="../../Helper/AboutUs?tabname=contact_the_salon">
+                                            <span class="style__title___1YACv">联系赛龙</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quark-collapse-item">
+                        <div class="quark-collapse-header" role="tab" tabindex="0" aria-expanded="true">
+                            <div class="quark-collapse-header-inner">
+                                <div class="quark-collapse-header-title">
+                                    <span class="style__title___1YACv">
+                                        购买指南
+                                    </span>
+                                </div>
+                                <div class="quark-collapse-quark-collapse-header-icon">
+                                    <i class="m-627K0 quark-collapse-header-icon quark-collapse-header-icon-minus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                    <i class="m-34X92 quark-collapse-header-icon quark-collapse-header-icon-plus m-3c0Qz" style="font-size:12px;line-height:24px;font-family:quark-mobile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quark-collapse-content quark-collapse-content-inactive" role="tabpanel">
+                            <div class="quark-collapse-content-box">
+                                <ul class="style__collapse-group___3pt3d">
+                                    <li>
+                                        <a href="../../Helper/PurchaseGuide?tabname=account_management">
+                                            <span class="style__title___1YACv">账号管理</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../../Helper/PurchaseGuide?tabname=shopping_guide">
+                                            <span class="style__title___1YACv">购物帮助</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../../Helper/PurchaseGuide?tabname=payment_method">
+                                            <span class="style__title___1YACv">支付方式与发票</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../../Helper/PurchaseGuide?tabname=order_info">
+                                            <span class="style__title___1YACv">订单帮助</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../../Helper/PurchaseGuide?tabname=shipping_and_delivery">
+                                            <span class="style__title___1YACv">物流与发货</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../../Helper/PurchaseGuide?tabname=refund_and_return_policy">
+                                            <span class="style__title___1YACv">退换货条款</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<footer class="style__footer___qYK8J">
+    <div class="style__navigation___1BMaA">
+        <a class="style__nav-item___3GmcR" href="javascript:;" target="_blank" rel="noopener">SYLOON.CN</a>
+        <a class="style__nav-item___3GmcR" href="../../Helper/PrivacyPolicy" target="_blank" rel="noopener">隐私政策</a>
+        <a class="style__nav-item___3GmcR" href="../../Helper/TermOfUser" target="_blank" rel="noopener">使用条款</a>
+    </div>
+    <div class="style__country-selector___150lw">
+        <a href="javascript:;">
+            <div class="m-1M0tP style__country-text___1pqMH">
+                <div class="m-3RCO6">
+                    中国大陆
+                    ( 简体中文 / ¥ CNY )
+                </div>
+                <div class="m-2rbuV">
+                    <i class="m-1XEsT m-18iay m-3c0Qz" style="font-family:quark-mobile"></i>
+                </div>
+            </div>
+        </a>
+    </div><div class="style__copyright___1HHS7">
+        版权所有© 2018 赛龙礼品保留所有权利
+    </div>
+</footer>
+<!--浮动nav-->
+<div id="top" class="go-top"></div>

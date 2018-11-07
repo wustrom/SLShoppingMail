@@ -1,0 +1,1111 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    //颜色
+    var TupleList = (List<Tuple<string, string, string>>)ViewBag.TupleList;
+    var thisColorList = (List<Colorinfo>)ViewBag.thisColorList;
+    var newColorList = new List<Colorinfo>();
+    //商品信息
+    var UserInfo = (User)ViewBag.UserInfo;
+    var ViewModel = (Grade_Commodity_View)ViewBag.Commodity;
+    ViewModel.Sales = ViewModel.Sales == null ? 0 : ViewModel.Sales;
+    var StagePriceList = (List<Commodity_Stage_Price>)ViewBag.StagePriceList;
+    var ZeroStagePrice = StagePriceList.OrderBy(p => p.StageAmount).FirstOrDefault();
+    if (ZeroStagePrice == null)
+    {
+        ZeroStagePrice = new Commodity_Stage_Price { StageAmount = 0, StagePrice = 0 };
+    }
+    float DisCount = 1;
+    if (UserInfo != null)
+    {
+        DisCount = UserInfo.Discount == null ? 0 : UserInfo.Discount.Value;
+    }
+    //类别
+    var List_GradeAttr = (List<Grade_Attr>)ViewBag.GradeAttr;
+    var MinPrice = StagePriceList.OrderBy(p => p.StagePrice).FirstOrDefault().StagePrice;
+    var count = 0;
+    var AdminUrl = ViewBag.AdminUrl;
+    Shopcart ShopCart = ViewBag.ShopCart == null ? new Shopcart() : (Shopcart)ViewBag.ShopCart;
+    var Material = ViewBag.Material == null ? new Raw_Materials() : (Raw_Materials)ViewBag.Material;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    var TechnologyList = ViewBag.TechnologyList == null ? new List<Technology>() : (List<Technology>)ViewBag.TechnologyList;
+    List<string> CommdityInfoList = new List<string>();
+    if (ViewModel.CommodityInfo != null)
+    {
+        CommdityInfoList = ViewModel.CommodityInfo.Split('|').Where(p => !string.IsNullOrEmpty(p) && p.Contains(',')).Distinct().ToList();
+    }
+}
+@section css{
+    <style>
+        .content-part {
+            width: 1200px;
+            margin: auto;
+        }
+
+        .shoporder .prodetail .rightde .color_info .color_list .color_box.current {
+            background: #BFBFBF;
+        }
+
+        .prodetail {
+            padding-bottom: 50px;
+        }
+
+        .shoporder .titlem {
+            background: #BFBFBF;
+        }
+
+            .shoporder .titlem .s1 em img {
+                width: 19px;
+                height: 19px;
+            }
+
+        .shoporder .pllist li .s2 {
+            width: 965px;
+        }
+
+        .dealert .detailcontent .content .del {
+            background: #BFBFBF;
+        }
+
+        .default-link-style.clearfix img {
+            text-align: center;
+        }
+
+        .style__slider___1tQak .style__slide-item___24smX a img {
+            max-height: 400px;
+        }
+
+        .styles__attr-section___1n96r li {
+            height: 87px;
+            line-height: 22px;
+            font-size: 14px;
+            float: left;
+            margin-right: 4px;
+            border-radius: 2px;
+            text-align: center;
+            cursor: pointer;
+            min-width: 83px;
+            background-color: #D9D9D9;
+        }
+
+            .styles__attr-section___1n96r li.current {
+                border-color: #D9D9D9;
+                background: #D9D9D9;
+                box-shadow: 0 15px 15px -10px rgba(0,0,0,.15);
+            }
+
+                .styles__attr-section___1n96r li.current .title {
+                    background: #fabe00;
+                }
+
+            .styles__attr-section___1n96r li.current {
+                box-shadow: 0px 0px 4px #fabe00;
+            }
+
+
+            .styles__attr-section___1n96r li .title {
+                background-color: #008375;
+                color: white;
+                height: 40px;
+                padding-top: 8px;
+                font-weight: bold;
+                font-size: 17px;
+            }
+
+        .styles__attr-section___1n96r .ordersom li .title {
+            margin-left: 10px;
+            margin-right: 10px;
+            line-height: 22px;
+            background: white;
+            border-bottom: 1px solid #646464;
+            color: black;
+        }
+
+        .styles__attr-section___1n96r li .num {
+            line-height: 43px;
+            background-color: #BFBFBF;
+            color: white;
+            margin-top: 3px;
+        }
+
+        .num_input {
+            float: left;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+            .num_input input {
+                width: 90px;
+                height: 30px;
+                padding: 1px 1px;
+                text-align: center;
+            }
+
+            .num_input .s1 em {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+        .dealert.UserLogin .content {
+            margin: 0 auto;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            min-height: 240px;
+            background: #fff;
+            width: 760px;
+            padding: 80px 80px;
+        }
+
+        .Dialog__success___1LQ9Z .Dialog__icon-container___3I950 {
+            color: #27ae60;
+        }
+
+        .Dialog__icon-container___3I950 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .Dialog__success___1LQ9Z h3 {
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .dealert.UserLogin .detailcontent {
+            width: 920px;
+        }
+
+        .Dialog__dialog___1pLKt.Dialog__confirm___2avn4.Dialog__lite___7ndzX {
+            padding: 80px 80px;
+            margin-left: -80px;
+        }
+
+        .top-part .second-line .left-part ul li {
+            height: 60px;
+        }
+
+        .btn.bigger.primary.styles__action-button___1P1wp {
+            height: 39px;
+            line-height: 39px;
+            width: 145px;
+            background-color: white;
+            color: #008375;
+            border: 1px solid #808080;
+            padding: 0px;
+            margin-right: 28px;
+        }
+
+        .top-part .second-line .left-part ul li:first-child {
+            height: 55px !important;
+        }
+
+        .top-part .second-line .left-part ul li:nth-child(2) {
+            height: 55px !important;
+        }
+
+        .top-part .second-line .left-part ul li {
+            height: 55px !important;
+        }
+    </style>
+    <link href="~/Current/css/diy.css?version=1.04" rel="stylesheet" />
+    <link href="~/Current/css/diyBase.css?version=1.11" rel="stylesheet" />
+}
+
+@section js{
+    <script>
+
+        // #region 购物车方法
+
+        function ShopCartFunc() {
+            var datas = new Object();
+            datas.CommodityId = $('#hidCommodityId').val();
+            var num = $(".num_input input").val();
+            if (isNaN(num) || num == "") {
+                layer.msg("请输入购买数量，不能含字母！");
+                return;
+            }
+            datas.Amount = num;
+            datas.Color = $('input[name="颜色"]:checked').val();
+            $('.dealert.UserLogin').show();
+            debugger;
+            $('.dealert.UserLogin .detailcontent .h2tit span').html("加入购物车");
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(0)').html("加入购物车");
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(1)').html($('.style__product-title___2DEfZ').html().trim());
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(2)').html(datas.Color);
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(3)').html(datas.Amount);
+        }
+
+        function BuyImmediately() {
+            debugger;
+            var datas = new Object();
+            datas.CommodityId = $('#hidCommodityId').val();
+            var num = $(".num_input input").val();
+            if (isNaN(num) || num == "") {
+                layer.msg("请输入购买数量，不能含字母！");
+                return;
+            }
+            datas.Amount = num;
+            datas.Color = $('input[name="颜色"]:checked').val();
+            $('.dealert.UserLogin').show();
+
+            $('.dealert.UserLogin .detailcontent .content .h3tit span:eq(0)').html("立刻购买");
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(0)').html("立刻购买");
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(1)').html($('.style__product-title___2DEfZ').html().trim());
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(2)').html(datas.Color);
+            $('.dealert.UserLogin .detailcontent .content h2 span:eq(3)').html(datas.Amount);
+        }
+
+        function AddCart() {
+            var datas = new Object();
+            datas.CommodityId = $('#hidCommodityId').val();
+            var num = $(".num_input input").val();
+            if (isNaN(num) || num == "") {
+                layer.msg("请输入购买数量，不能含字母！");
+                return;
+            }
+            datas.Amount = num;
+            datas.Color = $('input[name="颜色"]:checked').val();
+            datas.PrintingMethod = $("input[name='printFunc']:checked").val();
+            //datas.Attr = $('.height2 .right select option:selected').html();
+            datas.ShopCartId = $("#hidShopCartId").val();
+            if ($('#login').length != 0) {
+                datas.Moblie = $('#InputPhone').val();
+                if (IsNullOrEmpty(datas.Moblie)) {
+                    layer.msg("请输入手机号码！");
+                    return;
+                }
+                datas.VaildCode = $('#PhoneCode2').val();
+                if (IsNullOrEmpty(datas.VaildCode)) {
+                    layer.msg("请输入验证码！");
+                    return;
+                }
+            }
+            jQuery.axadminpost('../../Api/UpImg/AddCartFunc', datas, function (data) {
+                if ($('.dealert.UserLogin .detailcontent .h2tit span').html() == "加入购物车") {
+                    window.location.href = "/../../ShopCart/Index";
+                }
+                else {
+                    window.location.href = "/../../PayPage/Index?ShopCartId=" + data.Message;
+                }
+
+            });
+        }
+
+        function SendInputPhoneCode() {
+            var obj = new Object();
+            obj.UserPhone = $('#InputPhone').val();
+            if (obj.UserPhone.length != 11) {
+                layer.msg("手机号长度不正确");
+                return;
+            }
+            obj.IsThild = true;
+            jQuery.axpost('../../api/Home/SendPhoneCode', JSON.stringify(obj), function (data) {
+                layer.msg(data.Message);
+            })
+        }
+
+        //替换所有html的特殊符号
+        function repalceKey(str) {
+            str = str.replace(/'/g, "Single_quotation&marks");
+            str = str.replace(/\"/g, 'Double_quotation&marks');
+            str = str.replace(/\\/g, 'BackSlash&marks');
+            return str;
+        }
+        // #endregion
+
+        // #region 是否为空
+        function IsNullOrEmpty(value) {
+            if (value == null || value == undefined || value == "") {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function IsNullOrEmpty2(value) {
+            if (value == null || value == undefined || value == "" || value == -1 || value == "-1") {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        // #endregion
+
+        $(function () {
+            bodyScroll();
+            // #region 轮播图扩大后按钮
+            $("button.style__close-btn___1GIA2").click(function () {
+                $(this).parent().removeClass('style__modal___3yKZK');
+                $(this).parent().find('.style__pagings-container___3Ubel.detailInfo').show();
+                $("button.style__close-btn___1GIA2").hide();
+                $("div.style__nav-controller___11v9f").hide();
+            });
+
+            $(".style__nav-controller___11v9f .style__prev___3tbbs").click(function () {
+                var slideitem = $('.style__slide-item___24smX.style__active___1aTdn').prev('.style__slide-item___24smX');
+                if (slideitem.length == 0) {
+                    slideitem = $('.style__slide-item___24smX').last();
+                }
+                $('.style__slide-item___24smX').removeClass('style__active___1aTdn');
+                slideitem.addClass('style__active___1aTdn');
+                var pagingitem = $('.style__paging-item___1pzla.style__active___1aTdn').prev('.style__paging-item___1pzla');
+                if (pagingitem.length == 0) {
+                    pagingitem = $('.style__paging-item___1pzla').last();
+                }
+                $('.style__paging-item___1pzla').removeClass('style__active___1aTdn');
+                pagingitem.addClass('style__active___1aTdn');
+
+            })
+
+            $(".style__nav-controller___11v9f .style__next___16LaI").click(function () {
+                var slideitem = $('.style__slide-item___24smX.style__active___1aTdn').next('.style__slide-item___24smX');
+                if (slideitem.length == 0) {
+                    slideitem = $('.style__slide-item___24smX').first();
+                }
+                $('.style__slide-item___24smX').removeClass('style__active___1aTdn');
+                slideitem.addClass('style__active___1aTdn');
+                var pagingitem = $('.style__paging-item___1pzla.style__active___1aTdn').next('.style__paging-item___1pzla');
+                if (pagingitem.length == 0) {
+                    pagingitem = $('.style__paging-item___1pzla').first();
+                }
+                $('.style__paging-item___1pzla').removeClass('style__active___1aTdn');
+                pagingitem.addClass('style__active___1aTdn');
+            })
+            $("button.style__close-btn___1GIA2").hide();
+            $("div.style__nav-controller___11v9f").hide();
+
+            // #endregion
+
+            // #region 轮播图扩大按钮
+            $(".style__slide-item___24smX").click(function () {
+                if ($(this).hasClass('style__active___1aTdn')) {
+                    $(".style__pagings-container___3Ubel.detailInfo").hide();
+                    $(this).parent().parent().parent().parent().addClass('style__modal___3yKZK');
+                    $("button.style__close-btn___1GIA2").show();
+                    $("div.style__nav-controller___11v9f").show();
+                }
+            })
+            // #endregion
+
+            // #region 轮播图切换按钮
+            $(".style__paging-item___1pzla").click(function () {
+                if (!$(this).hasClass('style__active___1aTdn')) {
+                    $(".style__paging-item___1pzla").removeClass('style__active___1aTdn');
+                    $(this).addClass('style__active___1aTdn');
+                    var roleIndex = $(this).attr('roleIndex');
+                    $(".style__slide-item___24smX").removeClass('style__active___1aTdn');
+                    $(".style__slide-item___24smX").each(function () {
+                        if (roleIndex == $(this).attr('roleIndex')) {
+                            $(this).addClass('style__active___1aTdn');
+                        }
+                    })
+                }
+            })
+            // #endregion
+
+            // #region 颜色切换轮播图
+            $(".styles__wrapper___9REzI").click(function () {
+                $(this).parent().find("input[name='颜色']").trigger('click');
+            })
+            $("input[name='颜色']").click(function () {
+                var Id = $(this).attr('id');
+                var Name = $(this)[0].defaultValue;
+                var stocknum = $(this).attr('stocknum');
+                $('.styles__attr-section___1n96r .stockNum').html(stocknum);
+                $('.style__paginations___1HX_4 .style__paging-item___1pzla').each(function () {
+                    if ($(this).attr('colorindex') == Id) {
+                        $(".style__paging-item___1pzla").removeClass('style__active___1aTdn');
+                        $(this).addClass('style__active___1aTdn');
+                    }
+                });
+
+                $('.style__slide-item___24smX').each(function () {
+                    if ($(this).attr('colorindex') == Id) {
+                        $(".style__slide-item___24smX").removeClass('style__active___1aTdn');
+                        $(this).addClass('style__active___1aTdn');
+                    }
+                });
+            })
+            //$("input[name='颜色']:checked").trigger('click');
+            // #endregion
+
+            $(".styles__attr-section___1n95r section .rightpart .radio").click(function () {
+                $(".styles__attr-section___1n95r section .rightpart .radio").removeClass("active");
+                $(this).addClass("active");
+                $(".styles__attr-section___1n95r section .rightpart .radio input").each(function () {
+                    var that = $(this);
+                    $(that)[0].checked = false;
+                })
+                $(this).children("input")[0].checked = true;
+                var saleinfo = $(this).children("input").attr("saleinfo");
+                var saleinfoarray = saleinfo.split('|');
+                for (var i = 0; i < saleinfoarray.length; i++) {
+                    var saleArray = saleinfoarray[i].split(",");
+                    $(".styles__attr-section___1n96r li .title label").each(function () {
+                        if (saleArray[0].trim() == $(this).html().trim()) {
+                            $(this).parent().parent().find(".num label").html(saleArray[1]);
+                        }
+                    })
+                }
+                $('.num_input input').trigger('change');
+            })
+            $(".styles__attr-section___1n95r section .rightpart .radio:first").trigger("click");
+
+
+            //文本框改变
+            $('.num_input input').change(function () {
+                StagePrice();
+                var nowprice = $('#NowPrice').html();
+                var numInput = parseInt($('.num_input input').val());
+                $(".styles__attr-section___1n96r li").each(function () {
+                    var titleMoney = $(this).children('.title')[0].innerText;
+                    var num = parseInt(titleMoney);
+                    var titlePrice = $(this).children('.num').children('label')[0].innerText;
+                    if (parseFloat(titlePrice) == parseFloat(nowprice) && num >= numInput) {
+                        $('.styles__attr-section___1n96r section ul li').removeClass('current');
+                        $(this).addClass('current');
+                        return false;
+                    }
+                });
+            })
+            //按钮点击
+            $('.styles__attr-section___1n96r li').click(function () {
+                var text = $(this).find('.title label')[0].innerText;
+                $('.styles__attr-section___1n96r li').removeClass('current');
+                if (!isNaN(text)) {
+                    $('.num_input input').val(parseInt(text));
+                }
+                else {
+                    $('.num_input input').val(1);
+                }
+                $(this).addClass('current');
+                StagePrice();
+            })
+
+            $('.num_input input').trigger('change');
+            //当前属于哪个价格
+
+            function StagePrice() {
+                var num = $('.num_input input').val();
+                var titleNum = 0;
+                var titleNumPrice = 0;
+                if (num == "") {
+                    num = "0";
+                }
+                var IntNum = parseInt(num);
+                if (isNaN(num) || IntNum < 0 || num.indexOf(".") > -1) {
+                    layer.msg("请输入正整数！");
+                    $('.num_input input').val('0');
+                    $('#NowPrice').html('0.00');
+                    $('#TotalPrice').html('0.00');
+                }
+                else {
+                    $('.num_input input').val(IntNum);
+                    $(".styles__attr-section___1n96r li").each(function () {
+                        var titleMoney = $(this).find('.title label')[0].innerText;
+                        var titlePrice = $(this).children('.num').children('label')[0].innerText;
+                        if (!isNaN(titleMoney) && parseInt(titleMoney) < IntNum + 1) {
+                            if (titleNum < parseInt(titleMoney)) {
+                                titleNum = parseInt(titleMoney);
+                                titleNumPrice = parseFloat(titlePrice);
+                            }
+                        }
+                        else if (isNaN(titleMoney)) {
+                            if (titleNum == 0) {
+                                titleNum = 0;
+                                titleNumPrice = parseFloat(titlePrice);
+                            }
+                        }
+                    });
+                }
+                if (titleNumPrice != 0 && titleNumPrice != undefined) {
+                    var IntNum = parseInt(num);
+                    $('#NowPrice').html(titleNumPrice);
+                    if (discount != null && discount != undefined && discount != "") {
+                        var discount = parseFloat($('#discount').val());
+                        $('#MemPrice').html((titleNumPrice * discount).toFixed(2));
+                        $('#TotalPrice').html((titleNumPrice * IntNum * discount).toFixed(2));
+                    }
+                    else {
+                        $('#MemPrice').html((titleNumPrice).toFixed(2));
+                        $('#TotalPrice').html((titleNumPrice * IntNum).toFixed(2));
+                    }
+
+
+                }
+            }
+        })
+
+    </script>
+    @*<script src="~/Current/script/diy.js?version=1.10"></script>*@
+}
+<div class="HiddenDiv">
+    <input type="hidden" id="discount" value="@DisCount" />
+    <input type="hidden" id="hidCommodityId" value="@ViewModel.Id" />
+    <input type="hidden" id="hidShopCartId" value="@ShopCart.Id" />
+</div>
+<main id="app">
+    <main class="style__app___159-r" data-reactroot="">
+        <main class="page-container style__bg-white___2TD_d" id="product-page">
+            <div class="style__product___3iYlO style__border-bottom___2meCI">
+                <div class="wrapper style__wrapper___3RrP0">
+                    <section class="index__section___2-jwJ">
+                        <div class="section-container">
+                            <ul class="index__breadcrumbs___30JIm">
+                                @{
+                                    var listGrade = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listGradeOfTitle;
+                                    var grade = new SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes();
+                                    foreach (var item_Level1 in listGrade)
+                                    {
+                                        foreach (var item_Level2 in item_Level1.listGrade)
+                                        {
+                                            grade = item_Level2.listGrade.Where(p => p.id == ViewModel.GradeId).FirstOrDefault();
+                                            if (grade != null)
+                                            {
+                                                <li class="index__breadcrumb-item___2tHRR">
+                                                    <a href="/Main/Index">商城首页</a>
+                                                </li>
+                                                <li class="index__breadcrumb-item___2tHRR">
+                                                    <a href="/CommodityList/Index?gradeId=@item_Level1.id">@item_Level1.name</a>
+                                                </li>
+                                                <li class="index__breadcrumb-item___2tHRR">
+                                                    <a href="/CommodityList/Index?gradeId=@item_Level2.id&IsMoreInfo=true">@item_Level2.name</a>
+                                                </li>
+                                                <li class="index__breadcrumb-item___2tHRR">
+                                                    <a href="/CommodityList/Index?gradeId=@grade.id&IsMoreInfo=true">@grade.name</a>
+                                                </li>
+                                                break;
+                                            }
+                                        }
+                                        grade = item_Level1.listGrade.Where(p => p.id == ViewModel.GradeId).FirstOrDefault();
+                                        if (grade != null)
+                                        {
+                                            <li class="index__breadcrumb-item___2tHRR">
+                                                <a href="/Main/Index">商城首页</a>
+                                            </li>
+                                            <li class="index__breadcrumb-item___2tHRR">
+                                                <a href="/CommodityList/Index?gradeId=@item_Level1.id">@item_Level1.name</a>
+                                            </li>
+                                            <li class="index__breadcrumb-item___2tHRR">
+                                                <a href="/CommodityList/Index?gradeId=@grade.id&IsMoreInfo=true">@grade.name</a>
+                                            </li>
+
+                                            break;
+                                        }
+                                    }
+                                    grade = listGrade.Where(p => p.id == ViewModel.GradeId).FirstOrDefault();
+                                    if (grade != null)
+                                    {
+                                        <li class="index__breadcrumb-item___2tHRR">
+                                            <a href="/Main/Index">商城首页</a>
+                                        </li>
+                                        <li class="index__breadcrumb-item___2tHRR">
+                                            <a href="/CommodityList/Index?gradeId=@grade.id">@grade.name</a>
+                                        </li>
+                                    }
+                                }
+                                <li class="index__breadcrumb-item___2tHRR">
+                                    <a href="/diy/index?Commodityid=@ViewModel.Id">@ViewModel.Name</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <article class="product-main">
+                        <article class="style__product-overview___2QSYU">
+                            <section class="container style__product-section___M4lo2">
+                                <div>
+                                    <article class="product-container">
+                                        <div class="slider-container">
+                                            <div>
+                                                <div>
+                                                    <div style=""></div>
+                                                    <div style="transform: none; z-index: 10;width: 595px;margin-top:40px" class=" sticky">
+                                                        <article class="style__product-photos___3jh9C">
+                                                            <div class="style__slider-container___1XV6e">
+                                                                <div class="style__slider___1tQak">
+                                                                    <button class="style__close-btn___1GIA2">
+                                                                        <i class="iconfont__kingsfont___3UTnp iconfont__icon-close___wDv45" style="font-size: 50px;"></i>
+                                                                        <div style="clear:both;"></div>
+                                                                    </button>
+                                                                    <div class="style__slides-container___3aXXt">
+                                                                        <div class="animated-slider">
+                                                                            <ul class="style__slides___BCums">
+                                                                                @if (ViewModel.ImageList != null)
+                                                                                {
+                                                                                    count = 1;
+                                                                                    foreach (var item in ViewModel.ImageList.Split('|'))
+                                                                                    {
+                                                                                        if (item != null && item.Trim() != "")
+                                                                                        {
+                                                                                            var ColorIndex = "";
+                                                                                            var ImageUrl = item;
+                                                                                            if (item.Contains(";"))
+                                                                                            {
+                                                                                                ColorIndex = $"ColorIndex={item.Split(';')[0]}";
+                                                                                                ImageUrl = item.Split(';')[1];
+                                                                                                var thiscolor = thisColorList.Where(p => p.Id.ToString() == item.Split(';')[0]).FirstOrDefault();
+                                                                                                if (thiscolor != null)
+                                                                                                {
+                                                                                                    newColorList.Add(new Colorinfo { Id = thiscolor.Id, ChinaDescribe = thiscolor.ChinaDescribe, EngDescibe = thiscolor.EngDescibe, HtmlCode = thiscolor.HtmlCode, StandardColor = thiscolor.StandardColor });
+                                                                                                }
+                                                                                            }
+                                                                                            var active = "";
+                                                                                            if (count == 1)
+                                                                                            {
+                                                                                                active = " style__active___1aTdn";
+                                                                                            }
+                                                                                            <li class="style__slide-item___24smX @active" roleIndex="@count" @ColorIndex>
+                                                                                                <a class="product-img" rel="group" role="presentation">
+                                                                                                    <img src="@AdminUrl@ImageUrl" class="img-rounded img-responsive">
+                                                                                                </a>
+                                                                                            </li>
+                                                                                            count++;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div class="style__nav-controller___11v9f">
+                                                                            <button class="style__prev___3tbbs">
+                                                                                <i class="iconfont__kingsfont___3UTnp iconfont__icon-arrow-left-thin___nrlyL" style="font-size: 72px;"></i>
+                                                                            </button>
+                                                                            <button class="style__next___16LaI">
+                                                                                <i class="iconfont__kingsfont___3UTnp iconfont__icon-arrow-right-thin___KAXJg" style="font-size: 72px;"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="style__pagings-container___3Ubel">
+                                                                        <div class="animated-items">
+                                                                            <ul class="style__paginations___1HX_4">
+                                                                                @if (ViewModel.ImageList != null)
+                                                                                {
+                                                                                    count = 1;
+                                                                                    foreach (var item in ViewModel.ImageList.Split('|'))
+                                                                                    {
+                                                                                        if (item != null && item.Trim() != "")
+                                                                                        {
+                                                                                            var ColorIndex = "";
+                                                                                            var ImageUrl = item;
+                                                                                            if (item.Contains(";"))
+                                                                                            {
+                                                                                                ColorIndex = $"ColorIndex={item.Split(';')[0]}";
+                                                                                                ImageUrl = item.Split(';')[1];
+                                                                                            }
+                                                                                            var active = "";
+                                                                                            var right = "margin-left:3px;margin-right:0px;";
+                                                                                            if (count == 1)
+                                                                                            {
+                                                                                                active = " style__active___1aTdn";
+                                                                                                right = "margin-right:1px;";
+                                                                                            }
+
+                                                                                            <li role="presentation" class="style__paging-item___1pzla @active" roleIndex="@count" @ColorIndex style="@right">
+                                                                                                <button>
+                                                                                                    <img src="@AdminUrl@ImageUrl" alt="">
+                                                                                                </button>
+                                                                                            </li>
+                                                                                            count++;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="style__pagings-container___3Ubel detailInfo" style="margin: 80px 30px 0px 30px;padding: 5px 10px;border: #41719C 1px solid;">
+                                                                        <label style="font-weight:bold;">温馨提示：</label><br />
+                                                                        <span style="font-size: 14px;line-height: 17px;">1，页面列出的印刷方式为大多数人选择的常规印刷方式，您如果有特殊印刷需求请联系客服 4008580505；</span><br />
+                                                                        <span style="font-size: 14px;line-height: 17px;">2，如需在下单前查看定制后的产品效果图，请联系我们客服，或将您的LOGO发送邮件至邮件至 <a href="mailto:kefu@syloon.cn" style="color:blue;text-decoration:underline;">kefu@syloon.cn</a>, 并留下您的联系方式，我司客服人员会与您联系；</span><br />
+                                                                        <span style="font-size: 14px;line-height: 17px;">3，如果您在下单前需查看样品，请在购买数量框中输入所需样品数量，样品金额低于10元的我们免费提供样品，您只需支付快递费用，若所需样品数量较多金额大于10元的，我们会根据实际金额收取费用，您所购买的产品金额大于99元时我们提供免运费包邮服务。</span> <br />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </article>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="info-container" role="presentation">
+                                            <div>
+                                                <section class="info-section" style="padding-bottom:0px;">
+                                                    <div class="style__product-price___1mPhp">
+                                                        <div>
+                                                            <div class="styles__price___1E7Hi">
+                                                                <div class="styles__current-price___C1xbQ">
+                                                                    @(Material.ProductNo)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h1 class="style__product-title___2h9Pl style__product-title___2DEfZ">
+                                                        @(ViewModel.Name)
+                                                    </h1>
+                                                    <div style="margin-top:5px;">
+                                                        @if (!string.IsNullOrEmpty(ViewModel.FrontView) && ViewModel.FrontView != "/Image/Grade/noImg.svg")
+                                                        {
+                                                            var array = ViewModel.FrontView.Split('|').Where(p => !string.IsNullOrEmpty(p)).Distinct().ToList();
+                                                            foreach (var item in array)
+                                                            {
+                                                                <img src="@ViewBag.AdminUrl@item" style="height:39px;margin-right:10px;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                </section>
+                                                <section class="info-section">
+                                                    <div class="info-content">
+                                                        <div class="content">
+                                                            <div class="default-link-style style__highlight___Y1KR-">@Material.ProductDesibe</div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+
+                                                <section class="info-section">
+                                                    <div class="info-content">
+                                                        <div class="content">
+                                                            <div class="default-link-style style__highlight___Y1KR-">
+                                                                @{
+                                                                    var attrArray = Material.TypeInfo == null ? new List<string>() : Material.TypeInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                    for (int i = attrArray.Count; i < 6; i++)
+                                                                    {
+                                                                        attrArray.Add("");
+                                                                    }
+                                                                }
+                                                                @(attrArray[0])@((attrArray[0] == "" && attrArray[1] == "") ? "" : "：")@(attrArray[1]) <br />
+                                                                @(attrArray[2])@((attrArray[3] == "" && attrArray[2] == "") ? "" : "：")@(attrArray[3])
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+
+                                                <section class="info-section">
+                                                    <div class="info-content">
+                                                        <div class="content">
+                                                            <div class="default-link-style style__highlight___Y1KR-">
+                                                                产品尺寸：@(Material.Specification)<br />
+                                                                产品重量：@Material.Weight g
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                @if (Material.SyloonPatent == "1")
+                                                {
+                                                    <section class="info-section">
+                                                        <div class="info-content">
+                                                            <div class="content">
+                                                                <div class="default-link-style style__highlight___Y1KR-">
+                                                                    <img src="~/Current/images/Image/SYLOONPatent.png" style="height: 65px;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                }
+                                                <section class="info-section">
+                                                    <ul>
+                                                        <li class="styles__attr-section___1n95r">
+                                                            <section>
+                                                                <div class="leftpart">
+                                                                    <h3 class="styles__header___3KlVl">选择印刷方式：</h3>
+                                                                </div>
+
+                                                                <div class="rightpart">
+                                                                    @{
+                                                                        var PrintFuncList = Material.PrintFuncInfo == null ? new List<string>() : Material.PrintFuncInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                        var MoneyList = Material.SalesInfoList.Split(';').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                        var percentageList = Material.PercentageInfo == null ? new List<string>() : Material.PercentageInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                        var TipPercentList = Material.TipPercentInfo == null ? new List<string>() : Material.TipPercentInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                        #region 工艺详情
+                                                                        var PrintingList = new List<Tuple<string, List<List<string>>>>();
+                                                                        if (Material.Printingdetail != null)
+                                                                        {
+                                                                            var array = Material.Printingdetail.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                            foreach (var item in array)
+                                                                            {
+                                                                                var printInfo = item.Split('(');
+                                                                                var ListListString = new List<List<string>>();
+                                                                                var printingDtailList = printInfo[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                                foreach (var printingDetailInfo in printingDtailList)
+                                                                                {
+                                                                                    var printingDetailArray = printingDetailInfo.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                                    var ListString = new List<string>();
+                                                                                    foreach (var printDetail in printingDetailArray)
+                                                                                    {
+                                                                                        ListString.Add(printDetail);
+                                                                                    }
+                                                                                    ListListString.Add(ListString);
+                                                                                }
+                                                                                PrintingList.Add(new Tuple<string, List<List<string>>>(item1: printInfo[0], item2: ListListString));
+                                                                            }
+                                                                        }
+                                                                        #endregion
+                                                                        var Intcount = 0;
+                                                                    }
+                                                                    @foreach (var item in PrintFuncList)
+                                                                    {
+                                                                        Intcount++;
+                                                                        var array = item.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                        var printfunc1 = PrintingList.Where(p => p.Item1.ToLower() == $"printfunc{Intcount}").FirstOrDefault();
+                                                                        if (array.Count == 2)
+                                                                        {
+                                                                            var percentage = percentageList.Where(p => p.Contains(array[0])).FirstOrDefault();
+                                                                            var TipPercent = TipPercentList.Where(p => p.Contains(array[0])).FirstOrDefault();
+                                                                            var SaleInfo = "";
+                                                                            foreach (var money in MoneyList)
+                                                                            {
+                                                                                var moneyInfoList = money.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                                                                SaleInfo = SaleInfo + moneyInfoList[0];
+                                                                                if (array[0] == "PrintFunc1")
+                                                                                {
+                                                                                    SaleInfo = SaleInfo + "," + moneyInfoList[1];
+                                                                                }
+                                                                                else if (array[0] == "PrintFunc2")
+                                                                                {
+                                                                                    SaleInfo = SaleInfo + "," + moneyInfoList[2];
+                                                                                }
+                                                                                else if (array[0] == "PrintFunc3")
+                                                                                {
+                                                                                    SaleInfo = SaleInfo + "," + moneyInfoList[3];
+                                                                                }
+                                                                                SaleInfo = SaleInfo + "|";
+                                                                            }
+                                                                            <a href="javascript:;" style="display:block;cursor:pointer;" title="@(TipPercent == null ? "" : $"{TipPercent.Split(':')[1]}")">
+                                                                                <div class="radio">
+                                                                                    <input type="radio" name="printFunc" value="@array[0]" checked="" style="margin-bottom: 2px;" SaleInfo="@SaleInfo" />
+                                                                                    @(array[1])
+                                                                                    @(percentage == null ? "" : $"{percentage.Split(':')[1]}")
+                                                                                </div>
+                                                                            </a>
+                                                                        }
+                                                                    }
+                                                                </div>
+
+                                                                <div style="clear:both;"></div>
+                                                            </section>
+                                                        </li>
+                                                    </ul>
+                                                </section>
+
+                                                <section class="info-section">
+                                                    <ul>
+                                                        <li class="styles__attr-section___1n95r">
+                                                            <section>
+                                                                <div class="leftpart">
+                                                                    <h3 class="styles__header___3KlVl">选择商品颜色：</h3>
+                                                                </div>
+                                                                <div class="rightpart">
+                                                                    <ul class="styles__cols-3___3f9CN">
+                                                                        @foreach (var item in newColorList)
+                                                                        {
+                                                                            var checkedString = "";
+                                                                            if (item == thisColorList[0] && ShopCart.Color == null)
+                                                                            {
+                                                                                checkedString = "checked=\"checked\"";
+                                                                            }
+                                                                            if (item.ChinaDescribe == ShopCart.Color)
+                                                                            {
+                                                                                checkedString = "checked=\"checked\"";
+                                                                            }
+                                                                            <li class="styles__attr-item___3z5xG">
+                                                                                <label for="@item.ChinaDescribe" class="checkable">
+                                                                                    <input type="radio" name="颜色" id="@item.Id" value="@item.ChinaDescribe" class="@item.HtmlCode" @checkedString>
+                                                                                    <div class="styles__wrapper___9REzI">
+                                                                                        <span style="background-color:@item.HtmlCode" class="styles__color-symbol___3axcJ"></span>
+                                                                                        <span class="styles__text___dKo39">@item.ChinaDescribe</span>
+                                                                                    </div>
+                                                                                </label>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                                <div style="clear:both;"></div>
+                                                            </section>
+                                                        </li>
+                                                    </ul>
+                                                </section>
+
+                                                <section class="info-section">
+                                                    <ul>
+                                                        <li class="styles__attr-section___1n96r">
+                                                            <section>
+                                                                <div class="leftpart">
+                                                                    <h3 class="styles__header___3KlVl" style="margin-bottom: 0px;">输入商品数量：</h3>
+                                                                </div>
+                                                                <div class="rightpart">
+                                                                    <div class="num_input">
+                                                                        <input type="text" class="words" value="1" />
+                                                                        <span class="s1">
+                                                                            <em>X</em>
+                                                                            <label id="NowPrice">@ZeroStagePrice.StagePrice</label>元/@(Material.ChinaUnit)
+
+                                                                            <em>=</em>
+                                                                            <label id="TotalPrice">@ZeroStagePrice.StagePrice</label>元
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div style="">
+                                                                    <div style="float: left;font-size: 13px;color: #595959;margin-top: 35px;margin-bottom: 5px;">
+                                                                        数量和单价对应表，价格含印刷费用、16%增值税、满99元包邮
+                                                                    </div>
+                                                                    <div style="float: right;font-size: 13px;color: #808080;margin-top: 35px;margin-bottom: 5px;">
+
+                                                                    </div>
+                                                                </div>
+                                                                <ul style="float: left;">
+                                                                    @foreach (var item in StagePriceList)
+                                                                    {
+                                                                        if (item.StageAmount == 0)
+                                                                        {
+                                                                            <li class="current">
+                                                                                <div class="title">
+                                                                                    <label>无定制</label>
+                                                                                    <input type="hidden" value="@item.StageAmount" />
+                                                                                </div>
+                                                                                <div class="num">
+                                                                                    ¥<label>@item.StagePrice</label>
+                                                                                </div>
+                                                                                <div class="StagePriceId" style="display:none;">
+                                                                                    @item.Id
+                                                                                </div>
+                                                                            </li>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <li>
+                                                                                <div class="title">
+                                                                                    <label>@item.StageAmount</label>
+                                                                                    <input type="hidden" value="@item.StageAmount" />
+                                                                                </div>
+                                                                                <div class="num">
+                                                                                    ¥<label>@item.StagePrice</label>
+                                                                                </div>
+                                                                                <div class="StagePriceId" style="display:none;">
+                                                                                    @item.Id
+                                                                                </div>
+                                                                            </li>
+                                                                        }
+                                                                    }
+
+                                                                </ul>
+                                                                <div style="clear:both;"></div>
+                                                            </section>
+                                                        </li>
+                                                    </ul>
+                                                </section>
+                                                <section class="info-section variant-actions style__variant-actions___3Tu5L">
+                                                    <div>
+                                                        <button class="btn bigger primary styles__action-button___1P1wp" style="" onclick="ShopCartFunc()">加入购物车</button>
+                                                        <button class="btn bigger primary styles__action-button___1P1wp" style="background-color: #008375;color: white;" onclick="BuyImmediately()">立即购买</button>
+
+                                                        @*<button class="btn bigger primary styles__action-button___1P1wp" style="background-color: #008375;color: white;border: 1px solid #808080;" onclick="ShopCartFunc()">拿样</button>*@
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                            </section>
+                            <section class="product-detail-section style__product-section___M4lo2">
+                                <div id="product-detail">
+                                    <div class="style__tab___1sbWh">
+                                        <div>
+                                            <div>
+                                                <div style="padding-bottom: 0px;"></div>
+                                                <div class="" style="transform: translateZ(0px);">
+                                                    <div class="section-container header-wrapper style__header___2ZdRk">
+                                                        <ul class="style__header-flex___3cDWL style__header-align-center___-LO2p">
+                                                            <li class="style__item___gNEnQ style__active___viHCY">
+                                                                <button id="gtm_Overview" class="style__item-switcher___2kX5r">产品概览</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="section-container style__body___IaUot style__layout-top-bottom___1J0nW">
+                                                <article id="overview" class="style__tab-content-item___3rpYZ style__content-layout-show-hide___1WFPP style__active___viHCY">
+                                                    <div class="style__content-container___qNuZO">
+                                                        <div>
+                                                            <article class="default-link-style clearfix" role="presentation">
+                                                                <div class="col-xs-9" style="border-right: 1px solid #D9D9D9;padding-right:  30px;min-height:1px">
+                                                                    @Html.Raw(ViewModel.Content)
+                                                                </div>
+                                                                @if (CommdityInfoList.Count != 0)
+                                                                {
+                                                                    <div class="col-xs-3 wrap-right" style="width:280px;padding-top:24px; padding-right:0;">
+                                                                        <div class="product-video">
+                                                                            <div class="row">
+                                                                                <div class="col-xs-8">
+                                                                                    <h3 style="color:#333;text-decoration: none;">推荐搭配</h3>
+                                                                                </div>
+                                                                            </div>
+                                                                            @foreach (var item in CommdityInfoList)
+                                                                            {
+                                                                                var itemarray = item.Split(',').ToList();
+                                                                                var commInfo = List_Comm.Where(p => p.Id.ToString() == itemarray[1]).FirstOrDefault();
+                                                                                if (commInfo != null)
+                                                                                {
+                                                                                    <div class="phantom-intr-video" style="margin-bottom: 10px;">
+                                                                                        <div class="img-thumbnail">
+                                                                                            <a class="fancybox-media thumb-info" href="./../Diy/Index?CommodityId=@commInfo.Id">
+                                                                                                <img alt="@commInfo.Name" border="0" class="img-responsive" src="@ViewBag.AdminUrl@commInfo.Image" style="min-height:150px;margin-bottom:33px;">
+                                                                                                <span class="thumb-info-title" style="background-color:#98CCCB">
+                                                                                                    <span class="thumb-info-inner">@commInfo.Name</span>
+                                                                                                </span>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+
+                                                            </article>
+                                                        </div>
+                                                    </div>
+
+                                                </article>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </article>
+                    </article>
+                </div>
+            </div>
+        </main>
+    </main>
+</main>
+
+<!-- 消息框 -->
+<div class="dealert UserLogin" style="display: none;">
+    <div class="zz"></div>
+    <div class="detailcontent">
+        <h2 class="h2tit" style="display:none;">
+            <span>立即购买</span>
+            <i onclick="$('.dealert').css('display','none')"></i>
+        </h2>
+        <div class="content">
+            <div class="Dialog__dialog___1pLKt Dialog__confirm___2avn4 Dialog__lite___7ndzX">
+                <header class="Dialog__success___1LQ9Z">
+                    <div class="Dialog__icon-container___3I950">
+                        <i class="iconfont__kingsfont___3UTnp iconfont__icon-check___Id2Oj" style="font-size: 72px;"></i>
+                    </div>
+                    <h2>是否<span>立即购买</span><span>木铅笔商品1</span><span>红色</span><span>2</span>@Material.ChinaUnit</h2>
+                </header><footer>
+                    <button id="gtm_gtm_ContinueShopping" class="btn info big" onclick="$('.dealert.UserLogin').hide()">取消</button>
+                    <button id="gtm_gtm_ViewCart&amp;Checkout" class="btn primary big" onclick="AddCart()">确定</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 消息框 -->

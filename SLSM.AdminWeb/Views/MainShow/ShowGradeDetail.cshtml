@@ -1,0 +1,32 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    Showgradeinfo ShowGradeInfo = ViewBag.ShowGradeInfo == null ? new Showgradeinfo() : (Showgradeinfo)ViewBag.ShowGradeInfo;
+    List<Grade> GradeList = ViewBag.GradeList == null ? new List<Grade>() : (List<Grade>)ViewBag.GradeList;
+}
+<script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择分类</label>
+            <div class="layui-input-block">
+                <select name="GradeId">
+                    <option>请选择</option>
+                    @foreach (var item in GradeList)
+                    {
+                        var selected = "";
+                        if (ShowGradeInfo.GradeId == item.Id)
+                        {
+                            selected = "selected=\"selected\"";
+                        }
+                        <option value="@item.Id" @selected>@item.Name</option>
+                    }
+                </select>
+                <input type="hidden" name="Id" value="@ShowGradeInfo.Id" />
+                <input type="hidden" name="OrderId" value="@ShowGradeInfo.OrderCount" />
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

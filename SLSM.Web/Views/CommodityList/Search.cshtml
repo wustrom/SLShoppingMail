@@ -1,0 +1,127 @@
+﻿@using DbOpertion.Models
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var listCommView = ViewBag.listCommView == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.listCommView;
+}
+<script>
+    var text='@ViewBag.text';
+</script>
+<script src="~/Current/script/CommSearch.js"></script>
+<link href="~/Current/css/CommodityList/srarch.css" rel="stylesheet" />
+<link href="~/Current/css/CommodityList/CommCommon.css" rel="stylesheet" />
+<div class="searchContainer">
+    <div class="searchWord">
+        <div style="text-transform: none;">
+            "<span style="color: #008376;">@ViewBag.text</span>" 的搜索结果
+        </div>
+    </div>
+    @if (listCommView.Count == 0)
+    {
+        <div class="nothing_find">
+            <div class="nothing_find_text">
+                <h3>对不起，找不到商品。</h3>
+                <h6>您可以试着换个词再试试，或者通过类目来查找商品。</h6>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="section-container">
+            <ul class="product-list">
+                @foreach (var item in listCommView)
+                {
+                    //product-item-has-hover-img是看有没有背景图片的
+                    <li class="section-item">
+                        <a class="product-item-link" href="../../Diy/Index?CommodityId=@item.Id">
+                            <div class="product-item product-item-has-hover-img">
+                                <div class="image">
+                                    <div class="cover">
+                                        <img src="@ViewBag.AdminUrl@item.Image">
+                                    </div>
+                                    <div class="hover">
+                                        <div class="image-bg-cover">
+                                            <img src="@ViewBag.AdminUrl@item.BackView">
+                                            <p class="hover-text">@item.Introduce</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="title">@item.Name</h4>
+                                <div class="price">
+                                    <div class="money">
+                                        <span>
+                                            <span class="normal_price">¥@item.minPrice</span>
+                                            @*<span class="discount-price">
+                                                    ¥@item.minPrice
+                                                </span>
+                                                <span class="original-price">
+                                                    ¥1199
+                                                </span>*@
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                }
+
+                <div style="clear:both;"></div>
+            </ul>
+        </div>
+    }
+
+
+
+
+    <div class="pagesize" style="display:none;">
+        <center>
+            <ul class="pagination">
+                <li class="active">
+                    <a>1</a>
+                </li>
+                <li><a>2</a></li>
+                <li><a>3</a></li>
+                <li><a>4</a></li>
+                <li><a>5</a></li>
+                <li><a>下一页 &gt;</a></li>
+
+            </ul>
+        </center>
+        <div style="clear:both;"></div>
+
+    </div>
+
+    <section class="section features">
+        <div class="features-container">
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-truck.svg" alt="全场满¥99顺丰包邮（顺丰无法配送的区域将使用EMS）">
+                    </p>
+                    <h4>
+                        全国包邮
+                    </h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-card.svg" alt="支持支付宝、微信、线下支付">
+                    </p>
+                    <h4>支持支付宝、微信</h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-message.svg" alt="客服热线：400-700-0303">
+                    </p>
+                    <h4>
+                        客服热线：400-858-0505
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

@@ -1,0 +1,112 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var reply = ViewBag.Reply == null ? new Reply() : (Reply)ViewBag.Reply;
+}
+
+<div style="margin: 15px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片列表</label>
+        <div class="layui-input-block">
+            @{
+                if (reply.ImageList != null)
+                {
+                    var arry = reply.ImageList.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    foreach (var item in arry)
+                    {
+                        <div style="width:80px;height:80px;float: left;">
+                            <img src="@item" style="width:80px;height:80px;">
+                            <i class="layui-icon btn-delAttr" style="top: -80px;right: -65px;position: relative;" onclick="ImgDelClick(this)">ဆ</i>
+                            <input class="hiddenImgUrl" type="hidden" value="@item" />
+                        </div>
+                    }
+                }
+            }
+            <img src="~/Base/images/add.jpg" onclick="btnimgClick(this)" />
+            <div style="clear:both;"></div>
+        </div>
+        <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+            <input name="upImg" type="file" id="upImg" onchange="fileListchange(this)" accept=".png,.jpg,.jpeg">
+            <input id="testSubmit" type="submit" value="上传">
+        </form>
+    </div>
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="ReplyId" id="ReplyId" value="@reply.Id" />
+            <input type="hidden" name="ParentEvalId" id="ParentEvalId" value="@ViewBag.EvaluateParentId" />
+            <input type="hidden" name="ImgList" id="hiddImgList" value="" />
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="content" lay-verify="content" id="LAY_demo_editor">@Html.Raw(reply.Content)</textarea>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<script>
+    // #region 图片上传
+    function btnimgClick(that) {
+        $(that).parent().parent().find('#upImg').val('');
+        $(that).parent().parent().find('#upImg').click();
+    }
+
+    function fileListchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(that).parent().parent().find('.layui-input-block').prepend('<div style="width:80px;height:80px;float: left;">\
+            <img src="' + res + '" style="width:80px;height:80px;">\
+            <i class="layui-icon btn-delAttr" style="top: -80px;right: -65px;position: relative;" onclick="ImgDelClick(this)">ဆ</i>\
+            <input class="hiddenImgUrl" type="hidden" value="'+ res + '"/>\
+            </div>');
+            ImgList();
+        });
+    }
+
+    function ImgDelClick(that) {
+        $(that).parent().remove();
+        ImgList();
+    }
+
+    function ImgList() {
+        
+        var img = "";
+        $('.hiddenImgUrl').each(function () {
+            img = img + $(this).val() + "|";
+        })
+        $('#hiddImgList').val(img);
+    }
+    ImgList();
+// #endregion
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+    }
+</style>

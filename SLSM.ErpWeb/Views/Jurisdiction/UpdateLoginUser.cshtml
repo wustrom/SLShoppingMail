@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+    var LoginUserInfo = ViewBag.LoginUserInfo == null ? new DbOpertion.Models.Erplogin_Role_View() : (DbOpertion.Models.Erplogin_Role_View)ViewBag.LoginUserInfo;
+
+    var RoleInfo = (List<DbOpertion.Models.Erpuser>)ViewBag.RolesInfo;
+}
+<div style="height:100px">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="hidden" name="erpLoginId" value="@LoginUserInfo.erpLoginId" class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户账号：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="erpLoginName" placeholder="请输入账号" lay-verify="required" autocomplete="off" class="layui-input" value="@LoginUserInfo.erpLoginName" style="width:260px;" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户密码：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="erpLoginPwd" placeholder="请输入密码" lay-verify="required" autocomplete="off" class="layui-input" value="@LoginUserInfo.erpLoginPwd" style="width:260px;" />
+            </div>
+        </div> <div class="layui-form-item">
+            <label class="layui-form-label">用户角色：</label>
+            <div class="layui-input-inline" style="width:260px">
+                <select name="ErproleId">
+                    @foreach (var item in RoleInfo)
+                    {
+                        <option @{if (LoginUserInfo.ErproleId != null && LoginUserInfo.ErproleId == item.ErproleId) { <text> selected</text>}} value="@item.ErproleId">
+                            @item.ErproleName
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none; background-color:#f2f2f2"></button>
+    </form>
+</div>
+

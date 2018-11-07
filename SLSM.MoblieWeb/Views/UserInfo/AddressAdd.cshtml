@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "AddressAdd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var address = ViewBag.Address == null ? new DbOpertion.Models.Address() : (DbOpertion.Models.Address)ViewBag.Address;
+    var array = address.AddrArea != null ? address.AddrArea.Split(',').ToList() : new List<string>();
+    var provinceList = (List<string>)ViewBag.provinceList;
+    var CityList = (List<string>)ViewBag.CityList;
+    var AreaList = (List<string>)ViewBag.AreaList;
+}
+<div id="panel" class="public-content-box" style="background:#f4f4f4;">
+    <!--面包屑-->
+    <div>
+
+    </div>
+    <!--表单添加-->
+    <form class="mt20 add-people-info" action="">
+        <div class="bgfff cennter-box">
+            <input type="hidden" id="Id" value="@address.Id" />
+            <div>
+                <label for="name">姓名：</label>
+                <input class="input" type="text" id="Name" placeholder="请输入姓名" value="@address.ContactName">
+            </div>
+
+            <div>
+                <label for="number">电话：</label>
+                <input class="input" type="text" id="Phone" placeholder="请输入电话号码" value="@address.ContactPhone">
+            </div>
+            <label style="top: 2.4rem;">地址：</label>
+            <div class="s2">
+                <select name="province" id="province">
+                    <option value="-1">请选择省</option>
+                    @foreach (var item in provinceList)
+                    {
+                        var selected = "";
+                        if (array.Count >= 3)
+                        {
+                            if (array[0] == item)
+                            {
+                                selected = "selected=\"selected\"";
+                            }
+                        }
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+                <span class="t">-</span>
+                <select name="city" id="city">
+                    <option value="-1">请选择市</option>
+                    @foreach (var item in CityList)
+                    {
+                        var selected = "";
+                        if (array.Count >= 3)
+                        {
+                            if (array[1] == item)
+                            {
+                                selected = "selected=\"selected\"";
+                            }
+                        }
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+                <span class="t">-</span>
+                <select name="area" id="area">
+                    <option value="-1">请选择县/区</option>
+                    @foreach (var item in AreaList)
+                    {
+                        var selected = "";
+                        if (array.Count >= 3)
+                        {
+                            if (array[2] == item)
+                            {
+                                selected = "selected=\"selected\"";
+                            }
+                        }
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <textarea id="AddrDetail">@address.AddrDetail</textarea>
+            </div>
+        </div>
+        <div>
+            <input class="action-btn" type="button" value="确定">
+        </div>
+    </form>
+    <!--表单 end-->
+</div>
+@section js
+{
+    <script src="~/Current/js/UserInfo/Address.js"></script>
+}

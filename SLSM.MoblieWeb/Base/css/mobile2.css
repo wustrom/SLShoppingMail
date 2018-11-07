@@ -1,0 +1,98 @@
+﻿/*!
+ * Bootstrap v3.0.0
+ *
+ * Copyright 2013 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */ /*! normalize.css v2.1.3 | MIT License | git.io/normalize */
+
+.user-info {
+    background: #F7F8F9;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    overflow: hidden
+}
+
+    .user-info .user-photo {
+        float: left;
+        padding-right: 10px
+    }
+
+        .user-info .user-photo img {
+            height: 42px;
+            width: 42px;
+            border-radius: 50%;
+            display: inline-block;
+            border: solid 1px rgba(0,0,0,0.08);
+            margin-left: 16px
+        }
+
+    .user-info .login-info {
+        color: #008374;
+        float: left;
+        width: 70%
+    }
+
+        .user-info .login-info a {
+            color: #008374
+        }
+
+.account-main {
+    background: #fff;
+}
+
+    .account-main .main-ul {
+        margin: 0px !important;
+        padding: 0px
+    }
+
+        .account-main .main-ul li {
+            position: relative;
+            padding: 0 15px;
+            background: none !important;
+            list-style-type: none;
+            border-bottom: 1px solid #ececec
+        }
+
+        .account-main .main-ul .main-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 14px 0;
+            font-size: 13px;
+            border: none;
+            text-transform: uppercase;
+            color: #707473;
+            text-decoration: none;
+            font-weight: normal
+        }
+
+            .account-main .main-ul .main-link:hover {
+                text-decoration: none
+            }
+
+        .account-main .main-ul .login-out {
+            margin: 42px 0 25px 0;
+            padding: 0px 15px 15px;
+            border: none
+        }
+
+            .account-main .main-ul .login-out .login-out-btn {
+                background: white !important;
+                border: 1px solid #4a4a4a !important;
+                border-radius: 30px !important;
+                padding: 13px 14px;
+                color: #4a4a4a !important;
+                font-size: 14px !important;
+                display: block;
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+                height: inherit;
+            }
+
+                .account-main .main-ul .login-out .login-out-btn:after {
+                    background-image: none !important
+                }

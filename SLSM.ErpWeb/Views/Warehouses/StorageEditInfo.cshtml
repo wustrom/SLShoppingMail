@@ -1,0 +1,97 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Storage = (Storage)ViewBag.StorageFullInfo;
+    var listStorage = (List<Storage>)ViewBag.listStorage == null ? new List<Storage>() : (List<Storage>)ViewBag.listStorage;
+    var WareHouseList = (List<Warehouse>)ViewBag.WareHouseList == null ? new List<Warehouse>() : (List<Warehouse>)ViewBag.WareHouseList;
+    var aaa = 123;
+}
+
+<style>
+    .layui-layer-setwin a:nth-child(1) {
+        display: none;
+    }
+
+    .layui-layer-setwin a:nth-child(2) {
+        display: none;
+    }
+
+    .layui-layer-btn a {
+        width: 100px;
+        text-align: center;
+        margin: 20px 200px;
+    }
+</style>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script>
+    function renderForm() {
+        layui.use('form', function () {
+            var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+            form.on('select(wareHouse)', function (data) {
+                $('input[name="WarehouseId"]').val(data.value);
+                $(data.elem.parentNode.parentNode.parentNode).find('.StockInfo').html($(data.elem.selectedOptions[0]).attr('stock'));
+                $('input[name="storageId"]').val($(data.elem.selectedOptions[0]).attr('storageId'));
+                $('input[name="RawmaterialsId"]').val($(data.elem.selectedOptions[0]).attr('RawmaterialsId'));
+                $('input[name="SKU"]').val($(data.elem.selectedOptions[0]).attr('SKU'));
+            });
+        });
+    }
+    $(function () {
+        renderForm();
+    })
+</script>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="hidden" name="storageId" value="@Storage.Id" class="layui-input" />
+            <input type="hidden" name="WarehouseId" value="@Storage.WarehouseId" class="layui-input" />
+            <input type="hidden" name="RawmaterialsId" value="@Storage.Raw_materialsId" class="layui-input" />
+            <input type="hidden" name="SKU" value="@Storage.Color" class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">现有库存：</label>
+            <div class="layui-input-block" style="top:10px;">
+                <label class="StockInfo" style="font-size:18px;">@(Storage.stock == null ? 0 : Storage.stock)</label>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属仓库：</label>
+            <div class="layui-input-block">
+                <select lay-filter="wareHouse" lay-verify="selectItem">
+                    <option value="">请选择仓库</option>
+                    @foreach (var item in listStorage)
+                    {
+                        var WareHouse = WareHouseList.Where(p => p.Id == item.WarehouseId).FirstOrDefault();
+                        var selected = "";
+                        if (Storage.Id != 0 && Storage.Id == item.Id)
+                        {
+                            selected = "selected=\"selected\"";
+                        }
+                        <option value="@item.WarehouseId" RawmaterialsId="@item.Raw_materialsId" SKU="@item.Color" stock="@item.stock" storageId="@item.Id" @selected>@WareHouse.Name</option>
+                    }
+                </select>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">调整数量：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="ChangeCount" style="width:140px;" lay-verify="number" autocomplete="off" class="layui-input" />
+            </div>
+
+            <label class="layui-form-label" style="width:45px; margin-left:-55px">类型：</label>
+            <div class="layui-input-inline" style="margin-right: 0px;">
+                <input type="radio" name="ChangeCountType" value="增加" title="增加" />
+                <input type="radio" name="ChangeCountType" value="减少" title="减少" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:80px;">调整原因<i style="color:red;font-size:22px;">*</i>：</label>
+            <div class="layui-input-block">
+                <textarea name="ChangeContext" class="layui-textarea" style="resize:none; width:400px; height:150px"></textarea>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

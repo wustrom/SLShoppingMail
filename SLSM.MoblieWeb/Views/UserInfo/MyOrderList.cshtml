@@ -1,0 +1,303 @@
+﻿
+@{
+    ViewBag.Title = "MyOrderList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var List_Order = (List<SLSM.MoblieWeb.Models.Response.Order.OrderInfoResponse>)ViewBag.Order;
+}
+<script src="~/Base/js/jquery-2.1.4.min.js"></script>
+<script src="~/Current/js/jquery.easyui.min.js"></script>
+<link href="~/Current/css/DJiMobile.css" rel="stylesheet" />
+<link href="~/Current/css/DJiCommon.css" rel="stylesheet" />
+<link href="~/Current/css/UserInfo/MyOrderList.css" rel="stylesheet" />
+<script>
+
+</script>
+<style>
+    a {
+        text-decoration: none
+    }
+</style>
+<section>
+    <div class="user-orders" id="custom-info">
+        <h2>
+            <span>我的订单</span>
+        </h2>
+        <div class="orders-list">
+            <ul>
+                @foreach (var item in List_Order)
+                {
+                    var sumprice = item.ListDetail.Sum(p => p.PayMoney).Value;
+                    <li class="order-list-wrap">
+                        <div class="div-place-one order-list-div">
+                            <div>
+                                <table border="0" cellpadding="0" cellspacing="0" class="order-list-table">
+                                    <tbody>
+                                        <tr class="split-order-title">
+                                            <td class="first-td" valign="top">
+                                                <div>订单号 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span class="order-number">@item.OrderNo</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @foreach (var detail in item.ListDetail)
+                                        {
+                                            List<string> ImageList = new List<string>();
+                                            if (detail.ImageList != null)
+                                            {
+                                                ImageList = detail.ImageList.Split('|').Where(p => p.Contains($"{detail.ColorId};")).ToList();
+                                            }
+                                            string Image = detail.Image;
+                                            foreach (var ImageInfo in ImageList)
+                                            {
+                                                var ImageArray = ImageInfo.Split(';');
+                                                if (ImageArray[0] == $"{detail.ColorId}")
+                                                {
+                                                    Image = ImageArray[1];
+                                                }
+                                            }
+                                            <tr class="split-order-title">
+                                                <td class="first-td" valign="top">
+                                                    <div>
+                                                        <img alt="@detail.Name" class="order-list-img" style="width:auto;" src="@ViewBag.AdminUrl@Image">
+                                                    </div>
+                                                </td>
+                                                <td class="second-td" valign="top">
+                                                    <div>
+                                                        <span>@detail.Name</span>
+                                                        <br>
+                                                        <span>RMB @detail.PayMoney</span>
+                                                        <br />
+                                                        @if ((item.Status == "待付款" || item.Status == "待发货") && item.IsErp != true)
+                                                        {
+                                                            @*<a class="btn btn-primary" href="javascript:;" style="float: right;margin-left: 10px;margin-top: 10px;color:white;background-color:#008376" onclick="StartDesign(this,@detail.Id)">开始设计</a>*@
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td class="first-td" valign="top">
+                                                <div>商品总金额 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span>RMB ¥@sumprice</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first-td" valign="top">
+                                                <div>配送服务 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first-td" valign="top">
+                                                <div>运费 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span>RMB ¥@item.Freight</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="split-order-title">
+                                            <td class="first-td" valign="top">
+                                                <div>总金额 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span>RMB ¥@item.TotalPrice</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr style="padding-bottom:10px;">
+                                            <td class="first-td" valign="top">
+                                                <div>下单时间 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span>@item.OrderTime</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first-td" valign="top">
+                                                <div>支付状态 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    @if (item.Status == "待付款")
+                                                    {
+                                                        <span>待支付</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>支付已确认</span>
+                                                    }
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="split-order-title">
+                                            <td class="first-td" valign="top">
+                                                <div>支付方式 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span>
+                                                        @if (item.PayType == 1)
+                                                        {
+                                                            @Html.Raw("线下支付");
+                                                        }
+                                                        else if (item.PayType == 2)
+                                                        {
+                                                            @Html.Raw("支付宝支付");
+                                                        }
+                                                        else if (item.PayType == 3)
+                                                        {
+                                                            @Html.Raw("微信支付");
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first-td" valign="top">
+                                                <div>订单状态 :</div>
+                                            </td>
+                                            <td class="second-td" valign="top">
+                                                <div>
+                                                    <span>@item.Status</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="logistics">
+                                    <span>配送信息</span>
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+                                <div class="logistics-info hidden">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="order-list-table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="first-td" valign="top">
+                                                    <div>配送至 :</div>
+                                                </td>
+                                                <td class="second-td" valign="top">
+                                                    <div>
+                                                        <span style="word-break:break-word;">@item.BuyName</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="first-td" valign="top">
+                                                    <div>收货地址 :</div>
+                                                </td>
+                                                <td class="second-td" valign="top">
+                                                    <div>
+                                                        <span>@item.Address @item.BuyName, @item.Phone</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <table border="0" cellpadding="0" cellspacing="0" class="order-list-table pay-cancel" style="border-top:1px solid #e7e7e7;padding-top:15px;">
+                                    <tbody>
+                                        <tr>
+                                            @if (item.Status == "待付款")
+                                            {
+                                                <td class="first-td" style="width:49%;">
+                                                    <a class="btn-order-cancel-new btn-mobile-right" onclick="ToCancel(@item.Id)" style="padding: 9px;">取消</a>
+                                                </td>
+                                                <td class="second-td" style="width:49%;text-align:center;" valign="top">
+                                                    <a class="product-btn-buy btn-mobile-right" onclick="ToPay(@item.Id)" style="padding: 6px;">支付</a>
+                                                </td>
+                                            }
+                                            else if (item.Status == "待收货")
+                                            {
+                                                <td class="second-td" style="width:99%;text-align:center;" valign="top">
+                                                    <a class="product-btn-buy btn-mobile-right" onclick="ToConfirm(@item.Id)" style="padding: 6px;">确认收货</a>
+                                                </td>
+                                            }
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+
+                                $('.logistics').on('click',
+                                    function (event) {
+                                        var $nextDiv = $(this).next("div");
+                                        var isVisible = !$nextDiv.hasClass("hidden")
+
+                                        if (isVisible) {
+                                            $nextDiv.addClass('hidden');
+                                            $(this).find("img").attr("src", '//asset1.djicdn.com/assets/mobile/direction_down-bdea691624224ee035ac208acb5d2b1f.png');
+                                        } else {
+                                            $nextDiv.removeClass('hidden');
+                                            $(this).find("img").attr("src", '//asset1.djicdn.com/assets/mobile/direction_up-9c3a6bfd247410cd67c56cbcec80e25e.png');
+                                        }
+                                        event.stopPropagation();
+
+                                    });
+                            })</script>
+                    </li>
+                }
+            </ul>
+            <div style="text-align: center">
+                <div style="display: inline-block;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+@section js
+{
+    <link href="~/Current/css/ShopCart/ShopCart.css" rel="stylesheet" />
+    <script src="~/Current/js/UserInfo/OrderList.js?version=1.05"></script>
+    <script>
+        $(function () {
+            // #region 定制效果点击
+            $('#tong .designContainer .skuimgs .designImg').click(function () {
+                $('#tong .designContainer .skuimgs .designImg img').each(function () {
+                    $(this).removeClass('sku_img_checked');
+                })
+                $(this).find('.itemImg').addClass('sku_img_checked');
+                var src = $(this).find('.itemImg').attr('src');
+                $('#tong .designContainer .imgbox img').attr('src', src);
+            });
+            // #endregion
+
+        })
+        // #region 定制效果
+        function designImg(that) {
+            //
+            $('#tong .designContainer .skuimgs .designImg img').eq(0).attr('src', $("#HiddenAdminUrl").val() + $(that).parent().find('.hidBackView').val())
+            $('#tong .designContainer .skuimgs .designImg img').eq(1).attr('src', $("#HiddenAdminUrl").val() + $(that).parent().find('.hidForntView').val())
+            $('#tong .designContainer .skuimgs .designImg img').eq(0).trigger('click');
+            //页面层
+            layer.open({
+                type: 1,
+                title: "定制效果",
+                closeBtn: 1,
+                area: ['11rem', '10rem'],
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: false,
+                content: $('#tong'),
+                end: function () {
+                    $('.hide').css('display', 'none');
+                }
+            });
+        }
+                                                                                                            // #endregion
+
+    </script>
+}

@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Message";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var List_Message = (List<DbOpertion.Models.Message_Grant_View>)ViewBag.Message;
+
+}
+@section Message{
+    class="current"
+}
+@section bannner{
+    <img src="~/Base/images/po.png" /> &nbsp; > &nbsp; <a href="../../UserInfo/Index">我的</a>&nbsp; >&nbsp; <a href="../../UserInfo/Message">消息</a>
+}
+@section name
+{
+    消息
+}
+<script src="~/Current/script/UserInfo/Message.js"></script>
+<link href="~/Current/css/UserInfo/Address.css" rel="stylesheet" />
+<div class="hiddenDiv">
+    <input type="hidden" id="hiddPageCount" value="@ViewBag.MessageCount" />
+    <input type="hidden" id="hiddNoReadPageCount" value="@ViewBag.NoReadMessageCount" />
+    <input type="hidden" id="hiddReadPageCount" value="@ViewBag.ReadMessageCount" />
+    <input type="hidden" id="PageCountType" value="PageCount" />
+</div>
+<div class="somecontet">
+    <div class="inforlisty">
+        <div class="titbox">
+            <div class="s1">
+                <input type="checkbox" />
+                <label onclick="SetAllMess()"> 全部</label>
+            </div>
+            <div class="s2" onclick="SetUnReadMess()">
+                未读 <span>@ViewBag.NoReadMessageAllCount</span>
+            </div>
+            <div class="s3" onclick="SetReadMess()">
+                已读
+            </div>
+            <div class="s4">
+                <a class="a1" onclick="ListUpRead()">标记为已读</a>
+                <a class="a2" onclick="ListDeRead()">删除</a>
+            </div>
+        </div>
+        <div class="list">
+            <ul></ul>
+            <div style="font-size:18px;color:#808080;padding-top:50px;padding-left:35%;display:none;">您暂时没有信息查阅！</div>
+        </div>
+        <div class="propj">
+            <div class="pagesize1">
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 删除 -->
+<div class="dealert Info">
+    <div class="zz"></div>
+    <div class="detailcontent">
+    </div>
+</div>
+<!-- 删除 -->

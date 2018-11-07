@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Info";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var List_Address = (List<DbOpertion.Models.Address>)ViewBag.Address;
+    string AddrShow = "none";
+    string HaveAddrShow = "block";
+    if (List_Address.Count != 0)
+    {
+        AddrShow = "block";
+        HaveAddrShow = "none";
+    }
+}
+@section js{
+    <script src="~/Current/script/UserInfo/Info.js"></script>
+    <script src="~/Current/script/UserInfo/Address.js"></script>
+}
+@section css{
+    <link href="~/Current/css/UserInfo/Info.css" rel="stylesheet" />
+    <link href="~/Current/css/UserInfo/Address.css" rel="stylesheet" />
+}
+
+@section TitelLink{
+    <li><a href="javascript:;">我的收获地址</a></li>
+}
+<div class="col-xs-12">
+    <div class="row">
+        <h2>我的收货地址</h2>
+        <div class="alert alert-warning" style="display:@AddrShow;">
+            <div class="no-order">
+                提示：您可以在结账过程中编辑和新增地址。&nbsp;
+            </div>
+        </div>
+        <div class="alert alert-info" style="display:@HaveAddrShow;">
+            <div class="no-order">您的账户暂时没有地址。&nbsp;</div>
+        </div>
+        <table class="table table-striped table-responsive" style="width:898px;">
+            <thead>
+                <tr class="sortable">
+                    <th style="width:60px;">联系人</th>
+                    <th style="width:600px;">地址</th>
+                    <th style="width:60px;">邮编</th>
+                    <th style="width:100px;">电话</th>
+                    <th style="width:70px;">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in List_Address)
+                {
+                    var AddArry = item.AddrArea.Split(',');
+                    var Address = AddArry[0] + " " + AddArry[1] + " " + AddArry[2] + " " + item.AddrDetail;
+                    <tr>
+                        <td><span>@item.ContactName</span></td>
+                        <td>@Address</td>
+                        <td>402200</td>
+                        <td>@item.ContactPhone</td>
+                        <td>
+                            <a class="btn btn-default btn-xs" onclick="DeleteAddr(@item.Id,this)">
+                                <i class="fa fa-trash-o"></i>&nbsp;删除
+                            </a>
+                            <input type="hidden" class="words AddrId" value="@item.Id" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,111 @@
+﻿.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-radius: 0\9;
+    border-radius: 3px;
+    border-radius: 2px;
+}
+
+.btn-xs, .btn-group-xs > .btn {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.btn-default {
+    border: 2px solid #44a8f2 !important;
+    color: #44a8f2 !important;
+    text-transform: uppercase !important;
+    background-color: white;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table {
+    max-width: 100%;
+    background-color: transparent;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.table > thead > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > th,
+.table > tbody > tr > td,
+.table > tfoot > tr > th,
+.table > tfoot > tr > td {
+    padding: 8px;
+    line-height: 1.428571429;
+    vertical-align: top;
+    border-top: 1px solid #dddddd;
+}
+
+.table > caption + thead > tr:first-child > th,
+.table > caption + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > td,
+.table > thead:first-child > tr:first-child > th,
+.table > thead:first-child > tr:first-child > td {
+    border-top: 0;
+    font-weight: 800;
+}
+
+.table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dddddd;
+}
+
+th {
+    text-align: left;
+}
+
+
+
+
+
+.user-center-content .col-xs-12 {
+    position: relative;
+    min-height: 1px;
+}
+
+    .user-center-content .col-xs-12 .row {
+        margin-left: 0px;
+        margin-right: 0px;
+        font-size: 13px;
+    }
+
+.alert {
+    border: none;
+    border-radius: 0px;
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.alert-info {
+    background-color: #d9edf7;
+    color: #31708f;
+}

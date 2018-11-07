@@ -1,0 +1,37 @@
+﻿body {
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.fc {
+    clear: both;
+}
+/*.layui-btn-danger {
+    margin-left: 10px;
+}*/
+
+
+.layui-collapse h2 {
+    line-height: 42px;
+}
+
+/*.layui-colla-item h2 font {
+    height: 100%;
+    display: inline-block;
+}*/
+.btn-edit {
+margin-left:10px;
+}
+
+.layui-colla-item h2 a {
+/*float:right*/
+}
+.layui-colla-item font {
+    float:right;
+}

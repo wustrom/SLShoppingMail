@@ -1,0 +1,187 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>表单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="~/plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="~/plugins/font-awesome/css/font-awesome.min.css">
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+    <script src="~/Current/Scripts/Grade/detail.js?version=2.01"></script>
+    <link href="~/Current/css/Grade/detail.css" rel="stylesheet" />
+
+    <style>
+        .checkbox-add span {
+            padding: 0;
+        }
+
+            .checkbox-add span input {
+                /*border:none;*/
+            }
+
+        .layui-form-selected span input {
+            width: 78px;
+            height: 22px;
+            /*vertical-align:middle;*/
+            line-height: 22px;
+            margin: 0;
+            margin-right: 2px;
+            margin-left: 2px;
+            margin-bottom: 2px;
+            /*font-size:22px;*/
+            /*line-height:33px;*/
+        }
+
+        .btn-addAttr {
+            /*background-color: #5FB878;
+                height: 30px;
+                line-height: 30px;
+                margin-top: 4px;*/
+        }
+        /*.attrs input {
+            height: 28px;
+            line-height: 28px;
+            margin-top: 4px;
+        }*/
+    </style>
+
+</head>
+
+
+
+<body onkeydown="keydown()">
+    @{ var req = new SLSM.AdminWeb.Model.Request.Grade.GradeDetailReq();
+        req = ViewBag.req;
+        req.img = req.img ?? "/Image/Grade/noImg.svg";
+        req.Bigimg = req.Bigimg ?? "/Image/Grade/noImg.svg";
+        var IsScence = ViewBag.IsScence == null ? "" : ViewBag.IsScence.ToString();
+        var CommdityList = ViewBag.CommdityList != null ? (List<Commodity_Stageprice_View>)ViewBag.CommdityList : new List<Commodity_Stageprice_View>();
+        var thisCommdityList = ViewBag.thisCommdityList != null ? (List<Commodity_Stageprice_View>)ViewBag.thisCommdityList : new List<Commodity_Stageprice_View>();
+    }
+    <input type="hidden" id="IsScence" value="@IsScence" />
+    <div style="margin: 15px;">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">选择缩略图</label>
+                <div class="layui-input-block">
+                    <img id="btn-Smallimg" src="@req.img" alt="暂无图片" style="height:100px;" />
+                </div>
+                <form id="formid1" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="visibility: hidden">
+                    <input name="upSmallImg" type="file" id="upSmallImg" onchange="fileSmallchange(event)" accept=".png,.jpg,.jpeg">
+                    <input id="testSubmit" type="submit" value="上传">
+                </form>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">选择大图</label>
+                <div class="layui-input-block">
+                    <img id="btn-Bigimg" src="@req.Bigimg" alt="暂无图片" style="height:100px;" />
+                </div>
+                <form id="formid2" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="visibility: hidden">
+                    <input name="upBigImg" type="file" id="upBigImg" onchange="filechange(event)" accept=".png,.jpg,.jpeg">
+                    <input id="testSubmit" type="submit" value="上传">
+                </form>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input data-id="@req.gradeId" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入分类名称" class="layui-input grade" value="@req.gradeName">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">父分类</label>
+            <div class="layui-input-block">
+                <input data-id="@req.fatherId" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="" readonly class="layui-input gradeFather" value="@req.fatherName">
+            </div>
+        </div>
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">添加商品</label>
+                    <div class="layui-input-block AddScences">
+                        <select name="Commdity">
+                            <option value=""></option>
+                            @foreach (var item in CommdityList)
+                            {
+                                <option value="@item.Id">@item.ProductNo</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-normal" onclick="AddCommdity()">添加</a>
+                </div>
+            </div>
+            <div class="layui-form-item CommScence">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品列表</label>
+                    <div class="layui-input-block Commdity">
+                        @foreach (var item in thisCommdityList)
+                        {
+                            <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                                <span>@item.ProductNo</span>
+                                <i class="layui-icon btn-delAttr" onclick="delCommdity(this)">ဆ</i>
+                                <input type="hidden" class="hiddenCommdity" value="@item.Id" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" value="" name="CommdityList" id="CommdityList" />
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn btn-save">立即提交</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function AddCommdity() {
+            if ($("select[name='Commdity'] option:selected").val() == "") {
+                layer.msg("请选择添加项！");
+                return;
+            }
+            $(".layui-input-block.Commdity").append(`<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                                                                <span>`+ $("select[name='Commdity'] option:selected").html() + `</span>
+                                                                <i class="layui-icon btn-delAttr" onclick="delCommdity(this)">ဆ</i>
+                                                                <input type="hidden" class="hiddenCommdity" value="`+ $("select[name='Commdity'] option:selected").val() + `" />
+                                                             </div>`);
+            GetCommdityList();
+            debugger;
+        }
+
+        function GetCommdityList() {
+            var CommdityList = "";
+            $(".hiddenCommdity").each(function () {
+                CommdityList = CommdityList + $(this).val() + "|";
+            })
+            $("#CommdityList").val(CommdityList);
+        }
+
+        function delCommdity(that) {
+            $(that).parent().remove();
+            GetCommdityList();
+        }
+        $(function () {
+            GetCommdityList();
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,449 @@
+﻿@{
+    ViewBag.Title = "Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    @{DbOpertion.Models.User userinfo = ViewBag.UserFullInfo;}
+    var Id = '@ViewBag.UserId'
+
+</script>
+<div id="panel" class="public-content-box">
+    <!--面包屑-->
+    <div class="public-crumbs border-b1s-ccc bgfff">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="../../userInfo/Index">个人中心</a></li>
+            <li><a href="../../userInfo/Info">个人资料</a></li>
+        </ul>
+    </div>
+    <!--个人资料-->
+    <div class="personal-date">
+        <div class="personal-row">
+            <div class="left-title">头像</div>
+            <div class="right-con">
+                <div class="add-head-img">
+                    @if (userinfo.Image != null)
+                    {
+                        <img src="@ViewBag.AdminUrl@userinfo.Image" class="img" style="opacity: 1;" />
+                    }
+                    else
+                    {
+                        <img src="~/Current/images/zhanwu_touxiang.png" />
+                    }
+                    <input type="file" class="file" placeholder="ICCID" accept="image/*" id="fileUpLoad">
+                </div>
+            </div>
+        </div>
+        <div class="personal-row name-row name-row2">
+            <div class="left-title">昵称</div>
+            <div class="right-con" id="Name">
+                <span>@userinfo.Name</span>
+                <input type="text" id="HName" value="@userinfo.Name" class="input" />
+                <input type="button" value="修改" class="btn-form name-btn" id="Xiu">
+                <input type="button" value="保存" class="btn-form name-btn" id="Baocun">
+            </div>
+        </div>
+        <div class="personal-row">
+            <div class="left-title">性别</div>
+            <div class="right-con" id="Sex">
+                <span>@(userinfo.Sex == true ? "男" : "女")</span>
+                <select id="HSex" class="form-select">
+                    @if (userinfo.Sex == true)
+                    {
+                        <option selected>男</option>
+                        <option>女</option>
+                    }
+                    else
+                    {
+                        <option>男</option>
+                        <option selected>女</option>
+                    }
+                </select>
+
+            </div>
+        </div>
+
+        <div class="personal-row">
+            <div class="left-title">手机</div>
+            <div class="right-con">
+                <p>@userinfo.Phone<a class="modify phoneInfo">修改绑定手机</a></p>
+            </div>
+        </div>
+        <div class="personal-row">
+            <div class="left-title">密码</div>
+            <div class="right-con">
+                <p>*********<a class="modify passwordInfo">修改密码</a></p>
+            </div>
+        </div>
+        <div class="personal-row">
+            <div class="left-title">公司名称</div>
+            <div class="right-con" id="CompanyName">
+                <span>@userinfo.CompanyName</span>
+                <input type="text" id="HCompanyName" value="@userinfo.CompanyName" class="input" />
+            </div>
+        </div>
+
+        <div class="personal-row">
+            <div class="left-title">公司性质</div>
+            <div class="right-con" id="ConmanyType">
+                <span>民营企业</span>
+                <select class="HiddenInput" id="HConmpanyType">
+                    @{
+                        var str = "国有企业,集体企业,联营企业,股份合作制企业,私营企业,个体户,合伙企业,有限责任公司,股份有限公司";
+                    }
+                    <option value="国有企业">国有企业</option>
+                    <option value="集体企业">集体企业</option>
+                    <option value="联营企业">联营企业</option>
+                    <option value="股份合作制企业">股份合作制企业</option>
+                    <option value="私营企业">私营企业</option>
+                    <option value="个体户">个体户</option>
+                    <option value="合伙企业">合伙企业</option>
+                    <option value="有限责任公司">有限责任公司</option>
+                    <option value="股份有限公司">股份有限公司</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="personal-row">
+            <div class="left-title">公司电话 </div>
+            <div class="right-con" id="CompanyPhone">
+                <span>@userinfo.CompanyPhone</span>
+                <input type="text" id="HCompanyPhone" value="@userinfo.CompanyPhone" class="input" />
+            </div>
+        </div>
+
+        <div class="personal-row address-row">
+            <div class="left-title">公司地址 </div>
+            <div class="right-con">
+                @if (userinfo.CompanyAddr != null)
+                {
+                    var area = userinfo.CompanyAddr.Split(',');
+                    if (area.Count() == 4)
+                    {
+                        userinfo.CompanyAddr = area[0] + " " + area[1] + " " + area[2];
+                        <div class="select-row" id="CompanyAddr">
+                            <span>@userinfo.CompanyAddr</span>
+                            <div class="s2" id="HCompanyAddr">
+                                <select name="province" id="province" class="form-select">
+                                    <option value="-1">请选择省</option>
+                                </select>
+                                <span class="t">-</span>
+                                <select name="city" id="city" class="form-select">
+                                    <option value="-1">请选择市</option>
+                                </select>
+                                <span class="t">-</span>
+                                <select name="area" id="area" class="form-select">
+                                    <option value="-1">请选择县/区</option>
+                                </select>
+                            </div>
+                        </div>
+                        <span id="CompanyDetail">@area[3]</span>
+                        <input type="text" id="HCompanyDetail" value="@area[3]" class="input" />
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="personal-row">
+            <div class="left-title">邮编</div>
+            <div class="right-con" id="ZipCode">
+                <span>@userinfo.ZipCode</span>
+                <input type="number" pattern="\d*" id="HZipCode" value="@userinfo.ZipCode" class="input" />
+            </div>
+        </div>
+
+    </div>
+   
+</div>
+<div class="go-top"></div>
+<div class="alertname Phone" style="display:none;">
+    <div class="detailcontent">
+        <div class="box2">
+            <div class="model">
+                <div class="s1">
+                    旧手机：
+                </div>
+                <div class="s2">
+                    <input type="number" pattern="\d*" class="words" id="phone1" />
+                    <span class="yz dateBtn1" onclick="dateBtnClick();">
+                        验证
+                        <script>
+                            function dateBtnClick() {
+                                var _this = $(".dateBtn1:last");
+                                if (!$(_this).hasClass("on")) {
+                                    var data = new Object();
+                                    data.UserPhone = $('#phone1').val();
+                                    if (data.UserPhone == null || data.UserPhone == "") {
+                                        layer.msg("请输入手机号码！");
+                                        return;
+                                    }
+                                    jQuery.axpost("../../Api/Home/SendReSetPhone", JSON.stringify(data), function () {
+                                        layer.msg("发送短信成功！");
+                                    });
+
+                                }
+                            }
+                        </script>
+                    </span>
+                </div>
+            </div>
+            <div class="model">
+                <div class="s1">
+                    验证码：
+                </div>
+                <div class="s2 ">
+                    <input type="number" pattern="\d*" class="words2" id="code1" />
+                </div>
+            </div>
+            <div class="model">
+                <div class="s1">
+                    新手机：
+                </div>
+                <div class="s2">
+                    <input type="number" pattern="\d*"class="words" id="phone2" />
+                    <span class="yz dateBtn2" onclick="dateBtnClick2();">
+                        验证
+                        <script>
+                            function dateBtnClick2() {
+                                var _this = $(".dateBtn2:last");
+                                if (!$(_this).hasClass("on")) {
+                                    var data = new Object();
+                                    data.UserPhone = $('#phone2').val();
+                                    if (data.UserPhone == null || data.UserPhone == "") {
+                                        layer.msg("请输入手机号码！");
+                                        return;
+                                    }
+                                    jQuery.axpost("../../Api/Home/SendReSetPhone", JSON.stringify(data), function () {
+                                        layer.msg("发送短信成功！");
+                                    });
+
+                                }
+                            }
+
+                        </script>
+                    </span>
+                </div>
+            </div>
+            <div class="model">
+                <div class="s1">
+                    验证码：
+                </div>
+                <div class="s2">
+                    <input type="number" pattern="\d*" class="words2" id="code2" />
+                </div>
+            </div>
+            <div class="xg" onclick="enterEdit()">确定修改</div>
+        </div>
+    </div>
+</div>
+
+<div class="alertname password" style="display:none;">
+    <div class="detailcontent">
+        <div class="box2">
+            <div class="model">
+                <div class="s1">
+                    旧密码：
+                </div>
+                <div class="s2 ">
+                    <input type="password" class="words2" id="Password1" />
+                </div>
+            </div>
+            <div class="model">
+                <div class="s1">
+                    新密码：
+                </div>
+                <div class="s2">
+                    <input type="password" class="words2" id="Password2" />
+                </div>
+            </div>
+            <div class="model">
+                <div class="s1">
+                    重&nbsp;&nbsp;&nbsp;复：
+                </div>
+                <div class="s2">
+                    <input type="password" class="words2" id="Password3" />
+                </div>
+            </div>
+            <div class="xg" onclick="ResetPass()">确定修改</div>
+        </div>
+    </div>
+</div>
+
+@section js
+{
+    <style>
+        .layui-layer-shade {
+            z-index: 0 !important;
+        }
+
+        .alertname .detailcontent .box2 .model .s1 {
+            float: left;
+            width: 1.6rem;
+            color: #333333;
+            line-height: 27px;
+            padding-left: 0.1rem;
+        }
+
+        .alertname .detailcontent .box2 .model .s2 .words {
+            float: left;
+            width: 3.0rem;
+            height: 25px;
+            border: none;
+            padding-left: 0.1rem;
+            padding-right: 0.1rem;
+        }
+
+        .alertname .detailcontent .box2 .model .s2 {
+            float: left;
+            width: 4.3rem;
+            height: 25px;
+            border: 1px solid #ccc;
+        }
+
+            .alertname .detailcontent .box2 .model .s2 .yz {
+                float: left;
+                height: 25px;
+                line-height: 25px;
+                text-align: center;
+                color: #fff;
+                width: 1.2rem;
+                cursor: pointer;
+                background: #008374;
+            }
+
+        .alertname .detailcontent .box2 .xg {
+            display: block;
+            margin: auto;
+            margin-top: 28px;
+            width: 3.0rem;
+            height: 32px;
+            background: #008374;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .alertname .detailcontent .box2 .model {
+            zoom: 1;
+            overflow: hidden;
+            margin-bottom: 13px;
+            margin-top: 13px;
+        }
+
+            .alertname .detailcontent .box2 .model .s2 .words2 {
+                float: left;
+                width: 3.0rem;
+                height: 25px;
+                border: none;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+        .add-head-img img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="~/Current/js/UserInfo/Info.js"></script>
+    <script>
+        $(function () {
+
+            $("#fileUpLoad").change(function () {
+                //加载层-风格3
+                layer.load(2);
+                //此处演示关闭
+                setTimeout(function () {
+                    layer.closeAll('loading');
+                }, 5000)
+                 $(this).prev().css("opacity", "1")
+                var filePath = $(this).val();//读取图片路径
+                var fr = new FileReader();//创建new FileReader()对象
+                var imgObj = this.files[0];//获取图片
+                fr.readAsDataURL(imgObj);//将图片读取为DataURL
+                var obj = $(this).prev()[0];//
+                if (filePath.indexOf("jpg") != -1 || filePath.indexOf("JPG") != -1 || filePath.indexOf("PNG") != -1 || filePath.indexOf("png") != -1) {
+                    var arr = filePath.split('\\');
+                    var fileName = arr[arr.length - 1];
+                    $(this).parent().next().show();
+                    fr.onload = function () {
+                        var datas = new Object();
+                        datas.pic = this.result;
+                        datas.UserID = @userinfo.Id;
+                        jQuery.axadminpost('../../Api/UpImg/SaveUserImage', datas, function (data) {
+                            obj.src = data.Message;
+                            layer.closeAll('loading');
+                        })
+                    };
+                } else {
+                    layer.msg("您未上传文件，或者您上传文件类型有误！");
+                    $(this).parent().next().show();
+                    return false
+                }
+            })
+
+            $(".add-head-img img").click(function () {
+                $('#fileUpLoad').trigger("click");
+            })
+            $('.modify.phoneInfo').click(function () {
+                layer.open({
+                    type: 1,
+                    title: "修改手机号码",
+                    closeBtn: 1,
+                    area: ['7rem', '7rem'],
+                    shadeClose: false,
+                    content: $('.alertname.Phone'),
+                    end: function () {
+                        $('.hide').css('display', 'none');
+                    }
+                });
+            })
+            $('.modify.passwordInfo').click(function () {
+                layer.open({
+                    type: 1,
+                    title: "修改密码",
+                    closeBtn: 1,
+                    area: ['7rem', '8rem'],
+                    shadeClose: false,
+                    content: $('.alertname.password'),
+                    end: function () {
+                        $('.hide').css('display', 'none');
+                    }
+                });
+            })
+        });
+        function enterEdit() {
+            var data = new Object();
+            data.Phone1 = $('#phone1').val();
+            data.Phone2 = $('#phone2').val();
+            data.Code1 = $('#code1').val();
+            data.Code2 = $('#code2').val();
+            jQuery.axpost('../../Api/User/ResetPhone', JSON.stringify(data), function (data) {
+                layer.closeAll();
+                layer.msg("手机号码修改成功！");
+                $('.rightsome2 .num .words2').val(Phone2);
+            })
+        }
+
+        function ResetPass() {
+            var data = new Object();
+            data.Password = $('#Password1').val();
+            data.NewPassword = $('#Password2').val();
+            if ($('#Password2').val() != $('#Password3').val()) {
+                layer.msg("两次输入密码不一致！");
+                return;
+            }
+            $('#Password1').val('');
+            $('#Password2').val('');
+            $('#Password3').val('');
+            jQuery.axpost('../../Api/User/ResetPassword', JSON.stringify(data), function (data) {
+                layer.closeAll();
+                layer.msg("手机密码修改成功！");
+                
+            })
+        }
+    </script>
+}
+

@@ -1,0 +1,206 @@
+﻿
+@{
+    ViewBag.Title = "Info";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    DbOpertion.Models.User userinfo = ViewBag.UserFullInfo;
+    var CompanyType = userinfo.ConmpanyType == null ? "暂未选择" : userinfo.ConmpanyType;
+    var ListComm = ViewBag.ListComm == null ? new List<string>() : (List<string>)ViewBag.ListComm;
+}
+@section js{
+    <script>
+    $(function () {
+        $(".col-xs-10 .form-group input[type=file]").change(function () {
+            $(this).parent().parent().parent().find('.col-xs-2 img').css("opacity", "1")
+            var filePath = $(this).val();//读取图片路径
+            var fr = new FileReader();//创建new FileReader()对象
+            var imgObj = this.files[0];//获取图片
+            fr.readAsDataURL(imgObj);//将图片读取为DataURL
+            var obj = $(this).parent().parent().parent().find('.col-xs-2 img')[0];//
+            if (filePath.indexOf("jpg") != -1 || filePath.indexOf("JPG") != -1 || filePath.indexOf("PNG") != -1 || filePath.indexOf("png") != -1) {
+                var arr = filePath.split('\\');
+                var fileName = arr[arr.length - 1];
+                $(this).parent().next().show();
+                fr.onload = function () {
+
+                    var datas = new Object();
+                    datas.pic = this.result;
+                    datas.UserID = @userinfo.Id;
+                    jQuery.axadminpost('../../Api/UpImg/SaveUserImage', datas, function (data) {
+                        obj.src = data.Message;
+                    })
+                };
+            } else {
+                $(this).parent().next().show();
+                $(this).parent().next().children("i").html("您未上传文件，或者您上传文件类型有误！").css("color", "red");
+                return false
+            }
+        });
+    })
+
+
+    function enterEdit() {
+         var data = new Object();
+         data.Phone1 = $('#phone1').val();
+         data.Phone2 = $('#phone2').val();
+         data.Code1 = $('#code1').val();
+         data.Code2 = $('#code2').val();
+         jQuery.axpost('../../Api/User/ResetPhone', JSON.stringify(data), function (data) {
+             layer.msg("手机号码修改成功！");
+             $('.rightsome2 .num .words2').val(Phone2);
+        })
+    }
+
+    function ResetPass() {
+        var data = new Object();
+        data.Password = $('#Password1').val();
+        data.NewPassword = $('#Password2').val();
+        if ($('#Password2').val() != $('#Password3').val()) {
+            layer.msg("两次输入密码不一致！");
+            return;
+        }
+        $('#Password1').val('');
+        $('#Password2').val('');
+        $('#Password3').val('');
+        jQuery.axpost('../../Api/User/ResetPassword', JSON.stringify(data), function (data) {
+            layer.msg("手机密码修改成功！");
+        })
+        }
+
+        function submitUser() {
+            var Id = $('input[name="Id"]').val();
+            var UserName = $('input[name="Name"]').val();
+            var CompanyName = $('input[name="CompanyName"]').val();
+            var ConmpanyType = $('#ConmpanyType option:selected').val();
+            var CompanyPhone = $('input[name="CompanyPhone"]').val();
+            var CompanyAddr = document.getElementById("CompanyAddr").value;
+            var ZipCode = $('input[name="ZipCode"]').val();
+            var select = $('#select2').val();
+            var select2 = $('#select1').val();
+            var datas = { CompanyName: CompanyName, CompanyPhone: CompanyPhone, CompanyAddr: CompanyAddr, ZipCode: ZipCode, CompanyType: select, sex: select2, Name: UserName };
+            jQuery.axpost('../../Api/User/UpdateCompany', JSON.stringify(datas), function (data) {
+                layer.msg(data.Message);
+                window.location.replace("../../UserInfo/Info");
+            })
+        }
+    </script>
+}
+@section css{
+    <link href="~/Current/css/UserInfo/Info.css" rel="stylesheet" />
+}
+
+@section TitelLink{
+    <li><a href="javascript:;">我的个人资料</a></li>
+}
+<h2>个人资料</h2>
+<form accept-charset="UTF-8" action="/cn/user/49551361" class="form-horizontal ng-pristine ng-valid" enctype="multipart/form-data" id="profile-form" method="post">
+    <div style="margin:0;padding:0;display:inline">
+        <input type="hidden" name="Id" value="@userinfo.Id" />
+    </div>
+    <fieldset>
+        <div ng-non-bindable="">
+            <div class="row form-group">
+                <div class="col-xs-12">
+                    <label>头像</label>
+                </div>
+                <div class="col-xs-2 profile-pic">
+                    @if (userinfo.Image != null)
+                    {
+                        <img src="@ViewBag.AdminUrl@userinfo.Image" class="img" style="opacity: 1;" />
+                    }
+                    else
+                    {
+                        <img src="@ViewBag.AdminUrl@userinfo.Image" class="img" />
+                    }
+
+                </div>
+                <div class="col-xs-10">
+                    <div class="form-group">
+                        <label for="inputFile">上传新的头像</label>
+                        <input type="file" class="file" placeholder="ICCID" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <small>允许的文件类型JPG, GIF或PNG。<br />最大文件尺寸为1MB</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label>手机</label>
+                    <input class="form-control" name="user[account_name]" readonly="readonly" type="text" value="@userinfo.Phone" />
+                </div>
+                <div class="col-xs-4">
+                    <label>用户名</label>
+                    <span class="text-danger">&nbsp;*</span>
+                    <input class="form-control" type="text" value="@userinfo.Name" name="Name" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label><span>公司名称</span></label>
+                    <input class="form-control" type="text" value="@userinfo.CompanyName" name="CompanyName" />
+                </div>
+                <div class="col-xs-4">
+                    <label><span>公司电话</span></label>
+                    <input class="form-control" type="text" value="@userinfo.CompanyPhone" name="CompanyPhone" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label><span>公司地址</span></label>
+                    <input class="form-control" type="text" value="@userinfo.CompanyAddr" id="CompanyAddr" />
+                </div>
+                <div class="col-xs-4">
+                    <label><span>公司电话</span></label>
+                    <input class="form-control" type="text" value="@userinfo.ZipCode" name="ZipCode" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label>公司性质</label>
+                    <select class="form-control select" id="select2" name="date[year]">
+                        @foreach (var item in ListComm)
+                        {
+                            if (item == CompanyType)
+                            {
+                                <option value="@item" selected="selected">@item</option>
+                            }
+                            else
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-12">
+                    <label for="gender">性别</label>
+                </div>
+
+                <div class="col-xs-4">
+                    <select id="select1" class="form-control">
+                        @if (userinfo.Sex == true)
+                        {
+                            <option value="男" selected>男</option>
+                            <option value="女">女</option>
+                        }
+                        else
+                        {
+                            <option value="男">男</option>
+                            <option value="女" selected>女</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-2" style="padding-left:0px;">
+            <button class="btn btn-primary btn-block" type="button" onclick="submitUser()">
+                <span id="profile_submit_tip" class="">保存</span>
+            </button>
+        </div>
+    </fieldset>
+    <div class="row">
+        &nbsp;
+    </div>
+</form>

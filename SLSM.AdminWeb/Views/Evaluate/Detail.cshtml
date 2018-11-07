@@ -1,0 +1,79 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Evalinfo = ViewBag.Evaluate == null ? new Evalinfo() : (Evalinfo)ViewBag.Evaluate;
+}
+
+<div style="margin: 15px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片列表</label>
+        <div class="layui-input-block">
+            @{
+                if (Evalinfo.ImageList != null)
+                {
+                    var arry = Evalinfo.ImageList.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    foreach (var item in arry)
+                    {
+                        <div style="width:80px;height:80px;float: left;">
+                            <img src="@item" style="width:80px;height:80px;">
+                        </div>
+                    }
+                }
+            }
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="EvalId" id="EvalId" value="@Evalinfo.EvaluateId" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommName" lay-verify="required" autocomplete="off" class="layui-input" value="@Evalinfo.CommName" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Introduce" placeholder="请输入内容标题" lay-verify="required" class="layui-input" value="@Evalinfo.Name" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">星级</label>
+            <div class="layui-input-block">
+                <select name="Start" lay-verify="required" disabled="disabled">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (Evalinfo.Start == i)
+                        {
+                            <option value="@i" selected="selected">@i 星</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i 星</option>
+                        }
+
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="content" lay-verify="content" id="LAY_demo_editor" readonly="readonly">@Html.Raw(@Evalinfo.Content)</textarea>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script>
+
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+    }
+</style>

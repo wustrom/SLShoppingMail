@@ -1,0 +1,163 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var ListGrade = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listGradeOfTitle;
+    var listScence = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listScence;
+}
+<link href="~/Current/css/SyloonAssestBase.css" rel="stylesheet" />
+<link href="~/Current/css/Assets/sitemap.css" rel="stylesheet" />
+<div class="syloon-CN">
+    <div class="breadcrumb-nav">
+        <div class="container">
+            <h2 class="title">网站地图</h2>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="../Main/Index">首页</a>
+                </li>
+                <li>
+                    <span>网站地图</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="sitemap">
+        <div class="container clearfix">
+            <div class="row">
+                <div class="col-sm-3 col-xs-6 site-group">
+                    <h4>关于赛龙</h4>
+                    <p>
+                        <a href="../../Helper/AboutUs?tabname=company_profile">公司介绍</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/AboutUs?tabname=exhibition">展会信息</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/AboutUs?tabname=recruitment_elites">人才招聘</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/AboutUs?tabname=news">最新动态</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/AboutUs?tabname=contact_the_salon">联系我们</a>
+                    </p>
+                </div>
+                <div class="col-sm-3 col-xs-6 site-group">
+                    <h4>最新动态</h4>
+                    <p>
+                        <a href="../../Helper/PurchaseGuide?tabname=account_management">账号管理</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/PurchaseGuide?tabname=shopping_guide">购物帮助</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/PurchaseGuide?tabname=payment_method">支付方式与发票</a>
+                    </p>
+                    <p style="display:none;">
+                        <a href="../../Helper/PurchaseGuide?tabname=dji_credit">积分</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/PurchaseGuide?tabname=order_info">订单帮助</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/PurchaseGuide?tabname=shipping_and_delivery">物流与发货</a>
+                    </p>
+                    <p>
+                        <a href="../../Helper/PurchaseGuide?tabname=refund_and_return_policy">退换货政策</a>
+                    </p>
+                </div>
+                <div class="col-sm-3 col-xs-6 site-group">
+                    <h4>工艺介绍</h4>
+                    <p style="padding-bottom:17px;">
+                        <a href="javascript:;">商品工艺介绍</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**笔身常用材料和表面处理</a>
+                    </p>
+                    <p style="padding-bottom:34px;">
+                        <a href="javascript:;">**笔芯小知识</a>
+                    </p>
+                    <p style="padding-bottom:17px;">
+                        <a href="javascript:;">印刷工艺介绍</a>
+                    </p>
+                    <p>
+
+                    </p>
+                    <p>
+                        <a href="javascript:;">**丝网印刷</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**移印</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**热转印</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**数码打印</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**镭射</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**烫印（金、银）</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**压印</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**胶印</a>
+                    </p>
+                    <p>
+                        <a href="javascript:;">**刺绣</a>
+                    </p>
+                </div>
+                <div class="col-sm-3 col-xs-6 site-group">
+                    <h4>购买渠道</h4>
+                    <p>
+                        <a href="../../Main/Index">
+                            赛龙官方商城
+                        </a>
+                    </p>
+                    <a href="javascript:;" target="_blank" rel="nofollow">
+                        天猫官方旗舰店
+                    </a>
+                    <p>
+                        <a href="javascript:;">
+                            京东官方旗舰店
+                        </a>
+                    </p>
+                    <a href="javascript:;" target="_blank" rel="nofollow">
+                        XX礼品平台
+                    </a>
+                    <a href="javascript:;" target="_blank" rel="nofollow">
+                        查找各地经销商
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-sm-3 col-xs-6 site-group" style="margin-top: -200px;">
+                    <h4>商品分类</h4>
+                    @foreach (var item in ListGrade)
+                    {
+                        <p>
+                            <a href="../../../CommodityList/Index?gradeId=@item.id">
+                                @item.name
+                            </a>
+                        </p>
+                    }
+                </div>
+                <div class="col-sm-3 col-xs-6 site-group" style="margin-top: -200px;margin-left: 25%;">
+                    <h4>使用场景</h4>
+                    @foreach (var item in listScence)
+                    {
+                        <p>
+                            <a href="../../../CommodityList/Index?gradeId=@item.id">
+                                @item.name
+                            </a>
+                        </p>
+                    }
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>

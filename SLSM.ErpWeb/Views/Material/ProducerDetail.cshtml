@@ -1,0 +1,547 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var producer = ViewBag.Producer == null ? new Producer() : (Producer)ViewBag.Producer;
+    var ConectList = ViewBag.ConectList == null ? new List<Producerconectinfo>() : (List<Producerconectinfo>)ViewBag.ConectList;
+}
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<style>
+    .titletd {
+        background-color: #008375;
+        color: white;
+        font-size: 23px;
+        height: 60px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+        .titletd img {
+            height: 52px;
+            width: 52px;
+            float: right;
+            margin-left: 155px;
+            margin-top: -11px;
+            position: absolute;
+        }
+
+    .blankLine {
+        height: 20px;
+    }
+
+    .BaseInfo {
+        height: 20px;
+        border: none;
+    }
+
+        .BaseInfo .baselabel {
+            background-color: #D9D9D8;
+            border: 1px solid black;
+            padding-left: 5px;
+        }
+
+        .BaseInfo .baseinput {
+            border: 1px solid black;
+        }
+
+            .BaseInfo .baseinput .layui-input {
+                height: 19px;
+                line-height: 19px;
+                padding-left: 3px;
+            }
+
+
+    .hearpart {
+        background-color: yellow;
+        height: 20px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    .fin_info {
+        height: 20px;
+    }
+
+        .fin_info .baselabel {
+            background-color: #D9D9D8;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .fin_info .baseinput {
+            border: 1px solid black;
+        }
+
+            .fin_info .baseinput .layui-input {
+                padding-left: 2px;
+                height: 20px;
+                line-height: 20px;
+            }
+
+    .ConectTitle td {
+        border: 1px solid black;
+        background-color: #d9d9d9;
+        text-align: center;
+    }
+
+    .ConectDetail td {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .layui-form-select .layui-edge {
+        right: -12px;
+    }
+
+    .layui-select-title .layui-input.layui-unselect {
+        padding-right: 0px;
+        padding-left: 5px;
+    }
+
+    .layui-form-selected dl {
+        position: relative;
+    }
+
+    .layui-select-title {
+        position: relative;
+    }
+
+    .layui-anim.layui-anim-upbit {
+        top: 0px;
+    }
+
+    .ConectDetail .layui-input {
+        height: 19px;
+        line-height: 19px;
+    }
+</style>
+<script>
+    function TdConectListHtml() {
+        var count = $("#ConectListCount").val();
+        var str = '<tr class="ConectDetail">\
+                        <td>\
+                            <input type="text" name="ProducerConect_'+ count + '_ConectName" autocomplete="off" class="layui-input" value="">\
+                        </td>\
+                        <td colspan="2">\
+                            <input type="text" name="ProducerConect_'+ count + '_Position" autocomplete="off" class="layui-input" value="">\
+                        </td>\
+                        <td>\
+                            <select name="ProducerConect_'+ count + '_ConectSex" lay-verify="selectItem">\
+                                <option value="">请选择性别</option>\
+                                <option value="男">男</option>\
+                                <option value="女">女</option>\
+                            </select>\
+                        </td>\
+                        <td colspan="3">\
+                            <input type="text" name="ProducerConect_'+ count + '_Telephone" autocomplete="off" class="layui-input" value="">\
+                        </td>\
+                        <td colspan="2">\
+                            <input type="text" name="ProducerConect_'+ count + '_Phone" autocomplete="off" class="layui-input" value="">\
+                        </td>\
+                        <td colspan="2">\
+                            <input type="text" name="ProducerConect_'+ count + '_Email" autocomplete="off" class="layui-input" value="">\
+                             <div style="float: right;position: absolute;margin-left: 200px;margin-top: -20px;">\
+                                <a class="DelConectBtn">删除</a>\
+                            </div>\
+                        </td>\
+                    </tr>';
+        count++;
+        $("#ConectListCount").val(count);
+        return str;
+    }
+
+    // #region 颜色信息绑定
+    function TdConectBind() {
+        // #region 删除按钮
+        $(".DelConectBtn").unbind();
+        $(".DelConectBtn").click(function () {
+            var that = this;
+            if ($("tr.ConectDetail").length == 1) {
+                layer.msg("至少要有一个联系人！");
+            }
+            else {
+                layer.confirm('确定删除此联系人？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $(that).parent().parent().parent().remove();
+                    layer.close(index);
+                });
+            }
+        });
+        // #endregion
+
+        // #region 添加按钮
+        $(".AddConectBtn").unbind();
+        $(".AddConectBtn").click(function () {
+            layer.confirm('确定要添加联系人？', {
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                $("tr.ConectDetail:last").after(TdConectListHtml());
+                TdConectBind();
+                renderForm();
+                layer.close(index);
+            });
+        });
+        // #endregion
+    }
+    // #endregion
+
+    $(function () {
+        TdConectBind();
+    })
+
+    function renderForm() {
+        layui.use('form', function () {
+            var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+            form.on('select(color)', function (data) {
+                $(data.elem.parentNode.parentNode).find('input[name$="_ColorSystem"]').val(data.elem.selectedOptions[0].parentNode.label);
+                $(data.elem.parentNode.parentNode).find('input[name$="_ColorDesc"]').val($(data.elem.selectedOptions[0]).attr('ChinaDescribe'));
+                $(data.elem.parentNode.parentNode).find('input[name$="_EngColorDesc"]').val($(data.elem.selectedOptions[0]).attr('engdescibe'));
+            });
+
+            form.on('select(Prodecer)', function (data) {
+                
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProdecerCode"]').val(data.elem.selectedOptions[0].value);
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProdecerCodeInfo"]').val($(data.elem.selectedOptions[0]).attr('CodeInfo'));
+            });
+        });
+    }
+</script>
+<div>
+    <input type="hidden" id="ConectListCount" value="@(ConectList.Count>0?ConectList.Count:1)" />
+</div>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <table>
+            <colgroup>
+                <col style="width:80px;" />
+                <col style="width:46px;" />
+                <col style="width:53px;" />
+                <col style="width:82px;" />
+                <col style="width:67px;" />
+                <col style="width:12px;" />
+                <col style="width:83px;" />
+                <col style="width:77px;" />
+                <col style="width:95px;" />
+                <col style="width:90px;" />
+                <col style="width:105px;" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td colspan="11" class="titletd">
+                        宁波赛龙礼品有限公司 产品档案
+                        <img src="~/Base/images/Image/SyloonLogo.png" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="11" class="blankLine"></td>
+                </tr>
+                <!--供应商基础信息开始-->
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        供应商代码
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="ProducerCode" value="@producer.ProducerCode" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel">
+                        地址
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="Address" value="@producer.Address" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        供应商名称
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="hidden" name="id" value="@producer.Id">
+                        <input type="text" name="Name" value="@producer.Name" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel">
+                        所在地区
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="AddressRegion" value="@producer.AddressRegion" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        供应商简称
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="Abbreviation" value="@producer.Abbreviation" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel">
+                        邮政编码
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="ZipCode" value="@producer.ZipCode" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        主营产品
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="SupplyProducts" value="@producer.SupplyProducts" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel">
+                        信用等级
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="CreditRating" value="@producer.CreditRating" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        公司网址
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="CompanyWebsite" value="@producer.CompanyWebsite" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel">
+                        合作等级
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="CooperationLevel" value="@producer.CooperationLevel" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        企业法人
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="EnterLegPerson" value="@producer.EnterLegPerson" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel">
+                        企业传真
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="FaxNumber" value="@producer.FaxNumber" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="BaseInfo">
+                    <td colspan="2" class="baselabel">
+                        付款方式(开票后几天)
+                    </td>
+                    <td colspan="3" class="baseinput">
+                        <input type="text" name="AccountPeriod" value="@producer.AccountPeriod" lay-verify="number" autocomplete="off" class="layui-input">
+                    </td>
+                    <td></td>
+                    <td colspan="2" class="baselabel"></td>
+                    <td colspan="3" class="baseinput"></td>
+                </tr>
+                <!--供应商基础信息结束-->
+                <tr>
+                    <td colspan="11" class="blankLine"></td>
+                </tr>
+                <!--联系人信息开始-->
+                <tr class="hearpart">
+                    <td colspan="11">
+                        联系人信息
+                        <div style="float: right;position: absolute;margin-left: 810px;margin-top: -19px;">
+                            <a class="AddConectBtn">添加</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="ConectTitle">
+                    <td>
+                        姓名
+                    </td>
+                    <td colspan="2">
+                        职位
+                    </td>
+                    <td>
+                        性别
+                    </td>
+                    <td colspan="3">
+                        电话
+                    </td>
+                    <td colspan="2">
+                        手机
+                    </td>
+                    <td colspan="2">
+                        电子邮箱
+                    </td>
+                </tr>
+                @if (ConectList.Count == 0)
+                {
+                    <tr class="ConectDetail">
+                        <td>
+                            <input type="text" name="ProducerConect_0_ConectName" autocomplete="off" class="layui-input" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="ProducerConect_0_Position" autocomplete="off" class="layui-input" value="">
+                        </td>
+                        <td>
+                            <select name="ProducerConect_0_ConectSex" lay-verify="selectItem">
+                                <option value="">请选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="ProducerConect_0_Telephone" autocomplete="off" class="layui-input" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="ProducerConect_0_Phone" autocomplete="off" class="layui-input" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="ProducerConect_0_Email" autocomplete="off" class="layui-input" value="">
+                            <div style="float: right;position: absolute;margin-left: 200px;margin-top: -20px;">
+                                <a class="DelConectBtn">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    for (int i = 0; i < ConectList.Count; i++)
+                    {
+                        <tr class="ConectDetail">
+                            <td>
+                                <input type="text" name="ProducerConect_@(i)_ConectName" autocomplete="off" class="layui-input" value="@ConectList[i].ConectName">
+                            </td>
+                            <td colspan="2">
+                                <input type="text" name="ProducerConect_@(i)_Position" autocomplete="off" class="layui-input" value="@ConectList[i].Position">
+                            </td>
+                            <td>
+                                <select name="ProducerConect_@(i)_ConectSex" lay-verify="selectItem">
+                                    <option value="">请选择性别</option>
+                                    @if (ConectList[i].ConectSex == "男")
+                                    {
+                                        <option value="男" selected>男</option>
+                                        <option value="女">女</option>
+                                    }
+                                    else if (ConectList[i].ConectSex == "女")
+                                    {
+                                        <option value="男">男</option>
+                                        <option value="女" selected>女</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    }
+                                </select>
+                            </td>
+                            <td colspan="3">
+                                <input type="text" name="ProducerConect_@(i)_Telephone" autocomplete="off" class="layui-input" value="@ConectList[i].Telephone">
+                            </td>
+                            <td colspan="2">
+                                <input type="text" name="ProducerConect_@(i)_Phone" autocomplete="off" class="layui-input" value="@ConectList[i].Phone">
+                            </td>
+                            <td colspan="2">
+                                <input type="text" name="ProducerConect_@(i)_Email" autocomplete="off" class="layui-input" value="@ConectList[i].Email">
+                                <div style="float: right;position: absolute;margin-left: 200px;margin-top: -20px;">
+                                    <a class="DelConectBtn">删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                <!--联系人信息结束-->
+                <tr>
+                    <td colspan="11" class="blankLine"></td>
+                </tr>
+                <!--财务信息开始-->
+                <tr class="hearpart">
+                    <td colspan="11">财务信息</td>
+                </tr>
+                <tr class="fin_info">
+                    <td colspan="2" class="baselabel">开票抬头</td>
+                    <td colspan="9" class="baseinput">
+                        <input type="text" name="RaiseTicket" value="@producer.RaiseTicket" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="fin_info">
+                    <td colspan="2" class="baselabel">开户银行</td>
+                    <td colspan="9" class="baseinput">
+                        <input type="text" name="Bank" value="@producer.Bank" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="fin_info">
+                    <td colspan="2" class="baselabel">企业税号</td>
+                    <td colspan="9" class="baseinput">
+                        <input type="text" name="identify" value="@producer.identify" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <tr class="fin_info">
+                    <td colspan="2" class="baselabel">企业账号</td>
+                    <td colspan="9" class="baseinput">
+                        <input type="text" name="AccountNumber" value="@producer.AccountNumber" lay-verify="required" autocomplete="off" class="layui-input">
+                    </td>
+                </tr>
+                <!--财务信息结束-->
+            </tbody>
+        </table>
+        <script src="~/Current/Scripts/area.js?version=20181017001"></script>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+        <style>
+            .layui-form-item .layui-input-inline {
+                width: 126px;
+            }
+        </style>
+        <script>
+            layui.use(['form', 'layedit', 'laydate'], function () {
+                var form = layui.form(),
+                    layer = layui.layer,
+                    layedit = layui.layedit,
+                    laydate = layui.laydate;
+                //自定义验证规则
+                form.verify({
+                    title: function (value) {
+                        if (value.length < 5) {
+                            return '标题至少得5个字符啊';
+                        }
+                    },
+                    pass: [/(.+){6,12}$/, '密码必须6到12位'],
+                    float: function (value) {
+                        if (isNaN(value)) {
+                            return '只能填写数字';
+                        }
+                        else if (value < 0) {
+                            return '填写数字请不小于0';
+                        }
+                    },
+                    nannum: function (value) {
+                        if (value != "" && value != undefined) {
+                            if (isNaN(value)) {
+                                return '只能填写数字';
+                            }
+                            else if (value < 0) {
+                                return '填写数字请不小于0';
+                            }
+                            else if (parseInt(value) != value) {
+                                return '请输入整数';
+                            }
+                        }
+                    },
+                    nanfloat: function (value) {
+                        if (value != "" && value != undefined) {
+                            if (isNaN(value)) {
+                                return '只能填写数字';
+                            }
+                            else if (value < 0) {
+                                return '填写数字请不小于0';
+                            }
+                        }
+                    },
+                    selectItem: function (value) {
+                        if (value == "" || value == undefined) {
+                            return '请进行选择';
+                        }
+                    }
+                });
+            });
+        </script>
+    </form>
+</div>

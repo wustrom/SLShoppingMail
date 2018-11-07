@@ -1,0 +1,110 @@
+﻿
+@{
+    Layout = null;
+    var List_Distribution = (List<DbOpertion.Models.Distribution_Production_View>)ViewBag.Distribution;
+    var productionTime = ViewBag.productionTime;
+    var ProductionInfo = ViewBag.ProductionInfo;
+    var NotProductionTime = ViewBag.NotProductionTime;
+    var EndProductionTime = ViewBag.EndProductionTime;
+}
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+<script src="~/plugins/layui/layui.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/Designer/Distribution.js?version=20181017001"></script>
+<script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    <style>
+        table tr {
+            height: 55px;
+        }
+    </style>
+    <div style="margin:0px; background-color: white; margin:0 10px;min-width:1400px">
+        <div style="width:65%">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="300">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <tr style="background-color:#707070; color:white; height:40px">
+                    <td colspan="3">
+                        <div style="float:left;font-size:20px;">生产计划和分配表</div>
+                        @if (ProductionInfo.ProductionStatus == "待生产")
+                        {<div style="float:right;font-size:20px;">
+                                制单人：
+                                <label id="ProductionPerson">@ViewBag.UserName</label>
+                                &nbsp; 时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="float:right;font-size:20px;">
+                                制单人：
+                                <label id="ProductionPerson">@ProductionInfo.ProductionPerson</label>
+                                &nbsp; 时间：@ProductionInfo.ProductionTime.ToString("yyyy-MM-dd HH:mm")
+                            </div>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:18px">生产工序</td>
+                    <td style="font-size:18px">生产时间</td>
+                    <td style="font-size:18px">
+                        生产人员
+                        @if (ProductionInfo.ProductionStatus == "待生产")
+                        {
+                            <button style="float:right" id="AddDistribution" onclick="AddDistribution()" class="layui-btn layui-btn-small">添加信息</button>
+                        }
+                    </td>
+                </tr>
+                @foreach (var item in List_Distribution)
+                {
+                    <tr>
+                        <td>
+                            @if (ProductionInfo.ProductionStatus == "待生产")
+                            {
+                                <img src="~/Current/Icon/DeleteBox.png" style="padding-right: 10px;margin-top: -4px;cursor:pointer;" class="DeleteBox" />
+                            }
+                            @item.procedures
+                            <input type="hidden" value="@item.procedures" style="width:65px;height:35px;text-align:right" readonly />
+                        </td>
+                        <td><input type="hidden" value="@item.productionTime" style="width:65px;height:35px;text-align:right" readonly />@item.productionTime&nbsp;&nbsp;天</td>
+                        <td><input type="hidden" value="@item.productionMan" style="width:300px;height:35px; padding-left: 5px;" readonly />@item.productionMan&nbsp;</td>
+                    </tr>
+                }
+                @if (List_Distribution.Count < 10)
+                {
+                    for (int i = List_Distribution.Count; i < 10; i++)
+                    {
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td style="text-align:left">该订单时间：</td>
+                    <td>@productionTime &nbsp;天</td>
+                    <td>在生产订单时间:@EndProductionTime &nbsp;天&nbsp;&nbsp;&nbsp;未生产订单时间:@NotProductionTime &nbsp;天</td>
+                </tr>
+            </table>
+
+            <div style="margin:0px; background-color: white; margin:0 10px;min-width:950px">
+                <div style="text-align:center">
+                    @if (ProductionInfo.ProductionStatus == "待生产")
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="Preservation(@ProductionInfo.Id)" style="width:100px;">保存</button>
+                    }
+                    <button class="layui-btn layui-btn-warm" onclick="CloseBtn()" id="CloseBtn" style="width:100px;">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

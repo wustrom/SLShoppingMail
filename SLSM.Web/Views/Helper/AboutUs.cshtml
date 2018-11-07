@@ -1,0 +1,411 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+}
+<link href="~/Current/css/SyloonAssestBase.css" rel="stylesheet" />
+<link href="~/Current/css/Assets/purchase.css" rel="stylesheet" />
+<script>
+    $(function () {
+        $(".syloon-CN .care-tab li").click(function () {
+            $(".syloon-CN .care-tab li").removeClass("active");
+            $(this).addClass("active");
+            var tabName = $(this).children("a").attr("tabName");
+            $(".part-faq.tab-pane.fade").removeClass("active").removeClass("in");
+            $("#" + tabName).addClass("active").addClass("in");
+            $(".syloon-CN .breadcrumb li:last a").html($(this).children("a").html());
+        })
+    })
+</script>
+<style>
+    .part-faq .faq-list .item-title h4 {
+        color: black;
+        display: inline-block;
+        position: relative;
+        padding-right: 25px;
+        font-weight: 400;
+        margin-bottom: 5px;
+        font-size: 22px;
+        line-height: 21px;
+    }
+
+    .part-faq .faq-list .item-title {
+        border-bottom: none;
+    }
+
+    .part-faq .faq-list .faq-item .desc label {
+        font-weight: bold;
+    }
+
+    #news.part-faq .faq-list .faq-item .desc span {
+        float: right;
+    }
+
+    .part-faq .faq-list .desc img {
+        max-width: 100%;
+    }
+
+    table tr td {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    table thead tr:first-child td {
+        background-color: #F2F2F2;
+    }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .conectPhone {
+        color: #FF0000;
+        font-size: 22px;
+    }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .FirstTab {
+        width: 160px;
+        float: left;
+    }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .SecendTab {
+        width: 290px;
+        float: left;
+        color: #008375;
+        text-decoration: underline;
+    }
+
+        #contact_the_salon.part-faq .faq-list .faq-item .desc .SecendTab a {
+            color: #008375;
+        }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .ThirdTab {
+        width: 160px;
+        float: left;
+    }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .FourthTab {
+        width: 200px;
+        float: left;
+        color: #008375;
+        text-decoration: underline;
+    }
+
+        #contact_the_salon.part-faq .faq-list .faq-item .desc .FourthTab a {
+            color: #008375;
+        }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .Address {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .AddressDetail {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    #contact_the_salon.part-faq .faq-list .faq-item .desc .layui-btn.layui-btn-normal {
+        margin-left: 30px;
+        background-color: #008375;
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        opacity: .9;
+        filter: alpha(opacity=90);
+    }
+</style>
+<div class="syloon-CN">
+    <div class="breadcrumb-nav">
+        <div class="container">
+            <h1 class="title">
+                <span style="font-weight:400;">关于我们</span>
+            </h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="../../Main/Index">首页</a>
+                </li>
+                <li>关于我们</li>
+                <li>
+                    <a href="javascript:;">公司简介</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container purchase">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="care-tab-box closed">
+                    <ul role="tablist" class="care-tab">
+                        <li class="active">
+                            <a href="javascript:;" tabName="company_profile" class="select-item company_profile" aria-expanded="true">公司简介</a>
+                        </li>
+                        <li class="">
+                            <a href="javascript:;" tabName="exhibition" class="select-item exhibition" aria-expanded="false">展会信息</a>
+                        </li>
+                        <li class="">
+                            <a href="javascript:;" tabName="recruitment_elites" class="select-item recruitment_elites" aria-expanded="false">招聘精英</a>
+                        </li>
+                        <li class="">
+                            <a href="javascript:;" tabName="news" class="select-item news" aria-expanded="false">最新动态</a>
+                        </li>
+                        <li class="">
+                            <a href="javascript:;" tabName="contact_the_salon" class="select-item contact_the_salon" aria-expanded="false">联系赛龙</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-9 tab-content">
+                <div id="company_profile" role="tabpanel" class="part-faq tab-pane fade active in">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#1-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-account_management-1" class="toggle item-title ga-data" aria-expanded="true">
+                                        <h4 class="font-opensans">
+                                            公司简介
+                                        </h4>
+                                    </a>
+                                    <div id="1-1" class="content collapse in" aria-expanded="true">
+                                        <div class="desc">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;十五年以来，赛龙公司专业致力于为国际市场提供最前沿最适用的促销礼品类产品，专业的服务团队、丰富的产品资源、完善的印刷技术使我们一直屹立于行业的前端，并与全球多个国家的礼品巨头保持着良好的合作关系。
+                                            <br />
+                                            多年的行业经验，使我们无论在产品整合还是商标制作方面都极大的领先于国内同行。在印刷方面我们采用丝网印刷、移印、激光镭射、数码打印、烫印、电压等全方位的印刷技术可以满足各类用户不同类型品牌LOGO对印刷技术的需求，最大可能的在不同的产品上还原企业商标的标准设计。<br />
+                                            随着中国经济的蓬勃发展，加上促销礼品类产品具有广泛的应用场景，以及越来越多的国内用户开始注重企业形象及品牌推广，中国的促销礼品市场正经历着飞速的发展。作为国际礼赠品市场的主流供应商，现在我们将精美的产品和专业的服务带给中国市场，愿我们的产品和服务能够为你的品牌塑造添砖加瓦，共同点亮您的品牌。<br />
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="exhibition" role="tabpanel" class="part-faq tab-pane fade">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#2-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shopping_guide-1" class="toggle item-title ga-data" aria-expanded="true">
+                                        <h4 class="font-opensans">
+                                            第十届中国（成都）礼品及家居用品展览会
+                                        </h4>
+                                    </a>
+                                    <div id="2-1" class="content collapse in" aria-expanded="true">
+                                        <div class="desc">
+                                            我们珍惜每一个与尊贵客户见面的机会，本年六月，我们即将参加第十届中国（成都）礼品及家居用品展览会。
+                                            <br />
+                                            <br />我们诚邀您到访！
+                                            <br />
+                                            <br /><label>展览日期：</label>2018.06.21~2018.06.23（星期三~星期五）
+                                            <br />
+                                            <br /><label>展览地址：</label>成都世纪城新国际会展中心
+                                            <br />
+                                            <br /><label>展位编号：</label>3号馆3D29~3D31
+                                            <br />
+                                            <img src="~/Base/images/ImgCompany/Address.png" />
+                                            <br />
+                                            <img src="~/Base/images/ImgCompany/Position.png" />
+                                            <br />
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="recruitment_elites" role="tabpanel" class="part-faq tab-pane fade">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            招聘精英
+                                        </h4>
+                                    </a>
+                                    <div id="3-1" class="collapse content in">
+                                        <div class="desc">
+                                            <table>
+                                                <colgroup>
+                                                    <col style="width:200px;" />
+                                                    <col style="width:190px;" />
+                                                    <col style="width:165px;" />
+                                                    <col style="width:165px;" />
+                                                    <col style="width:170px;" />
+                                                </colgroup>
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            职位名称
+                                                        </td>
+                                                        <td>
+                                                            职位类别
+                                                        </td>
+                                                        <td>
+                                                            工作城市
+                                                        </td>
+                                                        <td>
+                                                            发布时间
+                                                        </td>
+                                                        <td>
+                                                            联系我们
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            平面设计师
+                                                        </td>
+                                                        <td>
+                                                            设计类
+                                                        </td>
+                                                        <td>
+                                                            宁波
+                                                        </td>
+                                                        <td>
+                                                            2018.06.12
+                                                        </td>
+                                                        <td>
+                                                            hr@syloon.com
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            营销助理
+                                                        </td>
+                                                        <td>
+                                                            销售类
+                                                        </td>
+                                                        <td>
+                                                            宁波
+                                                        </td>
+                                                        <td>
+                                                            2018.03.17
+                                                        </td>
+                                                        <td>
+                                                            hr@syloon.com
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            渠道专员
+                                                        </td>
+                                                        <td>
+                                                            销售类
+                                                        </td>
+                                                        <td>
+                                                            上海、杭州、广州
+                                                        </td>
+                                                        <td>
+                                                            2018.03.17
+                                                        </td>
+                                                        <td>
+                                                            hr@syloon.com
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            产品开发
+                                                        </td>
+                                                        <td>
+                                                            设计类
+                                                        </td>
+                                                        <td>
+                                                            深圳
+                                                        </td>
+                                                        <td>
+                                                            2018.07.15
+                                                        </td>
+                                                        <td>
+                                                            hr@syloon.com
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            生产计划
+                                                        </td>
+                                                        <td>
+                                                            管理类
+                                                        </td>
+                                                        <td>
+                                                            宁波
+                                                        </td>
+                                                        <td>
+                                                            2018.08.26
+                                                        </td>
+                                                        <td>
+                                                            hr@syloon.com
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="news" role="tabpanel" class="part-faq tab-pane fade">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#4-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-dji_credit-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            最新动态
+                                        </h4>
+                                    </a>
+                                    <div id="4-1" class="collapse content in">
+                                        <div class="desc">
+                                            <p>
+                                                <br />赛龙举行2018年度年中总结会议 <span>2018/7/20</span>
+                                                <br />
+                                                <br />赛龙礼品参加2018成都家居礼品展<span>2018/6/21</span>
+                                                <br />
+                                                <br />赛龙礼品商城正式上线<span>2018/6/20</span>
+                                                <br />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contact_the_salon" role="tabpanel" class="part-faq tab-pane fade">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#5-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-order_info-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            联系赛龙
+                                        </h4>
+                                    </a>
+                                    <div id="5-1" class="collapse content in">
+                                        <div class="desc">
+                                            联系电话：<label class="conectPhone">400-858-0505</label> <br>
+                                            <br /><div class="FirstTab">在线服务与支持：</div> <a href="mailto:kefu@syloon.cn">kefu@syloon.cn</a>
+                                            <br /><br />
+                                            <br /><label class="Address">地址：</label><label class="AddressDetail">浙江省宁波市北仑区戚家山花圃路29号</label><a href="https://www.amap.com/place/B0FFGWGGN1" target="_blank" class="layui-btn layui-btn-normal">导航到这里</a>
+                                            <br />
+                                            <img src="~/Base/images/ImgCompany/gaodeAddress.png" />
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

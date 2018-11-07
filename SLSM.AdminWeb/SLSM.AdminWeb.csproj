@@ -1,0 +1,844 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B65FCEB4-D974-4BBB-951F-4242A3BAE0F7}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SLSM.AdminWeb</RootNamespace>
+    <AssemblyName>SLSM.AdminWeb</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>2</WarningLevel>
+    <DocumentationFile>bin\SLSM.AdminWeb.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.4\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.4\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.4\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.4\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivator.1.5.1\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Area.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Base\css\begtable.css" />
+    <Content Include="Base\css\btable.css" />
+    <Content Include="Base\css\global.css" />
+    <Content Include="Base\css\layout.css" />
+    <Content Include="Base\css\login.css" />
+    <Content Include="Base\css\main.css" />
+    <Content Include="Base\css\table.css" />
+    <Content Include="Base\datas\area_data.js" />
+    <Content Include="Base\datas\nav.js" />
+    <Content Include="Base\font\iconfont.css" />
+    <Content Include="Base\font\iconfont.js" />
+    <Content Include="Base\font\iconfont.svg" />
+    <Content Include="Base\images\0.jpg" />
+    <Content Include="Base\images\NoImage.png" />
+    <Content Include="Base\images\logo-1.png" />
+    <Content Include="Base\images\add.jpg" />
+    <Content Include="Base\images\xx.png" />
+    <Content Include="Base\js\area.js" />
+    <Content Include="Base\js\baajax.js" />
+    <Content Include="Base\js\begtable.js" />
+    <Content Include="Base\js\btable.js" />
+    <Content Include="Base\js\city.js" />
+    <Content Include="Base\js\common.js" />
+    <Content Include="Base\js\index.js" />
+    <Content Include="Base\js\layout.js" />
+    <Content Include="Base\js\navbar.js" />
+    <Content Include="Base\js\paging.js" />
+    <Content Include="Base\js\tab.js" />
+    <Content Include="Base\js\validator.js" />
+    <Content Include="Base\NotChange.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Current\css\bootstrap.css" />
+    <Content Include="Current\css\bootstrap.min.css" />
+    <Content Include="Current\css\Commodity\Detail.css" />
+    <Content Include="Current\css\Grade\detail.css" />
+    <Content Include="Current\css\Grade\index.css" />
+    <Content Include="Current\css\Login.css" />
+    <Content Include="Current\css\MainShow\GradeList.css" />
+    <Content Include="Current\css\MainShow\Carousel.css" />
+    <Content Include="Current\css\MainShow\OnlineGallery.css" />
+    <Content Include="Current\css\MainShow\Order.css" />
+    <Content Include="Current\css\Site.css" />
+    <Content Include="Current\css\_Layout\_Layout.css" />
+    <Content Include="Base\images\default.png" />
+    <Content Include="Base\images\faces\default.png" />
+    <Content Include="Base\images\faces\ee_1.png" />
+    <Content Include="Base\images\faces\ee_10.png" />
+    <Content Include="Base\images\faces\ee_11.png" />
+    <Content Include="Base\images\faces\ee_12.png" />
+    <Content Include="Base\images\faces\ee_13.png" />
+    <Content Include="Base\images\faces\ee_14.png" />
+    <Content Include="Base\images\faces\ee_15.png" />
+    <Content Include="Base\images\faces\ee_16.png" />
+    <Content Include="Base\images\faces\ee_17.png" />
+    <Content Include="Base\images\faces\ee_18.png" />
+    <Content Include="Base\images\faces\ee_19.png" />
+    <Content Include="Base\images\faces\ee_2.png" />
+    <Content Include="Base\images\faces\ee_20.png" />
+    <Content Include="Base\images\faces\ee_21.png" />
+    <Content Include="Base\images\faces\ee_22.png" />
+    <Content Include="Base\images\faces\ee_23.png" />
+    <Content Include="Base\images\faces\ee_24.png" />
+    <Content Include="Base\images\faces\ee_25.png" />
+    <Content Include="Base\images\faces\ee_26.png" />
+    <Content Include="Base\images\faces\ee_27.png" />
+    <Content Include="Base\images\faces\ee_28.png" />
+    <Content Include="Base\images\faces\ee_29.png" />
+    <Content Include="Base\images\faces\ee_3.png" />
+    <Content Include="Base\images\faces\ee_30.png" />
+    <Content Include="Base\images\faces\ee_31.png" />
+    <Content Include="Base\images\faces\ee_32.png" />
+    <Content Include="Base\images\faces\ee_33.png" />
+    <Content Include="Base\images\faces\ee_34.png" />
+    <Content Include="Base\images\faces\ee_35.png" />
+    <Content Include="Base\images\faces\ee_4.png" />
+    <Content Include="Base\images\faces\ee_5.png" />
+    <Content Include="Base\images\faces\ee_6.png" />
+    <Content Include="Base\images\faces\ee_7.png" />
+    <Content Include="Base\images\faces\ee_8.png" />
+    <Content Include="Base\images\faces\ee_9.png" />
+    <Content Include="Base\images\group_user.png" />
+    <Content Include="Base\images\loading.gif" />
+    <Content Include="Base\images\logo-windowSDK.png" />
+    <Content Include="Base\images\logo.png" />
+    <Content Include="Base\images\timg.jpg" />
+    <Content Include="Base\images\铅笔.jpg" />
+    <Content Include="Current\Scripts\ajax.js" />
+    <Content Include="Current\Scripts\Commodity\Detail.js" />
+    <Content Include="Current\Scripts\Commodity\Index.js" />
+    <Content Include="Current\Scripts\Customer\adapter.js" />
+    <Content Include="Current\Scripts\Customer\browser-polyfill.min.js" />
+    <Content Include="Current\Scripts\Customer\demo-1.4.13.js" />
+    <Content Include="Current\Scripts\Customer\Demo.js" />
+    <Content Include="Current\Scripts\Customer\gulpfile.js" />
+    <Content Include="Current\Scripts\Customer\strophe-1.2.8.min.js" />
+    <Content Include="Current\Scripts\Customer\swfupload.cookie.js" />
+    <Content Include="Current\Scripts\Customer\swfupload.js" />
+    <Content Include="Current\Scripts\Customer\uploadShim.js" />
+    <Content Include="Current\Scripts\Customer\webim.config.js" />
+    <Content Include="Current\Scripts\Customer\webrtc-1.4.12.js" />
+    <Content Include="Current\Scripts\Customer\webrtc-1.4.13.js" />
+    <Content Include="Current\Scripts\Customer\websdk-1.4.13.js" />
+    <Content Include="Current\Scripts\Customer\websdk.shim.js" />
+    <Content Include="Current\Scripts\Evaluate\Evaluate.js" />
+    <Content Include="Current\Scripts\Grade\GradeShow.js" />
+    <Content Include="Current\Scripts\Grade\detail.js" />
+    <Content Include="Current\Scripts\Grade\scene.js" />
+    <Content Include="Current\Scripts\Grade\Index.js" />
+    <Content Include="Current\Scripts\jquery-form.js" />
+    <Content Include="Current\Scripts\MainShow\OnlineGallery.js" />
+    <Content Include="Current\Scripts\MainShow\GradeList.js" />
+    <Content Include="Current\Scripts\MainShow\Carousel.js" />
+    <Content Include="Current\Scripts\MainShow\DetailCarousel.js" />
+    <Content Include="Current\Scripts\MainShow\CommodityListSetting.js" />
+    <Content Include="Current\Scripts\MainShow\GradeListSetting.js" />
+    <Content Include="Current\Scripts\News\News.js" />
+    <Content Include="Current\Scripts\Message\SendMessage.js" />
+    <Content Include="Current\Scripts\Message\Message.js" />
+    <Content Include="Current\Scripts\Order\WechatOrder.js" />
+    <Content Include="Current\Scripts\Order\WebOrder.js" />
+    <Content Include="Current\Scripts\Service\Index.js" />
+    <Content Include="Current\Scripts\UserInfo\Index.js" />
+    <Content Include="Current\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Image\Grade\noImg.svg" />
+    <Content Include="Other.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugins\font-awesome\css\font-awesome.css" />
+    <Content Include="plugins\font-awesome\css\font-awesome.min.css" />
+    <Content Include="plugins\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="plugins\layui\css\layui.css" />
+    <Content Include="plugins\layui\css\layui.mobile.css" />
+    <Content Include="plugins\layui\css\modules\code.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\aero%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\aero.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\aero.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\blue%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\blue.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\blue.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\flat%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\flat.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\flat.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\green%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\green.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\green.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\grey%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\grey.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\grey.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\orange%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\orange.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\orange.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\pink%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\pink.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\pink.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\purple%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\purple.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\purple.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\red%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\red.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\red.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\yellow%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\yellow.css" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\yellow.png" />
+    <Content Include="plugins\layui\css\modules\icheck\flat\_all.css" />
+    <Content Include="plugins\layui\css\modules\icheck\futurico\futurico%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\futurico\futurico.css" />
+    <Content Include="plugins\layui\css\modules\icheck\futurico\futurico.png" />
+    <Content Include="plugins\layui\css\modules\icheck\icheck.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\aero.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\blue.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\green.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\grey.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\line%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\line\line.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\line.png" />
+    <Content Include="plugins\layui\css\modules\icheck\line\orange.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\pink.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\purple.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\red.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\yellow.css" />
+    <Content Include="plugins\layui\css\modules\icheck\line\_all.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\aero%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\aero.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\aero.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\blue%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\blue.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\blue.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\green%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\green.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\green.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\grey%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\grey.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\grey.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\minimal%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\minimal.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\minimal.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\orange%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\orange.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\orange.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\pink%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\pink.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\pink.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\purple%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\purple.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\purple.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\red%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\red.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\red.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\yellow%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\yellow.css" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\yellow.png" />
+    <Content Include="plugins\layui\css\modules\icheck\minimal\_all.css" />
+    <Content Include="plugins\layui\css\modules\icheck\polaris\polaris%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\polaris\polaris.css" />
+    <Content Include="plugins\layui\css\modules\icheck\polaris\polaris.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\aero%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\aero.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\aero.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\blue%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\blue.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\blue.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\green%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\green.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\green.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\grey%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\grey.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\grey.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\orange%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\orange.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\orange.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\pink%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\pink.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\pink.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\purple%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\purple.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\purple.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\red%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\red.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\red.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\square%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\square.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\square.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\yellow%402x.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\yellow.css" />
+    <Content Include="plugins\layui\css\modules\icheck\square\yellow.png" />
+    <Content Include="plugins\layui\css\modules\icheck\square\_all.css" />
+    <Content Include="plugins\layui\css\modules\laydate\icon.png" />
+    <Content Include="plugins\layui\css\modules\laydate\laydate.css" />
+    <Content Include="plugins\layui\css\modules\layer\default\icon-ext.png" />
+    <Content Include="plugins\layui\css\modules\layer\default\icon.png" />
+    <Content Include="plugins\layui\css\modules\layer\default\layer.css" />
+    <Content Include="plugins\layui\css\modules\layer\default\loading-0.gif" />
+    <Content Include="plugins\layui\css\modules\layer\default\loading-1.gif" />
+    <Content Include="plugins\layui\css\modules\layer\default\loading-2.gif" />
+    <Content Include="plugins\layui\font\iconfont.svg" />
+    <Content Include="plugins\layui\images\face\0.gif" />
+    <Content Include="plugins\layui\images\face\1.gif" />
+    <Content Include="plugins\layui\images\face\10.gif" />
+    <Content Include="plugins\layui\images\face\11.gif" />
+    <Content Include="plugins\layui\images\face\12.gif" />
+    <Content Include="plugins\layui\images\face\13.gif" />
+    <Content Include="plugins\layui\images\face\14.gif" />
+    <Content Include="plugins\layui\images\face\15.gif" />
+    <Content Include="plugins\layui\images\face\16.gif" />
+    <Content Include="plugins\layui\images\face\17.gif" />
+    <Content Include="plugins\layui\images\face\18.gif" />
+    <Content Include="plugins\layui\images\face\19.gif" />
+    <Content Include="plugins\layui\images\face\2.gif" />
+    <Content Include="plugins\layui\images\face\20.gif" />
+    <Content Include="plugins\layui\images\face\21.gif" />
+    <Content Include="plugins\layui\images\face\22.gif" />
+    <Content Include="plugins\layui\images\face\23.gif" />
+    <Content Include="plugins\layui\images\face\24.gif" />
+    <Content Include="plugins\layui\images\face\25.gif" />
+    <Content Include="plugins\layui\images\face\26.gif" />
+    <Content Include="plugins\layui\images\face\27.gif" />
+    <Content Include="plugins\layui\images\face\28.gif" />
+    <Content Include="plugins\layui\images\face\29.gif" />
+    <Content Include="plugins\layui\images\face\3.gif" />
+    <Content Include="plugins\layui\images\face\30.gif" />
+    <Content Include="plugins\layui\images\face\31.gif" />
+    <Content Include="plugins\layui\images\face\32.gif" />
+    <Content Include="plugins\layui\images\face\33.gif" />
+    <Content Include="plugins\layui\images\face\34.gif" />
+    <Content Include="plugins\layui\images\face\35.gif" />
+    <Content Include="plugins\layui\images\face\36.gif" />
+    <Content Include="plugins\layui\images\face\37.gif" />
+    <Content Include="plugins\layui\images\face\38.gif" />
+    <Content Include="plugins\layui\images\face\39.gif" />
+    <Content Include="plugins\layui\images\face\4.gif" />
+    <Content Include="plugins\layui\images\face\40.gif" />
+    <Content Include="plugins\layui\images\face\41.gif" />
+    <Content Include="plugins\layui\images\face\42.gif" />
+    <Content Include="plugins\layui\images\face\43.gif" />
+    <Content Include="plugins\layui\images\face\44.gif" />
+    <Content Include="plugins\layui\images\face\45.gif" />
+    <Content Include="plugins\layui\images\face\46.gif" />
+    <Content Include="plugins\layui\images\face\47.gif" />
+    <Content Include="plugins\layui\images\face\48.gif" />
+    <Content Include="plugins\layui\images\face\49.gif" />
+    <Content Include="plugins\layui\images\face\5.gif" />
+    <Content Include="plugins\layui\images\face\50.gif" />
+    <Content Include="plugins\layui\images\face\51.gif" />
+    <Content Include="plugins\layui\images\face\52.gif" />
+    <Content Include="plugins\layui\images\face\53.gif" />
+    <Content Include="plugins\layui\images\face\54.gif" />
+    <Content Include="plugins\layui\images\face\55.gif" />
+    <Content Include="plugins\layui\images\face\56.gif" />
+    <Content Include="plugins\layui\images\face\57.gif" />
+    <Content Include="plugins\layui\images\face\58.gif" />
+    <Content Include="plugins\layui\images\face\59.gif" />
+    <Content Include="plugins\layui\images\face\6.gif" />
+    <Content Include="plugins\layui\images\face\60.gif" />
+    <Content Include="plugins\layui\images\face\61.gif" />
+    <Content Include="plugins\layui\images\face\62.gif" />
+    <Content Include="plugins\layui\images\face\63.gif" />
+    <Content Include="plugins\layui\images\face\64.gif" />
+    <Content Include="plugins\layui\images\face\65.gif" />
+    <Content Include="plugins\layui\images\face\66.gif" />
+    <Content Include="plugins\layui\images\face\67.gif" />
+    <Content Include="plugins\layui\images\face\68.gif" />
+    <Content Include="plugins\layui\images\face\69.gif" />
+    <Content Include="plugins\layui\images\face\7.gif" />
+    <Content Include="plugins\layui\images\face\70.gif" />
+    <Content Include="plugins\layui\images\face\71.gif" />
+    <Content Include="plugins\layui\images\face\8.gif" />
+    <Content Include="plugins\layui\images\face\9.gif" />
+    <Content Include="plugins\layui\layui.js" />
+    <Content Include="plugins\layui\lay\dest\layui.all.js" />
+    <Content Include="plugins\layui\lay\dest\layui.mod.js" />
+    <Content Include="plugins\layui\lay\lib\jquery.js" />
+    <Content Include="plugins\layui\lay\modules\code.js" />
+    <Content Include="plugins\layui\lay\modules\element.js" />
+    <Content Include="plugins\layui\lay\modules\flow.js" />
+    <Content Include="plugins\layui\lay\modules\form.js" />
+    <Content Include="plugins\layui\lay\modules\jquery.js" />
+    <Content Include="plugins\layui\lay\modules\laydate.js" />
+    <Content Include="plugins\layui\lay\modules\layedit.js" />
+    <Content Include="plugins\layui\lay\modules\layer.js" />
+    <Content Include="plugins\layui\lay\modules\laypage.js" />
+    <Content Include="plugins\layui\lay\modules\laytpl.js" />
+    <Content Include="plugins\layui\lay\modules\mobile.js" />
+    <Content Include="plugins\layui\lay\modules\tree.js" />
+    <Content Include="plugins\layui\lay\modules\upload.js" />
+    <Content Include="plugins\layui\lay\modules\util.js" />
+    <Content Include="plugins\layui\modules\icheck.js" />
+    <Content Include="plugins\layui\modules\navbar.js" />
+    <Content Include="plugins\layui\modules\pjax.js" />
+    <Content Include="Current\Scripts\bootstrap.js" />
+    <Content Include="Current\Scripts\bootstrap.min.js" />
+    <Content Include="plugins\layui\font\iconfont.eot" />
+    <Content Include="plugins\layui\font\iconfont.ttf" />
+    <Content Include="plugins\layui\font\iconfont.woff" />
+    <Content Include="plugins\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="plugins\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="plugins\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="plugins\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="plugins\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Base\datas\btable_data.json" />
+    <Content Include="Base\datas\laytpl_laypage_data.json" />
+    <Content Include="Base\datas\nav.json" />
+    <Content Include="Base\datas\nav_content.json" />
+    <Content Include="Base\datas\nav_member.json" />
+    <Content Include="Base\font\iconfont.eot" />
+    <Content Include="Base\font\iconfont.ttf" />
+    <Content Include="Base\font\iconfont.woff" />
+    <None Include="Current\Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Current\Scripts\jquery-1.10.2.js" />
+    <Content Include="Current\Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Current\Scripts\modernizr-2.6.2.js" />
+    <Content Include="plugins\web-im\demo\images\Customerservice.png" />
+    <Content Include="plugins\web-im\demo\images\default.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_1.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_10.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_11.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_12.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_13.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_14.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_15.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_16.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_17.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_18.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_19.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_2.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_20.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_21.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_22.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_23.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_24.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_25.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_26.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_27.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_28.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_29.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_3.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_30.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_31.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_32.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_33.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_34.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_35.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_4.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_5.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_6.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_7.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_8.png" />
+    <Content Include="plugins\web-im\demo\images\faces\ee_9.png" />
+    <Content Include="plugins\web-im\demo\images\group_user.png" />
+    <Content Include="plugins\web-im\demo\images\loading.gif" />
+    <Content Include="plugins\web-im\demo\images\logo-windowSDK.png" />
+    <Content Include="plugins\web-im\demo\images\logo.png" />
+    <Content Include="plugins\web-im\demo\javascript\dist\browser-polyfill.min.js" />
+    <Content Include="plugins\web-im\demo\javascript\dist\demo-1.4.12.js" />
+    <Content Include="plugins\web-im\demo\javascript\dist\demo-1.4.13.js" />
+    <Content Include="plugins\web-im\demo\javascript\dist\swfupload\swfupload.min.js" />
+    <Content Include="plugins\web-im\demo\javascript\dist\swfupload\swfupload.swf" />
+    <Content Include="plugins\web-im\demo\javascript\dist\webim.config.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\api.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\blacklist\showBlacklist.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\blacklist\showGroupBlacklist.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\chat.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\chatWindow.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\confirmPop.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\emoji.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\operationsFriends.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\operationsGroups.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\sendWrapper.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\subscribe.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\chat\uploadShim.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\avatar.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\drag.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\loading.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\multiSelectBoxList.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\notify.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\rtcChannel.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\common\webim-demo.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\contact\contact.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\contact\contactItem.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\group\addGroupMember.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\group\adminGroupMembers.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\group\changeGroupInfo.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\group\confirmGroupInfo.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\group\createGroup.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\group\joinPublicGroup.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\language.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\leftbar\addFriend.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\leftbar\cate.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\leftbar\leftbar.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\leftbar\operations.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\message\audio.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\message\file.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\message\img.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\message\loc.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\message\txt.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\message\video.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\sign\signin.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\sign\signup.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\components\webim.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\entry.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\swfupload\swfupload.cookie.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\swfupload\swfupload.js" />
+    <Content Include="plugins\web-im\demo\javascript\src\swfupload\swfupload.swf" />
+    <Content Include="plugins\web-im\demo\javascript\src\test.js" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\demo.css" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\demo.html" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\demo_fontclass.html" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\demo_symbol.html" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\demo_unicode.html" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\iconfont.css" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\iconfont.js" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\iconfont.svg" />
+    <Content Include="plugins\web-im\sdk\demo.html" />
+    <Content Include="plugins\web-im\sdk\dist\strophe-1.2.8.js" />
+    <Content Include="plugins\web-im\sdk\dist\strophe-1.2.8.min.js" />
+    <Content Include="plugins\web-im\sdk\dist\websdk-1.4.13.js" />
+    <Content Include="plugins\web-im\sdk\dist\websdk.shim.js" />
+    <Content Include="plugins\web-im\sdk\gulpfile.js" />
+    <Content Include="plugins\web-im\sdk\ie8Demo.html" />
+    <Content Include="plugins\web-im\sdk\index.js" />
+    <Content Include="plugins\web-im\sdk\src\connection.js" />
+    <Content Include="plugins\web-im\sdk\src\message.js" />
+    <Content Include="plugins\web-im\sdk\src\queue.js" />
+    <Content Include="plugins\web-im\sdk\src\status.js" />
+    <Content Include="plugins\web-im\sdk\src\utils.js" />
+    <Content Include="plugins\web-im\webrtc\dist\adapter.js" />
+    <Content Include="plugins\web-im\webrtc\dist\webrtc-1.4.12.js" />
+    <Content Include="plugins\web-im\webrtc\dist\webrtc-1.4.13.js" />
+    <Content Include="plugins\web-im\webrtc\src\components\api.js" />
+    <Content Include="plugins\web-im\webrtc\src\components\call.js" />
+    <Content Include="plugins\web-im\webrtc\src\components\iq.js" />
+    <Content Include="plugins\web-im\webrtc\src\components\p2p.js" />
+    <Content Include="plugins\web-im\webrtc\src\components\utils.js" />
+    <Content Include="plugins\web-im\webrtc\src\components\webrtc.js" />
+    <Content Include="plugins\web-im\webrtc\src\entry.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common.Extend\BaseController\BaseMvcMasterController.cs" />
+    <Compile Include="Controllers\AjaxController\AlipayController.cs" />
+    <Compile Include="Controllers\AjaxController\EvaluateController.cs" />
+    <Compile Include="Controllers\AjaxController\LoginController.cs" />
+    <Compile Include="Controllers\AjaxController\NewsController.cs" />
+    <Compile Include="Controllers\AjaxController\MessageController.cs" />
+    <Compile Include="Controllers\AjaxController\GradeController.cs" />
+    <Compile Include="Controllers\AjaxController\CommodityController.cs" />
+    <Compile Include="Controllers\AjaxController\kuaidiController.cs" />
+    <Compile Include="Controllers\AjaxController\MainShowController.cs" />
+    <Compile Include="Controllers\AjaxController\OrderController.cs" />
+    <Compile Include="Controllers\AjaxController\ReplyController.cs" />
+    <Compile Include="Controllers\AjaxController\TableController.cs" />
+    <Compile Include="Controllers\AjaxController\UpImgController.cs" />
+    <Compile Include="Controllers\AjaxController\ServiceController.cs" />
+    <Compile Include="Controllers\AjaxController\UserController.cs" />
+    <Compile Include="Controllers\PageController\AliPayController.cs" />
+    <Compile Include="Controllers\PageController\LoginController.cs" />
+    <Compile Include="Controllers\PageController\MessageController.cs" />
+    <Compile Include="Controllers\PageController\EvaluateController.cs" />
+    <Compile Include="Controllers\PageController\CommodityController.cs" />
+    <Compile Include="Controllers\PageController\GradeController.cs" />
+    <Compile Include="Controllers\PageController\HomeController.cs" />
+    <Compile Include="Controllers\PageController\MainShowController.cs" />
+    <Compile Include="Controllers\PageController\NewsController.cs" />
+    <Compile Include="Controllers\PageController\OrderController.cs" />
+    <Compile Include="Controllers\PageController\PlatformController.cs" />
+    <Compile Include="Controllers\PageController\ServiceController.cs" />
+    <Compile Include="Controllers\PageController\UserInfoController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Request\Commdity\EditCommdityRequest.cs" />
+    <Compile Include="Model\Request\Commdity\CommdityRequest.cs" />
+    <Compile Include="Model\Request\Grade\EditShowCommRequest.cs" />
+    <Compile Include="Model\Request\Grade\ShowCommRequest.cs" />
+    <Compile Include="Model\Request\LoginRequest.cs" />
+    <Compile Include="Model\Request\MainShow\AddCarouselRequest.cs" />
+    <Compile Include="Model\Request\MainShow\EditCommRecommRequest.cs" />
+    <Compile Include="Model\Request\MainShow\CommRecommRequest.cs" />
+    <Compile Include="Model\Request\MainShow\EditGradeRequest.cs" />
+    <Compile Include="Model\Request\MainShow\TopItemRequest.cs" />
+    <Compile Include="Model\Request\MainShow\CarouselInfoRequest.cs" />
+    <Compile Include="Model\Request\Message\SendMessageRequest.cs" />
+    <Compile Include="Model\Request\Message\MessageRequest.cs" />
+    <Compile Include="Model\Request\Order\OrderChangePriceRequest.cs" />
+    <Compile Include="Model\Request\Order\OrderChangeRequest.cs" />
+    <Compile Include="Model\Request\Reply\ReplyRequest.cs" />
+    <Compile Include="Model\Request\Service\AddServiceRequest.cs" />
+    <Compile Include="Model\Request\Service\ServiceInfoRequest.cs" />
+    <Compile Include="Model\Request\ShopCart\CreateOrderRequest.cs" />
+    <Compile Include="Model\Request\Table\LayTableOrderRequest.cs" />
+    <Compile Include="Model\Request\UpImg\UpdateDivCrossRequest.cs" />
+    <Compile Include="Model\Request\UpImg\UpdateImgCrossRequest.cs" />
+    <Compile Include="Model\Request\UpImg\UpUserImageRequest.cs" />
+    <Compile Include="Model\Request\User\ProvinceInfoRequest.cs" />
+    <Compile Include="Model\Request\User\UserInfoRequest.cs" />
+    <Compile Include="Model\Request\Grade\AllReq.cs" />
+    <Compile Include="Model\Request\User\AddUserRequest.cs" />
+    <Compile Include="Model\Request\ShopCart\ShopCartAmountRequest.cs" />
+    <Compile Include="Model\Response\Table\CarouselImage.cs" />
+    <Compile Include="Model\Response\Table\CommodityInfo.cs" />
+    <Compile Include="Model\Response\Table\CustomerserviceInfo.cs" />
+    <Compile Include="Model\Response\Table\MessageResponse.cs" />
+    <Compile Include="Model\Response\Table\EvaluateResponse.cs" />
+    <Compile Include="Model\Response\Table\GradeInfo.cs" />
+    <Compile Include="Model\Response\Table\OrderInfoResponse.cs" />
+    <Compile Include="Model\Response\Table\UserInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Current\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Current\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Current\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Current\Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\web.config" />
+    <Content Include="Views\Home\Grade.cshtml" />
+    <Content Include="Views\UserInfo\Index.cshtml" />
+    <Content Include="Views\Grade\Index.cshtml" />
+    <Content Include="Views\Grade\Detail.cshtml" />
+    <Content Include="Views\UserInfo\AddInfo.cshtml" />
+    <Content Include="Views\UserInfo\EditInfo.cshtml" />
+    <Content Include="Views\MainShow\Carousel.cshtml" />
+    <Content Include="Views\MainShow\DetailCarousel.cshtml" />
+    <Content Include="Views\MainShow\GradeListSetting.cshtml" />
+    <Content Include="Views\MainShow\CommodityListSetting.cshtml" />
+    <Content Include="Views\Order\WebOrder.cshtml" />
+    <Content Include="Views\Order\WechatOrder.cshtml" />
+    <Content Include="Views\Commodity\Index.cshtml" />
+    <Content Include="Views\Commodity\Detail.cshtml" />
+    <Content Include="Views\Evaluate\Index.cshtml" />
+    <Content Include="Views\Message\Index.cshtml" />
+    <Content Include="Views\Evaluate\Detail.cshtml" />
+    <Content Include="Views\News\Detail.cshtml" />
+    <Content Include="Views\Message\SendMessage.cshtml" />
+    <Content Include="Views\Evaluate\ReturnDetail.cshtml" />
+    <Content Include="Views\Platform\Index.cshtml" />
+    <Content Include="Views\Platform\ManagePlat.cshtml" />
+    <Content Include="Views\Order\OrderDetail.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Service\ServiceInfo.cshtml" />
+    <Content Include="Views\Service\Services.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\Message\Detail.cshtml" />
+    <Content Include="Views\Service\EditInfo.cshtml" />
+    <Content Include="Views\Order\SendThing.cshtml" />
+    <Content Include="Views\Service\AddInfo.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\AliPay\OrderCreateInfo.cshtml" />
+    <Content Include="Views\MainShow\OnlineGallery.cshtml" />
+    <Content Include="Views\MainShow\OnLineDetail.cshtml" />
+    <Content Include="Views\Grade\GradeShow.cshtml" />
+    <Content Include="Views\Grade\GradeShowDetail.cshtml" />
+    <Content Include="Views\MainShow\CommodityListDetail.cshtml" />
+    <Content Include="Views\Grade\Scene.cshtml" />
+    <Content Include="Views\MainShow\ShowGrade.cshtml" />
+    <Content Include="Views\MainShow\ShowGradeDetail.cshtml" />
+    <Content Include="plugins\web-im\demo\.DS_Store" />
+    <Content Include="plugins\web-im\demo\javascript\.DS_Store" />
+    <Content Include="plugins\web-im\demo\javascript\dist\.DS_Store" />
+    <Content Include="plugins\web-im\demo\javascript\src\.DS_Store" />
+    <Content Include="plugins\web-im\demo\stylesheet\.DS_Store" />
+    <Content Include="plugins\web-im\demo\stylesheet\demo.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\iconfont.eot" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\iconfont.ttf" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\font\iconfont.woff" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\multiple-select-box.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\plugin.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_chat.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_common.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_dialog.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_global.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_layer.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_leftbar.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_loading.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_msg.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_notify.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_sign.scss" />
+    <Content Include="plugins\web-im\demo\stylesheet\src\_ui.scss" />
+    <Content Include="plugins\web-im\sdk\.DS_Store" />
+    <Content Include="plugins\web-im\sdk\dist\.DS_Store" />
+    <Content Include="plugins\web-im\sdk\dist\strophe-1.2.8.min.js.map" />
+    <Content Include="plugins\web-im\sdk\jsdoc.sh" />
+    <Content Include="plugins\web-im\sdk\package.json" />
+    <Content Include="plugins\web-im\sdk\README.md" />
+    <Content Include="plugins\web-im\webrtc\.DS_Store" />
+    <Content Include="plugins\web-im\webrtc\dist\.DS_Store" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Start\App_Data\" />
+    <Folder Include="Current\images\temp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{81030AAB-08DD-4CD9-833C-65FDAB99CB0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLSM.DBOpertion\SLSM.DBOpertion.csproj">
+      <Project>{9d8593a7-7e07-4c9c-9bd7-85bfddc884eb}</Project>
+      <Name>SLSM.DBOpertion</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51186</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:8051</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

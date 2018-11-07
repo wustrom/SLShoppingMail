@@ -1,0 +1,244 @@
+﻿@{
+    Layout = null;
+    var ShowGradeList = (List<DbOpertion.Models.Showgradeinfo>)ViewBag.ShowGradeList;
+    var GradeList = (List<DbOpertion.Models.Grade>)ViewBag.GradeList;
+    var count = 0;
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>轮播图设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Current/css/MainShow/Carousel.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+    <style>
+        .layui-elem-field.carousel-content {
+            width: 23%;
+            height: 200px;
+        }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part img {
+                max-width: 100%;
+                height: 130px;
+            }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part .Left_label .Comm_Name {
+                margin-top: 10px;
+
+            }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part.Nothing label {
+                font-size: 30px;
+                margin-top: 50px;
+                display: block;
+                margin-left: 20%;
+            }
+    </style>
+</head>
+<body>
+    <div style="margin: 15px;">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>展示分类管理</legend>
+        </fieldset>
+        @for (int i = 1; i <= 8; i++)
+        {
+            var item = ShowGradeList.Where(p => p.OrderCount == i).FirstOrDefault();
+            DbOpertion.Models.Grade grade = null;
+            if (item != null)
+            {
+                grade = GradeList.Where(p => p.Id == item.GradeId).FirstOrDefault();
+            }
+            <fieldset class="layui-elem-field carousel-content">
+                <legend>展示分类第<label>@i</label>个</legend>
+                <div class="layui-field-box">
+                    @if (grade != null)
+                    {
+                        <div class="left-part">
+                            <div class="Left_label">
+                                <div class="Comm_price">
+                                    <img src="@grade.Image" />
+                                </div>
+                                <div class="Comm_Name">
+                                    @grade.Name
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="left-part Nothing">
+                            <label>暂无分类</label>
+                        </div>
+                    }
+                    <div class="right-part">
+                        @if (grade == null)
+                        {
+                            <button class="layui-btn" onclick="AddImage(@i)">添加</button>
+                        }
+                        else
+                        {
+                            <button class="layui-btn layui-btn-normal" onclick="EditImage(@i)">修改</button>
+                            <br />
+                            <button class="layui-btn layui-btn-danger" onclick="DeleteImage(@i)">删除</button>
+                        }
+                    </div>
+                    <div style="clear:both;" />
+                </div>
+            </fieldset>
+        }
+        <div style="clear:both;" />
+    </div>
+    <script>
+        var layer;
+        $(document).ready(function () {
+            layui.config({
+                base: '../../../Base/js/'
+            });
+            layui.use(['paging', 'form'], function () {
+                var $ = layui.jquery,
+                    paging = layui.paging(),
+                    layerTips = parent.layer === undefined ? layui.layer : parent.layer, //获取父窗口的layer对象
+                    layer = layui.layer, //获取当前窗口的layer对象
+                    form = layui.form();
+            });
+        });
+        var BoxIndex = -1;
+        function EditImage(num) {
+            if (BoxIndex !== -1) {
+                layer.msg("已有一个弹出窗口！");
+                return;
+            }
+            var obj = new Object();
+            obj.Id = num;
+            //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+            $.get('../../MainShow/ShowGradeDetail', obj, function (form) {
+                BoxIndex = layer.open({
+                    type: 1,
+                    title: '添加表单',
+                    content: form,
+                    btn: ['保存', '取消'],
+                    shade: false,
+                    offset: ['100px', '30%'],
+                    area: ['600px', '400px'],
+                    zIndex: 19891013,
+                    maxmin: true,
+                    yes: function (index) {
+                        //触发表单的提交事件
+                        $('form.layui-form').find('button[lay-filter=edit]').click();
+                    },
+                    full: function (elem) {
+                        var win = window.top === window.self ? window : parent.window;
+                        $(win).on('resize', function () {
+                            var $this = $(this);
+                            elem.width($this.width()).height($this.height()).css({
+                                top: 0,
+                                left: 0
+                            });
+                            elem.children('div.layui-layer-content').height($this.height() - 95);
+                        });
+                    },
+                    success: function (layero, index) {
+                        //弹出窗口成功后渲染表单
+                        var form = layui.form();
+                        form.render();
+                        form.on('submit(edit)', function (data) {
+                            jQuery.axpost('../../api/MainShow/EditGradeInfo', JSON.stringify(data.field), function (dataInfo) {
+                                layer.close(index);
+                                layer.msg(dataInfo.Message);
+                                location.reload();
+                            });
+
+                            //这里可以写ajax方法提交表单
+                            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                        });
+                        //console.log(layero, index);
+                    },
+                    end: function () {
+                        BoxIndex = -1;
+                    }
+                });
+            });
+        }
+
+        function AddImage(num) {
+            if (BoxIndex !== -1) {
+                layer.msg("已有一个弹出窗口！");
+                return;
+            }
+            var obj = new Object();
+            obj.Id = num;
+            //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+            $.get('../..//MainShow/ShowGradeDetail', obj, function (form) {
+                BoxIndex = layer.open({
+                    type: 1,
+                    title: '添加表单',
+                    content: form,
+                    btn: ['保存', '取消'],
+                    shade: false,
+                    offset: ['100px', '30%'],
+                    area: ['600px', '400px'],
+                    zIndex: 19891013,
+                    maxmin: true,
+                    yes: function (index) {
+                        //触发表单的提交事件
+                        $('form.layui-form').find('button[lay-filter=edit]').click();
+                    },
+                    full: function (elem) {
+                        var win = window.top === window.self ? window : parent.window;
+                        $(win).on('resize', function () {
+                            var $this = $(this);
+                            elem.width($this.width()).height($this.height()).css({
+                                top: 0,
+                                left: 0
+                            });
+                            elem.children('div.layui-layer-content').height($this.height() - 95);
+                        });
+                    },
+                    success: function (layero, index) {
+                        //弹出窗口成功后渲染表单
+                        var form = layui.form();
+                        form.render();
+                        form.on('submit(edit)', function (data) {
+                            jQuery.axpost('../../api/MainShow/EditGradeInfo', JSON.stringify(data.field), function (dataInfo) {
+                                layer.close(index);
+                                layer.msg(dataInfo.Message);
+                                location.reload();
+                            });
+
+                            //这里可以写ajax方法提交表单
+                            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                        });
+                        //console.log(layero, index);
+                    },
+                    end: function () {
+                        BoxIndex = -1;
+                    }
+                });
+            });
+        }
+
+        function DeleteImage(num) {
+            layer.confirm('您确定要删除此展示商品吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                var obj = new Object();
+                obj.OrderId = num;
+                jQuery.axpost('../../api/MainShow/DeleteGradeInfo', JSON.stringify(obj), function (dataInfo) {
+                    layer.close(index);
+                    layer.msg(dataInfo.Message);
+                    location.reload();
+                });
+            }, null);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EnumType>
+  <!--订单状态不允许修改-->
+  <OrderStatus>
+    <status name="待付款" id="1"/>
+    <!--<status name="已付款" id="2"/>-->
+    <status name="未发货" id="3"/>
+    <status name="待收货" id="4"/>
+    <status name="待评价" id="5"/>
+    <status name="评价成功" id="6"/>
+    <status name="退货中" id="7"/>
+    <status name="退货失败" id="8"/>
+    <status name="退货成功" id="9"/>
+  </OrderStatus>
+  <PayInfo>
+    <PayType name="线下支付" id="1"/>
+    <PayType name="支付宝支付" id="2"/>
+    <PayType name="微信支付" id="3"/>
+  </PayInfo>
+</EnumType>

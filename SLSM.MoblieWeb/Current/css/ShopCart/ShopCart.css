@@ -1,0 +1,63 @@
+﻿#tong {
+    background-color: white;
+}
+
+
+    #tong .designContainer {
+        width: 11rem;
+        border: none;
+        top: 0px;
+        min-height: 10rem;
+    }
+
+        #tong .designContainer .skuimgs {
+            clear: both;
+            padding-top: 0.2rem;
+            /* margin-left: 71px; */
+            position: absolute;
+        }
+
+            #tong .designContainer .skuimgs .designImg {
+                width: 1.5rem;
+                height: 2rem;
+                float: left;
+                margin-right: 0.2rem;
+                text-align: center;
+                clear: both;
+                margin-left: 0.2rem;
+            }
+
+                #tong .designContainer .skuimgs .designImg .sku_img_checked {
+                    border: 1px solid #f15a48 !important;
+                }
+
+                #tong .designContainer .skuimgs .designImg .itemImg {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    border: 1px solid white;
+                    cursor: pointer;
+                }
+
+        #tong .designContainer .imgbox {
+            margin-top: 0.2rem !important;
+            margin-left: 2.0rem !important;
+            width: 8rem;
+            height: 8rem;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border: 1px solid #ccc;
+        }
+
+        #tong .designContainer .showImg {
+            padding-top: 0.2rem;
+            padding-left: 0.2rem;
+            width: 7.6rem;
+            height: 7.6rem;
+            border: 1px solid #dcdcdc
+        }
+.layui-layer-shade{
+    z-index:0 !important;
+}
+.hide{
+    display:none;
+}

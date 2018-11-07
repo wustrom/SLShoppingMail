@@ -1,0 +1,136 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <!--页面style css-->
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="~/Base/css/ydui.css" />
+    <link rel="stylesheet" type="text/css" href="~/Base/css/public.css?version=20181012" />
+    <link rel="stylesheet" type="text/css" href="~/Base/css/style.css" />
+    <link href="~/Current/css/Login.css" rel="stylesheet" />
+    <script src="~/Base/js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/ydui.flexible.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body style="background: #eeeeee;">
+    <div class="main-container">
+        <div class="page-wrap">
+            <div class="page-wrap__container">
+                <div class="register">
+                    <div class="form">
+                        <div class="child">
+                            <div class="row justify-content-center text-center">
+                                <span class="text-center tab align-middle ">密码登录</span>
+                                <span class="text-center tab align-middle tab-active">验证码登录</span>
+                            </div>
+                            <span mode="out-in">
+                                <div class="phone-view">
+                                    <div class="row MobliePhone">
+                                        <div class="d-select">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-secondary">+86</button>
+                                            </div>
+                                        </div>
+                                        <div class="d-input phoneNum">
+                                            <input placeholder="请输入手机号*" type="number" pattern="\d*" class="input">
+                                        </div>
+                                    </div>
+                                    <div class="row PassWord" style="display:none;">
+                                        <div class="verification-code">
+                                            <div class="input-field">
+                                                <i class="material-icons prefix"></i>
+                                                <input placeholder="密码*" type="password" class="input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row phoneCode">
+                                        <div class="input-btn">
+                                            <div class="input-field">
+                                                <i class="material-icons prefix"></i>
+                                                <input placeholder="短信验证码*" type="number" pattern="\d*" class="input">
+                                            </div>
+                                            <button type="button" autofocus="autofocus" class="btn inner-button second lg" style="font-size: .4rem;color: #fff;background: #008374;">
+                                                发送验证码
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row register-btn">
+                                        <button type="button" autofocus="autofocus" class="btn register-btn primary lg" style="font-size: .4rem;">
+                                            登录
+                                        </button>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Base/js/ydui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Base/js/public.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Current/js/ajax.js"></script>
+    <script src="~/plugins/layer/layer.js"></script>
+    <script>
+        $(function () {
+            $('span.tab').click(function () {
+                if (!$(this).hasClass('tab-active')) {
+                    if ($(this).html().trim() == "密码登录") {
+                        $('.row.PassWord').show();
+
+                        $('.row.phoneCode').hide();
+                    }
+                    else if ($(this).html().trim() == "验证码登录") {
+                        $('.row.PassWord').hide();
+                        $('.row.phoneCode').show();
+                    }
+                    $('.row.PassWord').val('');
+                    $('.row.phoneCode').val('');
+                    $('.row.justify-content-center.text-center .tab').removeClass('tab-active');
+                    $(this).addClass('tab-active');
+                }
+            })
+
+            $('.btn.inner-button.second.lg').click(function () {
+                var datas = new Object();
+                datas.UserPhone = $('.d-input.phoneNum input').val();
+                jQuery.axpost('../../Api/Login/SendPhoneCode', JSON.stringify(datas), function (data) {
+                    layer.msg('已发送');
+                })
+            })
+
+            $('.row.register-btn').click(function () {
+                var obj = new Object();
+                obj.UserPhone = $('.d-input.phoneNum input').val();
+                if ($('span.tab.tab-active').html() == "密码登录") {
+                    obj.Password = $('.verification-code .input-field input').val();
+                }
+                else {
+                    obj.PhoneCode = $('.input-btn .input-field input').val();
+                }
+                jQuery.axpost('../../Api/Login/LoginByPhone', JSON.stringify(obj), function (data) {
+                    YDUI.dialog.loading.close();
+                    window.location.href = "../../main/index"
+                });
+            });
+        })
+    </script>
+    <style>
+        .btn.lg:active {
+            background-color: #D9D9D9 !important;
+        }
+    </style>
+</body>
+
+</html>

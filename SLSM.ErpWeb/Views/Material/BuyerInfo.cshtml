@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+    var Id = ViewBag.Id;
+    var List_Produter = (List<DbOpertion.Models.Producer>)ViewBag.Producer;
+    var PrintText = ViewBag.PrintText;
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/btable.css" rel="stylesheet" />
+    <link href="~/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        .layui-inline.aaa .layui-form-checkbox {
+            margin-top: 0px;
+        }
+    </style>
+</head>
+
+<body style="">
+    <div style="margin:0px; background-color: white; margin:0 10px;min-width:1500px;">
+        <blockquote class="layui-elem-quote" style="background-color:white;min-width:1475px;">
+            <form class="layui-form title-part">
+                <div class="layui-inline aaa">
+                    <label>采购单状态:</label>
+                    <input type="checkbox" value="待下单" title="待下单" lay-skin="primary">
+                    <input type="checkbox" value="待送货品检" title="待送货品检" lay-skin="primary">
+                    <input type="checkbox" value="待入库" title="待入库" lay-skin="primary">
+                    <input type="checkbox" value="已入库" title="已入库" lay-skin="primary">
+                    <input type="checkbox" value="待退货" title="待退货" lay-skin="primary">
+                    <input type="checkbox" value="已退货" title="已退货" lay-skin="primary">
+                    <input type="checkbox" value="已取消" title="已取消" lay-skin="primary">
+                </div>
+                <div class="layui-inline Producer">
+                    <label class="layui-form-label">供应商</label>
+                    <div class="layui-input-inline" style="width: 160px;margin-top:4px;">
+                        <select name="ProduterId" lay-verify="" lay-search class="layui-input">
+                            <option value="0">全部</option>
+                            @foreach (var item in List_Produter)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">采购日期</label>
+                    <div class="layui-input-inline" style="width: 120px;margin-top:4px;" id="Time1">
+                        <input type="text" name="datestart" id="datestrat" lay-verify="date" placeholder="请选择日期" autocomplete="off" class="layui-input" onclick="">
+                    </div>
+                    <label style="margin-top:4px;">-</label>
+                    <div class="layui-input-inline" style="width: 120px;margin-top:4px;" id="Time2">
+                        <input type="text" name="dateend" id="dateend" lay-verify="date" placeholder="请选择日期" autocomplete="off" class="layui-input" onclick="">
+                    </div>
+                </div>
+                <input type="hidden" name="ProduterSelectId" id="ProduterId" value="@Id" />
+                <input type="hidden" name="PrintText" id="PrintText" value="@PrintText" />
+            </form>
+            <div style="clear:both;"></div>
+        </blockquote>
+        <div>
+            <div id="content" style="width: 100%;height: 533px;">
+            </div>
+        </div>
+    </div>
+    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/BuyerInfo/Index.js?version=20181017001"></script>
+</body>
+</html>
+

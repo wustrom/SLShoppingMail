@@ -1,0 +1,75 @@
+﻿body {
+}
+
+/*.s1 i, .pic1 i, .picbox i {
+    display: none;
+}*/
+
+/*.s1 span {
+    border: 0px !important;
+}*/
+
+.ordersom .StagePriceId {
+    display: none;
+}
+
+.propj .pagesize1 .active {
+    background-color: #008374;
+}
+
+.propj .pagesize1 .active a {
+    color: white;
+}
+
+.orderalert .conbox .leftbox .bjgbox {
+    display: none;
+}
+
+.orderalert .conbox .leftbox .bjgbox.active {
+    display: block;
+}
+
+.orderalert .conbox .leftbox .imgbox img {
+    width: 480px;
+    height: 480px;
+}
+
+.inputDiv {
+    zoom: 1;
+    overflow: hidden;
+    height: 27px;
+    line-height: 27px;
+    margin-bottom: 10px;
+}
+
+.inputDiv .s1 {
+    float: left;
+    width: 70px;
+    font-size: 16px;
+    color: #333333;
+    text-indent: 2px;
+}
+
+.inputDiv .s2 {
+    float: left;
+    width: 194px;
+}
+
+    .inputDiv .s2 .word {
+        float: left;
+        width: 192px;
+        height: 25px;
+        line-height: 25px;
+        border: 1px solid #d6d6d6;
+    }
+
+    .inputDiv .s2 .s3 {
+        float: left;
+        width: 32px;
+        text-align: center;
+        line-height: 27px;
+        font-size: 12px;
+        cursor: pointer;
+        color: #fff;
+        background: #333333;
+    }

@@ -1,0 +1,140 @@
+﻿@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@using DbOpertion.Models;
+@{
+    Layout = null;
+    List<GradeRes> GradeList = ViewBag.Grade == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.Grade;
+    List<Materials_Stock_View> ListMaterials = ViewBag.Materials == null ? new List<Materials_Stock_View>() : (List<Materials_Stock_View>)ViewBag.Materials;
+}
+<div>
+</div>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div style="display:none">
+
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">对应原材料</label>
+            <div class="layui-input-inline">
+                <select name="MaterialId" lay-verify="required" lay-filter="MaterialId">
+                    <option value=""></option>
+                    @foreach (var item in GradeList)
+                    {
+                        foreach (var ListLevel2 in item.listGrade)
+                        {
+                            var thisMaterial = ListMaterials.Where(p => p.Genera == ListLevel2.id.ToString()).ToList();
+                            if (thisMaterial.Count != 0)
+                            {
+                                <optgroup label="@item.name-@ListLevel2.name">
+                                    @foreach (var MaterialInfo in thisMaterial)
+                                    {
+                                        <option value="@MaterialInfo.Raw_materialsId" avaistock="@MaterialInfo.available_stock" Unit="@MaterialInfo.ChinaUnit" MatAndPro="@MaterialInfo.MatAndPro" SKU="@MaterialInfo.SKU" ChinaProductName="@MaterialInfo.ChinaProductName" ProducerNo="@MaterialInfo.ProductNo">@MaterialInfo.ChinaProductName-@MaterialInfo.SKU</option>
+                                    }
+                                </optgroup>
+                            }
+
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">补申数量</label>
+            <div class="layui-input-block">
+                <input type="text" name="AddNumber" placeholder="补申数量(注意少于库存数量)" lay-verify="numberinfo" autocomplete="off" class="layui-input" value="0">
+                <input type="hidden" name="ChinaProductName" value="">
+                <input type="hidden" name="Unit" value="">
+                <input type="hidden" name="SKU" value="">
+                <input type="hidden" name="MatAndPro" value="">
+                <input type="hidden" name="ProducerNo" value="">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">库存数量</label>
+            <div class="layui-input-block">
+                <label class="layui-form-label stock_num" style="text-align: left;padding-left: 5px;">0</label>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+
+</div>
+<script src="~/Current/Scripts/jquery-form.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script>
+    //$("input[name='AddNumber']").change(function () {
+    //    var valueNum = parseInt($(this).val());
+    //    if (valueNum == NaN) {
+    //        layer.msg("请输入数字");
+    //        $(this).val(0);
+    //        return;
+    //    }
+    //    else if (valueNum < 0) {
+    //        layer.msg("输入数字请大于0");
+    //        $(this).val(0);
+    //        return;
+    //    }
+    //    else if (valueNum != parseFloat($(this).val())) {
+    //        layer.msg("输勿输入小数");
+    //        $(this).val(0);
+    //        return;
+    //    }
+    //    else if (valueNum > parseInt($(".stock_num").html())) {
+    //        layer.msg("输勿大于未冻结库存");
+    //        $(this).val(0);
+    //        return;
+    //    }
+    //})
+    function renderForm() {
+        layui.use('form', function () {
+            var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+
+            form.on('select(MaterialId)', function (data) {
+                $('.stock_num').html($(data.elem.selectedOptions[0]).attr('avaistock'));
+                $('input[name="Unit"]').val($(data.elem.selectedOptions[0]).attr('Unit'));
+                $('input[name="SKU"]').val($(data.elem.selectedOptions[0]).attr('SKU'));
+                $('input[name="MatAndPro"]').val($(data.elem.selectedOptions[0]).attr('MatAndPro'));
+                $('input[name="ChinaProductName"]').val($(data.elem.selectedOptions[0]).attr('ChinaProductName'));
+                $('input[name="ProducerNo"]').val($(data.elem.selectedOptions[0]).attr('ProducerNo'));
+            });
+
+            form.on('input(numberinfo)', function (data) {
+                
+            });
+
+            //表单验证
+            form.verify({
+                numberinfo: function (value) {
+                    var valueNum = parseInt(value);
+                    if (valueNum == NaN) {
+                        $(this).val(0);
+                        return "请输入数字";
+                    }
+                    else if (valueNum < 0) {
+                        $(this).val(0);
+                        return "输入数字请大于0";
+                    }
+                    else if (valueNum != parseFloat(value)) {
+                        $(this).val(0);
+                        return "输勿输入小数";
+                    }
+                    else if (valueNum > parseInt($(".stock_num").html())) {
+                        $(this).val(0);
+                        return "输勿大于未冻结库存";
+                    }
+                },
+            });
+        });
+    }
+    $(function () {
+        renderForm();
+    })
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+        border: 1px solid DarkGray;
+    }
+</style>

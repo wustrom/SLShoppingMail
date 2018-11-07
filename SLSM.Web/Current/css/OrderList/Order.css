@@ -1,0 +1,43 @@
+﻿.myorder .ricont .select li:active a:after {
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+
+.myorder .ricont .select li:active a {
+    color: #008374
+}
+
+.myorder .ricont .select li.current a {
+    color: #008374
+}
+
+    .myorder .ricont .select li.current a:after {
+        opacity: 1;
+        filter: alpha(opacity=100);
+    }
+
+.myorder .ricont .model .design a {
+    background-color: #00B0F0;
+    color: white;
+    font-size: 23px;
+    border-radius: 10px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.orderalert .conbox .leftbox .bjgbox {
+    display: none;
+}
+
+    .orderalert .conbox .leftbox .bjgbox.active {
+        display: block;
+    }
+
+    .orderalert .conbox .leftbox .bjgbox .imgbox img {
+        width: 480px;
+        height: 480px;
+    }
+
+.orderalert .conbox .rightbox .bd .model.model1 .left .imgbox {
+    cursor: pointer;
+}

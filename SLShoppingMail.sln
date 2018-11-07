@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLSM.Web", "SLSM.Web\SLSM.Web.csproj", "{647D2970-0601-4D61-BE4D-A46C1660FAD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLSM.DBOpertion", "SLSM.DBOpertion\SLSM.DBOpertion.csproj", "{9D8593A7-7E07-4C9C-9BD7-85BFDDC884EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{81030AAB-08DD-4CD9-833C-65FDAB99CB0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AliyunHelper", "AliyunHelper\AliyunHelper.csproj", "{C64FA6E4-F74F-468A-9692-BBDA8F55DC29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLSM.MoblieWeb", "SLSM.MoblieWeb\SLSM.MoblieWeb.csproj", "{B468D038-9190-4134-9C3F-C562231F4250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLSM.AdminWeb", "SLSM.AdminWeb\SLSM.AdminWeb.csproj", "{B65FCEB4-D974-4BBB-951F-4242A3BAE0F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLSM.ErpWeb", "SLSM.ErpWeb\SLSM.ErpWeb.csproj", "{DAB251CB-5992-43C9-A888-EB152D5F2D43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{647D2970-0601-4D61-BE4D-A46C1660FAD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{647D2970-0601-4D61-BE4D-A46C1660FAD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{647D2970-0601-4D61-BE4D-A46C1660FAD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{647D2970-0601-4D61-BE4D-A46C1660FAD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D8593A7-7E07-4C9C-9BD7-85BFDDC884EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D8593A7-7E07-4C9C-9BD7-85BFDDC884EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D8593A7-7E07-4C9C-9BD7-85BFDDC884EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D8593A7-7E07-4C9C-9BD7-85BFDDC884EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81030AAB-08DD-4CD9-833C-65FDAB99CB0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81030AAB-08DD-4CD9-833C-65FDAB99CB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81030AAB-08DD-4CD9-833C-65FDAB99CB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81030AAB-08DD-4CD9-833C-65FDAB99CB0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C64FA6E4-F74F-468A-9692-BBDA8F55DC29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C64FA6E4-F74F-468A-9692-BBDA8F55DC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C64FA6E4-F74F-468A-9692-BBDA8F55DC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C64FA6E4-F74F-468A-9692-BBDA8F55DC29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B468D038-9190-4134-9C3F-C562231F4250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B468D038-9190-4134-9C3F-C562231F4250}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B468D038-9190-4134-9C3F-C562231F4250}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B468D038-9190-4134-9C3F-C562231F4250}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B65FCEB4-D974-4BBB-951F-4242A3BAE0F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B65FCEB4-D974-4BBB-951F-4242A3BAE0F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B65FCEB4-D974-4BBB-951F-4242A3BAE0F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B65FCEB4-D974-4BBB-951F-4242A3BAE0F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAB251CB-5992-43C9-A888-EB152D5F2D43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAB251CB-5992-43C9-A888-EB152D5F2D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAB251CB-5992-43C9-A888-EB152D5F2D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAB251CB-5992-43C9-A888-EB152D5F2D43}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35ED1C1F-713F-4EBF-BEEC-4B9FB365927D}
+	EndGlobalSection
+EndGlobal

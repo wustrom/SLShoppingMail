@@ -1,0 +1,347 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var MaterialsList = ViewBag.MaterialsList == null ? new List<Raw_Materials>() : (List<Raw_Materials>)ViewBag.MaterialsList;
+    var colorList = ViewBag.ColorList == null ? new List<Colorinfo>() : (List<Colorinfo>)ViewBag.ColorList;
+}
+@section css{
+    <link href="~/Current/css/ShopCart/Cart.css?version=201810251644" rel="stylesheet" />
+    <style>
+        input[type="checkbox"], input[type="radio"] {
+            display: none;
+        }
+
+        .regular-checkbox + label {
+            background-color: #fafafa;
+            border: 1px solid #cacece;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+            padding: 9px;
+            border-radius: 3px;
+            display: inline-block;
+            position: relative;
+        }
+
+            .regular-checkbox + label:active, .regular-checkbox:checked + label:active {
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+            }
+
+        .regular-checkbox:checked + label:after {
+            content: '\2714';
+            font-size: 14px;
+            position: absolute;
+            top: 0px;
+            left: 3px;
+            color: #99a1a7;
+        }
+
+        .index__cart-list-li___1JTr4.ItemActive {
+            background-color: white;
+            opacity: 0.3;
+        }
+    </style>
+    <script>
+        //$(function () {
+        //    $(".index__cart-list-li___1JTr4 .index__sub-item___3Syhp .content a").mousedown(function () {
+        //        $(this).parent().parent().parent().addClass("ItemActive");
+        //        selectedItem = $(this);
+        //        setTimeout(function () {
+        //            $(selectedItem).parent().parent().parent().removeClass("ItemActive");
+        //        }, 1000);
+        //    });
+
+        //    $(".index__cart-list-li___1JTr4 .index__sub-item___3Syhp .content a").mouseup(function () {
+        //        if ($(this).parent().parent().parent().hasClass("ItemActive")) {
+        //            location.href = $(this).parent().attr('href');
+        //        }
+        //    });
+        //})
+    </script>
+}
+<!--面包屑-->
+<div id="dji-store-page">
+    <div id="cartWrap">
+        <div class="loading-mask" style="display: none;">
+            <div class="spinner">
+                <span class="bounce bounce1">
+                </span>
+                <span class="bounce bounce2">
+                </span>
+                <span class="bounce bounce3">
+                </span>
+            </div>
+        </div>
+        <div style="padding-bottom:140px;">
+            <div class="control__title___G7-L1">
+                <a class="control__more___1YgZm" href="../../Main/Index">
+                    &lt; 继续购物
+                </a>
+                <a class="control__operate___2Y3ow" style="display:inline;">
+                    编辑
+                </a>
+            </div>
+            <ul>
+                @{
+                    var ListHisdesign = (List<SLSM.MoblieWeb.Models.Response.ShopCart.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+                    foreach (var item in ListHisdesign)
+                    {
+                        var material = MaterialsList.Where(p => p.Id == item.MaterialId).FirstOrDefault();
+                        var thisColor = colorList.Where(p => p.ChinaDescribe == item.Color && p.ParentId != 0).FirstOrDefault();
+                        var ImageList = item.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList();
+                        string Image = "";
+                        foreach (var ImageInfo in ImageList)
+                        {
+                            var ImageArray = ImageInfo.Split(';');
+                            if (ImageArray[0] == $"{thisColor.Id}")
+                            {
+                                Image = ImageArray[1];
+                            }
+                        }
+                        string PrintFunc = "";
+                        var PrinFuncList = material.PrintFuncInfo.Split('|').Where(p => p.Contains($"{item.PrintingMethod}:")).FirstOrDefault();
+                        PrintFunc = PrinFuncList == null ? "" : PrinFuncList.Split(':')[1];
+                        <li class="index__cart-list-li___1JTr4">
+
+                            <div class="index__sub-item___3Syhp">
+                                <div class="content">
+                                    <a href="../../Commodity/index?Commodityid=@item.CommodityId">
+                                        <img class="index__item-img___3J_Ic" src="@ViewBag.AdminUrl@Image">
+                                    </a>
+                                    <div class="index__item-context____wXt5">
+                                        <p class="index__product-name___kkhbP">
+                                            <a href="javascript:;">
+                                                @material.ProductNo
+                                            </a>
+                                        </p>
+                                        <p class="index__product-name___kkhbP">
+                                            <a href="../../Commodity/index?Commodityid=@item.CommodityId&ShopCartId=@item.ShopCartId">
+                                                @item.CommodityName
+                                            </a>
+                                        </p>
+                                        <p class="index__product-name___kkhbP">
+                                            <a href="javascript:;">
+                                                @item.Color
+                                            </a>
+                                        </p>
+                                        <p class="index__product-name___kkhbP">
+                                            <a href="javascript:;">
+                                                @PrintFunc
+                                            </a>
+                                        </p>
+                                        <p class="index__product-price___2_B3n">
+                                            ¥ <label>@item.Price</label>
+                                        </p>
+                                        <p class="index__product-shipping___1oAkz">
+
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="index__cart-num-edit___Sd4fh" style="top:.8rem;">
+                                    <div class="index__cart-num-cut___2oPvb">
+                                        <span class="index__cart-num-cut-icon___2cp3f">
+                                        </span>
+                                    </div>
+                                    <input id="product_num_0" name="product_num" class="index__cart-num-set___1tRp8" value="@item.Amount">
+                                    <div class="index__cart-num-add___qhJjl">
+                                        <span class="index__cart-num-add-icon___3H3BQ">
+                                        </span>
+                                    </div>
+                                    <br />
+                                    <input type="checkbox" id="checkbox-@item.ShopCartId" class="regular-checkbox fl" checked="checked" />
+                                    <label for="checkbox-@item.ShopCartId" style="float:  left;top: .3rem;left: 1.1rem;"></label>
+                                </div>
+                                <a class="index__delete-link___3t0z3" href="javascript:void(0);" style="display:none;margin-top: -0.7rem;margin-right: 0.8rem;" onclick="deleteShopCart(this)">删除</a>
+                                <input type="hidden" id="hidShopCartId" value="@item.ShopCartId" />
+                                <div class="clear">
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+
+            </ul>
+            <div class="total__footer___3DXqe">
+                <div class="total__wrapper___24RbB">
+                    <p class="total__total-price___1RYx2">
+                        <span class="total__total___X4pKp">
+                            <label>6</label> 个商品
+                        </span>
+                        <span class="total__price___2z4Kr">
+                            ¥ <label>4934</label>
+                        </span>
+                    </p>
+                    @*<p class="total__installment___35SM2">
+                            订单满 ¥500 即可优享分期支付
+                        </p>*@
+                    <button class="button__btn___Uhwzq total__checkout___16OYp">
+                        去结算
+                    </button>
+                </div>
+            </div>
+
+            <div class="index__cart-empty___146Dt">
+                <p>购物车为空</p>
+                <div class="index__cart-empty-icon___2FG4V"></div>
+            </div>
+            <div class="total__footer___3DXqe" style="display:none;">
+                <a href="../../Main/Index" class="button__btn___Uhwzq total__empty___rgD5c">
+                    继续购物
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+@section js{
+    <script src="~/Base/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Current/js/Commodity/index.js"></script>
+    <link href="~/Current/css/ShopCart/ShopCart.css" rel="stylesheet" />
+    <script>
+        // #region 删除购物车数据
+        function deleteShopCart(that) {
+            var data = new Object();
+            data.ShopCartId = $(that).parent().parent().find('#hidShopCartId').val();
+            jQuery.axadminpost("../../Api/UpImg/DeleteShopCart", data, function () {
+                layer.msg("删除购物车记录成功！");
+                $(that).parent().parent().remove();
+                PriceSum();
+                HavaComm();
+            });
+        }
+        // #endregion
+
+        $(function () {
+            // #region 更改购物数目
+            $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').change(function () {
+                var data = new Object();
+                var that = this;
+                data.ShopCartId = $(that).parent().parent().find('#hidShopCartId').val();
+                data.Amount = parseInt($(that).val());
+                $(that).val(parseInt($(that).val()));
+                jQuery.axpost("../../Api/ShopCart/ChangeAmount", JSON.stringify(data), function (dataInfo) {
+                    $(that).parent().parent().find('.index__product-price___2_B3n label').html(dataInfo.Message);
+                    PriceSum();
+                });
+            });
+
+            $(".index__cart-num-add___qhJjl").click(function () {
+                var Num = $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').val();
+                if (!isNaN(Num)) {
+                    Num = parseInt(Num) + 1;
+                }
+                else {
+                    Num = 1;
+                }
+                $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').val(Num);
+                $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').trigger("change");
+            })
+
+            $(".index__cart-num-cut___2oPvb").click(function () {
+                var Num = $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').val();
+                if (!isNaN(Num)) {
+                    Num = parseInt(Num);
+                    if (Num >= 2) {
+                        Num = Num - 1;
+                    }
+                }
+                else {
+                    Num = 1;
+                }
+                $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').val(Num);
+                $('.index__cart-list-li___1JTr4 .index__cart-num-set___1tRp8').trigger("change");
+            })
+            // #endregion
+            // #region 计算价格
+            $('.index__cart-list-li___1JTr4 input[type="checkbox"]').click(function () {
+                PriceSum();
+            });
+            // #endregion
+            // #region 定制效果点击
+            $('#tong .designContainer .skuimgs .designImg').click(function () {
+                $('#tong .designContainer .skuimgs .designImg img').each(function () {
+                    $(this).removeClass('sku_img_checked');
+                })
+                $(this).find('.itemImg').addClass('sku_img_checked');
+                var src = $(this).find('.itemImg').attr('src');
+                $('#tong .designContainer .imgbox img').attr('src', src);
+            });
+            // #endregion
+            // #region 结算
+            $('.button__btn___Uhwzq.total__checkout___16OYp').click(function () {
+                var ShopCart = "";
+                $('ul .index__cart-list-li___1JTr4 .index__sub-item___3Syhp .index__item-context____wXt5 .index__product-price___2_B3n label').each(function () {
+                    if ($(this).parent().parent().parent().parent().parent().find('input[type="checkbox"]')[0].checked) {
+                        ShopCart = ShopCart + $(this).parent().parent().parent().parent().parent().find('#hidShopCartId').val() + ",";
+                    }
+                });
+                if (ShopCart.length == 0) {
+                    layer.msg('请至少选择一件商品进行结算！');
+                }
+                else {
+                    ShopCart = ShopCart.substr(0, ShopCart.length - 1);
+                    window.location.href = '../../PayPage/Index?ShopCartId=' + ShopCart;
+                }
+            });
+            // #endregion
+            $('.jxgw').click(function () {
+                window.location.href = "../../Main/Index"
+            });
+        })
+
+        // #region 计算购物车价格
+        function PriceSum() {
+            var floatPrice = 0;
+            var NumCount = 0;
+            $('ul .index__cart-list-li___1JTr4 .index__sub-item___3Syhp .index__item-context____wXt5 .index__product-price___2_B3n label').each(function () {
+                if ($(this).parent().parent().parent().parent().parent().find('input[type="checkbox"]')[0].checked) {
+                    if (!isNaN($(this).html())) {
+                        var Price = parseFloat($(this).html());
+                        floatPrice = floatPrice + Price;
+                        NumCount++;
+                    }
+                }
+            });
+            $('.total__wrapper___24RbB .total__total-price___1RYx2 .total__price___2z4Kr label').html(floatPrice);
+            $('.total__footer___3DXqe .total__wrapper___24RbB .total__total___X4pKp label').html(NumCount);
+        }
+
+        PriceSum();
+        // #endregion
+
+        $(function () {
+            $('.control__title___G7-L1 .control__operate___2Y3ow').click(function () {
+                if ($(this).html().trim() == "编辑") {
+                    $('.index__cart-list-li___1JTr4 .index__sub-item___3Syhp .index__delete-link___3t0z3').each(function () {
+                        $(this).show();
+                    });
+                    $(this).html("完成");
+                }
+                else {
+                    $('.index__cart-list-li___1JTr4 .index__sub-item___3Syhp .index__delete-link___3t0z3').each(function () {
+                        $(this).hide();
+                    });
+                    $(this).html("编辑");
+                }
+
+            });
+
+        })
+
+        function HavaComm() {
+            if ($('ul .index__cart-list-li___1JTr4').length == 0) {
+                $('#cartWrap ul').hide();
+                $('.total__footer___3DXqe').eq(0).hide();
+                $('.total__footer___3DXqe').eq(1).show();
+                $('.index__cart-empty___146Dt').show();
+                $('.control__title___G7-L1 .control__operate___2Y3ow').hide();
+            }
+            else {
+                $('#cartWrap ul').show();
+                $('.total__footer___3DXqe').eq(0).show();
+                $('.total__footer___3DXqe').eq(1).hide();
+                $('.index__cart-empty___146Dt').hide();
+            }
+        }
+        HavaComm();
+    </script>
+}
+

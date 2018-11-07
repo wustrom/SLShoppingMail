@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = ViewBag.UserInfo == null ? new DbOpertion.Models.User() : (DbOpertion.Models.User)ViewBag.UserInfo;
+}
+<script>
+        //var selectedItem;
+        //$(function () {
+        //    $(".main-ul .main-li").mousedown(function () {
+        //        $(this).addClass("ItemActive");
+        //        selectedItem = $(this);
+        //        setTimeout(function () {
+        //            $(selectedItem).removeClass("ItemActive");
+        //        }, 200);
+        //    });
+
+        //    $(".main-ul .main-li").mouseup(function () {
+        //        if ($(this).hasClass("ItemActive")) {
+        //            location.href = $(this).attr('href');
+        //        }
+        //    });
+        //})
+</script>
+<style>
+    .main-ul .main-li:active {
+        background-color: #d9d9d9 !important;
+    }
+</style>
+<link href="~/Current/css/UserInfo/Index.css" rel="stylesheet" />
+<section>
+    <div id="custom-info">
+        <div class="account-main my-account">
+            <div class="user-info">
+                <div class="user-photo">
+                    <img src="//asset1.djicdn.com/uploads/avatars/thumb_47e1e8e0-d55f-4fde-94aa-667d4fcc288d.png">
+                </div>
+                <div class="user-name">@user.Phone</div>
+                <div class="login-info">@user.Name</div>
+            </div>
+            <ul class="main-ul">
+                <li class="main-li">
+                    <a class="main-link" href="../../userInfo/Info">我的帐号</a>
+                </li>
+                <li class="main-li">
+                    <a class="main-link" href="../../userInfo/MyOrderList">我的订单</a>
+                </li>
+                <li class="main-li">
+                    <a class="main-link" href="../../userInfo/Address">我的地址</a>
+                </li>
+                <li class="login-out help-close">
+                    <a class="login-out-btn btn btn-dafault dji-touch-button btn-gray" data-ajax="false" href="javacript:;">退出</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>

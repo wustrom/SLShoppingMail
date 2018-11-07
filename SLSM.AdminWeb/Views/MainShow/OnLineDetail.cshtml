@@ -1,0 +1,40 @@
+﻿
+@{
+    Layout = null;
+    var Carousel = (DbOpertion.Models.Carousel_Image)ViewBag.Carousel;
+}
+<script src="~/Current/Scripts/MainShow/DetailCarousel.js?version=2.00"></script>
+<script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<div style="margin: 15px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择图片</label>
+        <div class="layui-input-block">
+            @if (Carousel != null)
+            {
+                <img id="btn-img" src="@Carousel.Image" alt="暂无图片" style="width:333px;height:100px;">
+            }
+            else
+            {
+                <img id="btn-img" src="/Image/Grade/noImg.svg" alt="暂无图片" style="width:200px;height:100px;">
+            }
+            <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="visibility: hidden">
+                <input name="upImg" type="file" id="upImg" onchange="filechange(event)" accept=".png,.jpg,.jpeg">
+                <input id="testSubmit" type="submit" value="上传">
+            </form>
+        </div>
+    </div>
+    <form class="layui-form">
+        @if (Carousel != null)
+        {
+            <input type="hidden" name="CarouselID" id="CarouselID" value="@Carousel.Id" />
+            <input type="hidden" name="Image" id="Image" value="@Carousel.Image" />
+        }
+        else
+        {
+            <input type="hidden" name="CarouselID" id="CarouselID" value="" />
+            <input type="hidden" name="Image" id="Image" value="" />
+        }
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

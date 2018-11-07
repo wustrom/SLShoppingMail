@@ -1,0 +1,189 @@
+﻿
+@{
+    Layout = null;
+    var List_Deliver = (List<DbOpertion.Models.Deliver_Buyer_View>)ViewBag.DeliverFullInfo;
+    var Buyers = (DbOpertion.Models.Buyer_Producer_View)ViewBag.BuyerInfo;
+    var PrintText = ViewBag.PrintText;
+}
+
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+<script src="~/plugins/layui/layui.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/BuyerInfo/Index.js?version=20181017001"></script>
+<script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+<style>
+    .layui-form-item.titlepart .layui-inline .layui-input-block {
+        margin-top: 7px;
+        min-height: initial;
+    }
+
+        .layui-form-item.titlepart .layui-inline .layui-input-block label {
+            border: none;
+            border-bottom: black solid 1px;
+            display: block;
+            width: 180px;
+        }
+
+    .layui-form-item.titlepart .layui-inline {
+        margin-bottom: 0px;
+    }
+
+    .layui-form-item.buttonGroup .layui-btn {
+        border-radius: 4px;
+        height: 45px;
+        font-weight: 100;
+        padding: 0px 35px;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>采购入库详情信息</title>
+</head>
+<body>
+    <div id="Div1">
+        <div style="margin:0px; background-color: white; margin:0 10px;min-width:1400px">
+            <div style="width:72%;">
+                <div id="TableDiv">
+                    <input type="hidden" name="PrintText" id="PrintText" value="@PrintText" />
+                    <table class="layui-table" style="width:100%">
+                        <tr style="background-color:#707070; color:white; height:40px;">
+                            <td colspan="7">
+                                <div style="float:left;font-size:20px;">
+                                    采购单:@Buyers.buyerStatus
+                                </div>
+                                @if (Buyers.buyerStatus == "待下单")
+                                {
+                                    <div style="float:right;font-size:20px;">
+                                        制单人:<label id="SinglePerson"> @ViewBag.UserName</label>
+                                        &nbsp; 时间: <label id="SingleTime">@DateTime.Now.ToString("yyyy-MM-dd HH:mm")</label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="float:right;font-size:20px;">
+                                        制单人: <label id="SinglePerson">@Buyers.SinglePerson</label>&nbsp; 时间: <label id="SingleTime">@Buyers.SingleTime.Value.ToString("yyyy-MM-dd HH:mm")</label>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" style="height:60px;">
+                                <div class="layui-form-item titlepart" style="float:left;margin:0px -20px;">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">采购单号：</label>
+                                        <div class="layui-input-block" style="">
+                                            <label>@Buyers.BuyerNo</label>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">订单日期：</label>
+                                        <div class="layui-input-block" style="">
+                                            <label>@(Buyers.buyerTime != null ? Buyers.buyerTime.Value.ToString("yyyy-MM-dd") : "暂未下单")</label>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">供应商：</label>
+                                        <div class="layui-input-block">
+                                            <label>@Buyers.Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="height:55px;">
+                            <td>SKU#</td>
+                            <td>产品货号</td>
+                            <td>中文品名</td>
+                            <td>规格型号</td>
+                            <td>单位</td>
+                            <td>订单数量</td>
+                            <td>金额</td>
+                        </tr>
+                        @foreach (var item in List_Deliver)
+                        {
+                            <tr style="height:50px;">
+                                <td>@item.Color</td>
+                                <td>@item.ProductNo</td>
+                                <td>@item.ChinaProductName</td>
+                                <td>@item.Specification</td>
+                                <td>@item.ChinaUnit</td>
+                                <td>@item.buyerCount</td>
+                                <td>
+                                    @item.DeliverMoney
+
+                                    @if (Buyers.buyerStatus == "待下单")
+                                    {
+                                        <button type="button" onclick="DeleteById(@item.Id)" class="layui-btn layui-btn-big" value="@item.Id" style="background-color:white"><i class="layui-icon" style="color:black">&#xe640;</i></button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @if (List_Deliver.Count < 6)
+                        {
+                            for (int i = List_Deliver.Count; i < 6; i++)
+                            {
+                                <tr style="height:50px;">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+
+                        }
+                        <tr style="height:55px;">
+                            <td colspan="6">
+                                <label style="float:left;font-size:20px;padding-left: 20px;">总金额:<label id="ChangebuyerMoney"></label></label>
+                            </td>
+                            <td>￥<label id="buyerMoney"> @Buyers.buyerMoney</label></td>
+                        </tr>
+                        <tr style="height:50px;">
+                            <td colspan="7">
+                                <div class="layui-form-item" style="margin-bottom:0px;">
+                                    <div class="layui-input-inline" style="width:100%">
+                                        <label class="layui-form-label" style="width:35px;padding-left:0px;padding-top:0px;">备注:</label>
+                                        <textarea type="text" class="layui-textarea" style="resize:none;min-height:60px;" disabled></textarea>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="height:50px;">
+                            <td>品检结果:</td>
+                            <td colspan="6"><label style="float:left"> @Buyers.checkStatus</label></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="layui-form-item buttonGroup" style="margin:0px; background-color: white; margin:0 10px;min-width:1100px">
+                    <div style="text-align:center;">
+                        <div class="layui-inline">
+                            @if (Buyers.buyerStatus == "待下单")
+                            {
+                                <button class="layui-btn layui-btn-normal" onclick="WantBuyer(@Buyers.Id)">通知下单</button>
+                                <button class="layui-btn layui-btn-danger" onclick="CancelOrder(@Buyers.Id)">取消订单</button>
+                            }
+                            else if (Buyers.buyerStatus == "待送货品检")
+                            {
+                                <button class="layui-btn" id="PrintDeliver" onclick="PrintDeliver(@Buyers.Id)">打印送货单</button>
+                            }
+                            else if (Buyers.buyerStatus == "待退货")
+                            {
+                                <button class="layui-btn layui-btn-danger" onclick="Return(@Buyers.Id)" id="Return">退货</button>
+                                <button class="layui-btn" id="PrintReturnDeliver" onclick="PrintReturnDeliver(@Buyers.Id)">打印退货单</button>
+                            }
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-warm" id="CloseBtn" onclick="CloseBtn()">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

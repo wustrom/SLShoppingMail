@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "_UserLayout";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+}
+@section js{
+    @RenderSection("js", required: false)
+}
+@section css{
+    @RenderSection("css", required: false)
+}
+<script src="~/Base/js/prettify.js"></script>
+<script src="~/Base/js/jquery.scrollbar.js"></script>
+
+<link href="~/Base/css/application.css" rel="stylesheet" />
+<script src="~/Base/js/jquery.SuperSlide.2.1.1.js"></script>
+<script src="~/Base/js/jquery.raty.min.js"></script>
+@*<link href="~/Base/css/globle.css" rel="stylesheet" />*@
+<script src="~/Base/js/webuploader.min.js"></script>
+<script src="~/Base/js/diyUpload.js"></script>
+<link href="~/Current/css/InfoBase.css" rel="stylesheet" />
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb breadcrumb-user">
+            <li><a href="/Main/Index">首页</a></li>
+            <li><a href="/UserInfo/Index">我的帐号</a></li>
+            @RenderSection("TitelLink", required: false)
+        </ul>
+    </div>
+    <div class="container">
+        <div class="col-xs-12">
+            <div class="user-center-bg">
+                <div class="new-sidebar">
+                    <div class="page-title my-account">
+                        帐号
+                    </div>
+                    <div class="nav-list list-group">
+                        <a class="list-group-item" href="/UserInfo/Index">我的帐号</a>
+                        <a class="list-group-item high-light" href="/UserInfo/Info">我的个人资料</a>
+                        <a class="list-group-item" href="/UserInfo/MyOrderList">我的订单</a>
+                        <a class="list-group-item" href="../../../shopcart/Index">我的购物车</a>
+                        <a class="list-group-item" href="/UserInfo/Address">我的收货地址</a>
+                        @*<a class="list-group-item" href="/UserInfo/Message">我的消息</a>*@
+                        <a class="list-group-item" href="/UserInfo/password">修改密码</a>
+
+                    </div>
+                </div>
+                <div class="user-center-content">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

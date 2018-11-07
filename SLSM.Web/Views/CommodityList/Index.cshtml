@@ -1,0 +1,118 @@
+﻿@using DbOpertion.Models
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var listCommView = ViewBag.listCommView == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.listCommView;
+    GradeRes gradeRes = (GradeRes)ViewBag.gradeSingle;
+
+}
+<script>
+    @*var gradeId='@ViewBag.gradeId'*@
+</script>
+
+@section js{
+    @*<script src="~/Current/script/CommodityList.js"></script>*@
+}
+@section css{
+    <link href="~/Current/css/CommodityList/CommList.css" rel="stylesheet" />
+    <link href="~/Current/css/CommodityList/CommCommon.css" rel="stylesheet" />
+})
+<div class="CommListcontainer">
+    <section class="title">
+        <div class="section_container">
+            <ul class="breadcrumbs">
+                <li class="breadcrumb_item">
+                    <a href="../../Main/Index">商城首页</a>
+                </li>
+                @if (gradeRes != null)
+                {
+                    <li class="breadcrumb_item">
+                        <a href="../../../CommodityList/Index?gradeId=@gradeRes.id">@(gradeRes.name == null ? "" : gradeRes.name.Replace("#", ""))</a>
+                    </li>
+                    if (gradeRes.listGrade.Count != 0)
+                    {
+                        <li class="breadcrumb_item">
+                            <a href="../../../CommodityList/Index?gradeId=@gradeRes.listGrade[0].id">@(gradeRes.listGrade[0].name == null ? "" : gradeRes.listGrade[0].name.Replace("#", ""))</a>
+                        </li>
+                        if (gradeRes.listGrade[0].listGrade.Count != 0)
+                        {
+                            <li class="breadcrumb_item">
+                                <a href="../../../CommodityList/Index?gradeId=@gradeRes.listGrade[0].listGrade[0].id">@gradeRes.listGrade[0].listGrade[0].name</a>
+                            </li>
+                        }
+                    }
+                }
+
+            </ul>
+            <div style="clear:both;"></div>
+        </div>
+    </section>
+
+    <div class="section-container">
+        <ul class="product-list">
+            @foreach (var item in listCommView)
+            {
+                <li class="section-item">
+                    <a class="product-item-link" href="../../Diy/Index?CommodityId=@item.Id">
+                        <div class="product-item product-item-has-hover-img">
+                            <div class="image">
+                                <div class="cover">
+                                    <img src="@ViewBag.AdminUrl@item.Image">
+                                </div>
+                                <div class="hover">
+                                    <div class="image-bg-cover">
+                                        <img src="@ViewBag.AdminUrl@item.BackView">
+                                        <p class="hover-text">@item.Introduce</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="title">@item.Name</h4>
+                            <div class="price">
+                                <div class="money">
+                                    <span>
+                                        <span class="normal_price">¥@item.minPrice</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+            <div style="clear:both;"></div>
+        </ul>
+    </div>
+
+    <section class="section features">
+        <div class="features-container">
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-truck.svg" alt="全场满¥99顺丰包邮（顺丰无法配送的区域将使用EMS）">
+                    </p>
+                    <h4>
+                        全国包邮
+                    </h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-card.svg" alt="支持支付宝、微信、线下支付">
+                    </p>
+                    <h4>支持支付宝、微信</h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-message.svg" alt="客服热线：400-700-0303">
+                    </p>
+                    <h4>
+                        客服热线：400-858-0505
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

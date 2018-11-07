@@ -1,0 +1,455 @@
+﻿
+@{
+    Layout = null;
+    var List_Deliver = (List<DbOpertion.Models.Deliver_Buyer_View>)ViewBag.DeliverInfo;
+    var Producer = (DbOpertion.Models.Buyer_Producer_View)ViewBag.ProducerInfo;
+    var ProducerConectInfo = (DbOpertion.Models.Producerconectinfo)ViewBag.ProducerConectInfo;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/btable.css" rel="stylesheet" />
+    <link href="~/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/BuyerInfo/Index.js?x=1.02"></script>
+    <script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+
+    <style>
+        #minTable td {
+            text-align: left;
+        }
+
+        #minTable tr td:first-child {
+            width: 80px;
+        }
+    </style>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate;
+        });
+    </script>
+</head>
+<body>
+    <div id="Div1">
+        <div style="margin:0px; background-color: white; margin:0 10px;min-width:1000px">
+            <div id="PrintDiv">
+                <style>
+                    .titeltr {
+                        background-color: #008375;
+                        height: 65px
+                    }
+
+                        .titeltr .leftpart {
+                            float: left;
+                            color: white;
+                            font-size: 28px;
+                            margin: 15px 0px 13px 7px;
+                        }
+
+                        .titeltr .rightpart {
+                            float: right;
+                            color: white;
+                            margin: 10px 25px 10px 0px;
+                        }
+
+                    .blanktr {
+                        height: 6px;
+                    }
+
+                    .basetr {
+                        height: 19px;
+                    }
+
+                        .basetr .labeltd {
+                            margin-left: 3px;
+                            font-size: 12px;
+                        }
+
+                        .basetr .labeltitletd {
+                            font-size: 22px;
+                            font-weight: bold;
+                        }
+
+                        .basetr .inputtd {
+                        }
+
+                            .basetr .inputtd .layui-input {
+                                height: 18px;
+                                line-height: 18px;
+                                padding-left: 3px;
+                                border: none;
+                            }
+
+                                .basetr .inputtd .layui-input.bold {
+                                    font-weight: bold;
+                                }
+
+                    .goodinfotr {
+                        background-color: #bfbfbf;
+                        font-weight: bold;
+                        height: 38px;
+                    }
+
+                        .goodinfotr td {
+                            text-align: center;
+                            border: 1px solid black;
+                            font-size: 13px;
+                        }
+
+                    .gooddetailtr {
+                        height: 38px;
+                    }
+
+                        .gooddetailtr td {
+                            text-align: center;
+                            border: 1px solid black;
+                            font-size: 12px;
+                        }
+
+                    .descibetr {
+                        height: 165px;
+                    }
+
+                        .descibetr td {
+                            border: 1px solid black;
+                        }
+
+                            .descibetr td textarea {
+                                width: 100%;
+                                height: 158px;
+                                resize: none;
+                                overflow: hidden;
+                                line-height: 20px;
+                                padding-left: 5px;
+                                border: none;
+                            }
+                </style>
+                <input type="hidden" id="SinglePerson" value="@ViewBag.UserName" />
+                <table>
+                    <colgroup>
+                        <col style="width:75px;" />
+                        <col style="width:64px;" />
+                        <col style="width:86px;" />
+                        <col style="width:62px;" />
+                        <col style="width:68px;" />
+                        <col style="width:80px;" />
+                        <col style="width:76px;" />
+                        <col style="width:83px;" />
+                        <col style="width:84px;" />
+                    </colgroup>
+                    <tbody>
+                        <tr class="titeltr">
+                            <td colspan="9">
+                                <div>
+                                    <label class="leftpart">产品收购合同</label>
+                                    <label style="" class="rightpart">
+                                        <img src="~/Base/images/图片top.png" />
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="blanktr">
+                            <td colspan="9"></td>
+                        </tr>
+                        <!--基础字段开始-->
+                        <tr class="basetr">
+                            <td class="labeltd">
+                                合同编号：
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @if (Producer.ContractNumber != null)
+                                {
+                                    <input readonly class="layui-input bold" id="ContractNumber" value="@Producer.ContractNumber" style="font-size:16px;" />
+                                }
+                                else
+                                {
+                                    <input class="layui-input bold" id="ContractNumber" value="@Producer.BuyerNo" style="font-size:16px;" />
+                                }
+                            </td>
+                            <td></td>
+                            <td colspan="4" rowspan="2" class="labeltitletd">
+                                宁波赛龙礼品有限公司
+                            </td>
+                        </tr>
+                        <tr class="basetr">
+                            <td class="labeltd">
+                                签定日期：
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @if (Producer.SignedTime != null)
+                                {
+                                    <input readonly class="layui-input bold" id="SignedTime" value="@Producer.SignedTime.Value.ToString("yyyy-MM-dd")" />
+                                }
+                                else
+                                {
+                                    <input type="text" name="SignedTime" id="SignedTime" lay-verify="date" placeholder="请选择日期" autocomplete="off" class="layui-input bold" onclick="layui.laydate({elem: this})">
+                                }
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr class="basetr">
+                            <td class="labeltd">
+                                供应方：
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @Producer.Name
+                            </td>
+                            <td></td>
+                            <td colspan="4" class="labeltd">
+                                地址：宁波小港花圃路29号
+                            </td>
+                        </tr>
+                        <tr class="basetr">
+                            <td class="labeltd" rowspan="2" style="padding-bottom:17px;">
+                                供方地址：
+                            </td>
+                            <td colspan="3" class="inputtd" rowspan="2" style="padding-bottom:17px;">
+                                @Producer.Address
+                            </td>
+                            <td></td>
+                            <td class="labeltd">
+                                联系人:
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @if (Producer.SLSMContacts != null)
+                                {
+                                    <input readonly class="layui-input" id="SLSMContacts" value="@Producer.SLSMContacts" />
+                                }
+                                else
+                                {
+                                    <input class="layui-input" id="SLSMContacts" value="余雄伟" />
+                                }
+                            </td>
+                        </tr>
+                        <tr class="basetr">
+                            <td></td>
+                            <td class="labeltd">
+                                电话:
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @if (Producer.SLSMPhone != null)
+                                {
+                                    <input readonly class="layui-input bold" id="SLSMPhone" value="@Producer.SLSMPhone" />
+                                }
+                                else
+                                {
+                                    <input class="layui-input bold" id="SLSMPhone" value="0574-86232018" />
+                                }
+                            </td>
+                        </tr>
+                        <tr class="basetr">
+                            <td class="labeltd">
+                                联系人：
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @ProducerConectInfo.ConectName
+                            </td>
+                            <td></td>
+                            <td class="labeltd">
+                                传真:
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @if (Producer.SLSMFaxNumber != null)
+                                {
+                                    <input readonly class="layui-input" id="SLSMFaxNumber" value="@Producer.SLSMFaxNumber" />
+                                }
+                                else
+                                {
+                                    <input class="layui-input" id="SLSMFaxNumber" value="0574-86232018" />
+                                }
+                            </td>
+                        </tr>
+                        <tr class="basetr">
+                            <td class="labeltd">
+                                电话：
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @ProducerConectInfo.Phone
+                            </td>
+                            <td></td>
+                            <td class="labeltd">
+                                Email:
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @if (Producer.SLSMEmail != null && Producer.SLSMEmail != "")
+                                {
+                                    <input readonly class="layui-input" id="SLSMEmail" value="@Producer.SLSMEmail" />
+                                }
+                                else
+                                {
+                                    <input class="layui-input" id="SLSMEmail" value="yxw@syloon.com" />
+                                }
+                            </td>
+                        </tr>
+                        <tr class="basetr">
+                            <td class="labeltd">
+                                传真：
+                            </td>
+                            <td colspan="3" class="inputtd">
+                                @Producer.SLSMFaxNumber
+                            </td>
+                            <td></td>
+                            <td class="labeltd">
+                                签定地点:
+                            </td>
+                            <td colspan="3" class="labeltd">
+                                宁波
+                            </td>
+                        </tr>
+
+                        <!--基础字段结束-->
+                        <tr class="blanktr">
+                            <td colspan="9"></td>
+                        </tr>
+                        <!--货物信息开始-->
+                        @{
+                            var deliverIds = List_Deliver.Select(p => p.raw_materialsId).Where(p => p != null).Distinct().ToList();
+                            foreach (var item in deliverIds)
+                            {
+                                var listDeliver = List_Deliver.Where(p => p.raw_materialsId == item).ToList();
+                                if (listDeliver.Count > 0)
+                                {
+                                    var firstDeliver = listDeliver.FirstOrDefault();
+                                    <tr class="goodinfotr">
+                                        <td>我司货号</td>
+                                        <td>工厂货号</td>
+                                        <td>品名</td>
+                                        <td>数量</td>
+                                        <td>单位</td>
+                                        <td>单价(元)</td>
+                                        <td>总金额(元)</td>
+                                        <td>交货日期</td>
+                                        <td>价格标识</td>
+                                    </tr>
+                                    foreach (var deliver in listDeliver)
+                                    {
+                                        <tr class="gooddetailtr">
+                                            <td>@deliver.ProductNo</td>
+                                            <td>@deliver.FactoryNumber</td>
+                                            <td>@deliver.ChinaProductName</td>
+                                            <td>@deliver.buyerCount</td>
+                                            <td>@deliver.ChinaUnit</td>
+                                            <td>@deliver.buyerPrice</td>
+                                            <td>@deliver.DeliverMoney</td>
+                                            <td>@(deliver.wantTime == null ? "" : deliver.wantTime.Value.ToString("yyyy-MM-dd"))</td>
+                                            <td>@deliver.PriceTag</td>
+                                        </tr>
+                                    }
+                                    <tr class="descibetr">
+                                        <td colspan="9">
+                                            @if (Producer.SLSMContacts != null)
+                                            {
+                                                <textarea name="DeliverCountext" id="DeliverCountext" readonly rows="5">@(firstDeliver.DeliverCountext==null? firstDeliver.ProductDesibe: firstDeliver.DeliverCountext)</textarea>
+                                            }
+                                            else
+                                            {
+                                                <textarea name="DeliverCountext" id="DeliverCountext" rows="5" wrap="hard">@(firstDeliver.DeliverCountext==null? firstDeliver.ProductDesibe: firstDeliver.DeliverCountext)</textarea>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr style="height:38px;">
+                                        <td style="font-weight:bold;border:1px solid black;padding-left:5px;">采购备注</td>
+                                        <td colspan="8" style="text-align:left;border:1px solid black;">@Producer.buyerContext</td>
+                                    </tr>
+                                    <tr class="blanktr">
+                                        <td colspan="9"></td>
+                                    </tr>
+                                    <tr class="gooddetailtr" style="height:21px;">
+                                        <td colspan="3">外箱正唛</td>
+                                        <td colspan="3">外箱侧唛</td>
+                                        <td colspan="3">中箱唛头</td>
+                                    </tr>
+                                    <tr class="gooddetailtr" style="height:108px;">
+                                        <td colspan="3">
+                                            <img src="~/Base/images/图片1.png" style="height:79px;" />
+                                        </td>
+                                        <td colspan="3" style="text-align:left;padding-left:3px;">
+                                            货号：@firstDeliver.ProductNo<br />
+                                            品名：@firstDeliver.ChinaProductName  <br />
+                                            数量：@(firstDeliver.NumOuterBoxes)@(firstDeliver.ChinaUnit)  <br />
+                                            颜色：@firstDeliver.ChinaDescribe <br />
+                                            箱尺码： @(firstDeliver.OuterBoxesLength)*@(firstDeliver.OuterBoxesWidth)*@(firstDeliver.OuterBoxesHeight)CM <br />
+                                            毛净重： @firstDeliver.NetWeight /KGS <br />
+                                        </td>
+                                        <td colspan="3" style="text-align:left;padding-left:3px;padding-bottom:48px;">
+                                            货号：@firstDeliver.ProductNo <br />
+                                            品名：@firstDeliver.ChinaProductName  <br />
+                                            数量：@(firstDeliver.NumMiddleBoxes)@(firstDeliver.ChinaUnit)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        <!--货物信息结束-->
+                        <tr style="height:28px;">
+                            <td style="font-weight:bold;border:1px solid black;padding-left:5px;">总金额:</td>
+                            <td colspan="5" style="text-align:left;border:1px solid black;padding-left:5px;">人民币<label id="ChangebuyerMoney"></label></td>
+                            <td colspan="3" style="text-align:left;border:1px solid black;padding-left:5px;">￥<label id="buyerMoney">@Producer.buyerMoney</label></td>
+                        </tr>
+                        <tr class="blanktr">
+                            <td colspan="9"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9" style="border:1px solid black;">
+                                @if (Producer.ContractContext != null)
+                                {
+                                    <textarea readonly style="width:100%;height:260px; resize:none;padding-left:5px;border: 0px;" id="ContractContext">@Producer.ContractContext.Replace(" ","")</textarea>
+                                }
+                                else
+                                {
+                                    <textarea style="width:100%;height:260px; resize:none;line-height:20px;padding-left:5px;border: 0px;" id="ContractContext" onpropertychange="this.style.height=this.scrollHeight + 'px'" oninput="this.style.height=this.scrollHeight + 'px'">
+1,供方需在合同约定的交货期内，保质保量将该合同项下之产品送达需方指定的仓库或地点
+2,除非双方特殊约定，否则以上采购价格均含17%增值税及供方的送货费用；
+3,产品质量以双方方确认的封样作为验货依据；若无封样,则以国家相关产品品质标准作为检验依据；
+4,若供方提供的产品未能达到合同约定的品质要求,需方有权拒收货物,供方将承担因此而产生的退货费用、返工费用、货款损失等；因供方产品质量问题引起的需方客户索赔，其经济损失由供方承担；
+5,需方凭供方提供的增值税发票,产品入库单及经供方盖章的采购合同正本付款；
+6,付款方式:需方收到上述第5条整套付款资料后90天内付款；
+7,供方不得以任何形式将需方所设计开发的产品包括但不仅限于样品、图纸、效果图等提供给需方以外的任何单位及个人,如有发现将追究供方责任,如给需方造成经济损失将由供方承担；
+8,双方发生纠纷,应共同协商解决,如协商不成,诉诸需方所在地法院；
+9,本合同自双方签字盖章之日起生效,合同一经生效,任何一方均应严格履行；
+10,未规定事项依据供应商协议。
+                                    </textarea>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="blanktr">
+                            <td colspan="9"></td>
+                        </tr>
+                        <tr style="height:19px;">
+                            <td style="border:1px solid black;text-align:center;" colspan="4">供方</td>
+                            <td style="border:1px solid black;text-align:center;" colspan="5">需方</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid black;" colspan="4">
+                                单位名称 (章)：@Producer.Name<br />
+                                单位地址：@Producer.Address<br />
+                                法定代表人：<br />
+                                委托代理人：<br />
+                            </td>
+                            <td style="border:1px solid black;" colspan="5">
+                                单位名称：宁波赛龙礼品有限公司<br />
+                                单位地址：宁波小港花圃路29号<br />
+                                法定代表人：<br />
+                                委托代理人：<br />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background-color: white;margin: 0 10px;width: 700px;text-align: center; margin-top: 20px;">
+                <button class="layui-btn layui-btn-normal" onclick="Print(@Producer.Id)">打印合同</button>
+                <input type="hidden" value="@ViewBag.buyerStatus" id="buyerStatus" />
+                <button class="layui-btn layui-btn-warm" onclick="CloseBtn()" id="CloseBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

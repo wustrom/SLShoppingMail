@@ -1,0 +1,806 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userInfo = (User)ViewBag.UserInfo;
+    var addressList = (List<Address>)ViewBag.addressList;
+    var addressFlag = true;
+    decimal? price = 0;
+    decimal? decountprice = 0;
+    decimal? payprice = 0;
+}
+
+@section css{
+    <style>
+        .default-address-btn {
+            background: #1E9FFF !important;
+        }
+
+        .edit-address-btn {
+            background: #F7B824 !important;
+            right: 2.3rem !important;
+        }
+
+        .receipt-text.active {
+            border: 1px solid;
+        }
+
+        .receipt-text {
+            padding-right: 4.2rem !important;
+        }
+    </style>
+}
+
+@section js{
+    <script src="~/Base/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Current/js/Commodity/index.js"></script>
+    <link href="~/Current/css/ShopCart/ShopCart.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            // #region 定制效果点击
+            $('#tong .designContainer .skuimgs .designImg').click(function () {
+                $('#tong .designContainer .skuimgs .designImg img').each(function () {
+                    $(this).removeClass('sku_img_checked');
+                })
+                $(this).find('.itemImg').addClass('sku_img_checked');
+                var src = $(this).find('.itemImg').attr('src');
+                $('#tong .designContainer .imgbox img').attr('src', src);
+            });
+            // #endregion
+
+            // #region 定制效果
+            $('.shopping-cart-list li .customized a').click(function () {
+                $('#tong .designContainer .skuimgs .designImg img').eq(0).attr('src', $("#HiddenAdminUrl").val() + $(this).parent().find('.hidBackView').val())
+                $('#tong .designContainer .skuimgs .designImg img').eq(1).attr('src', $("#HiddenAdminUrl").val() + $(this).parent().find('.hidForntView').val())
+                $('#tong .designContainer .skuimgs .designImg img').eq(0).trigger('click');
+                //页面层
+                layer.open({
+                    type: 1,
+                    title: "定制效果",
+                    closeBtn: 1,
+                    area: ['11rem', '10rem'],
+                    skin: 'layui-layer-nobg', //没有背景色
+                    shadeClose: false,
+                    content: $('#tong'),
+                    end: function () {
+                        $('.hide').css('display', 'none');
+                    }
+                });
+            });
+            // #endregion
+
+            // #region 支付方式点击
+            $('.pay-mode .pay-mode-list li').click(function () {
+                $('.pay-mode .pay-mode-list li').each(function () {
+                    $(this).removeClass('active');
+                })
+                $(this).addClass('active');
+            });
+            // #endregion
+
+            // #region 提交订单
+            $('.pay-btn').click(function () {
+                if ($('.check-inline input:checked').length != 1) {
+                    layer.msg('请同意电子合同！');
+                    return;
+                }
+                var data = new Object();
+                if ($('.notlogin').length == 1) {
+                    // #region 未登入地址
+                    data.Name = $('.add-people-info .cennter-box .input#name').val();
+                    if (IsNullOrEmpty(data.Name)) {
+                        layer.msg('请输入姓名！');
+                        return;
+                    }
+                    data.Phone = $('.add-people-info .cennter-box .input#number').val();
+                    if (IsNullOrEmpty(data.Phone)) {
+                        layer.msg('请输入手机！');
+                        return;
+                    }
+                    if (IsNullOrEmpty2($('#city').val()) || IsNullOrEmpty2($('#area').val()) || IsNullOrEmpty2($('#province').val()) || IsNullOrEmpty($('textarea').val())) {
+                        layer.msg('请填写完整地址！');
+                        return;
+                    }
+                    else {
+                        data.Address = $('#province option:selected').html() + ' ' + $('#city option:selected').html() + ' ' + $('#area option:selected').html() + ' ' + $('textarea').val();
+                    }
+                    // #endregion
+                }
+                else {
+                    // #region 已登入地址
+                    var item = $('.receipt-text.active');
+                    if (item.length == 0) {
+                        layer.msg('请选择收货人！');
+                        return;
+                    }
+                    data.Name = item.find('p').eq(0).find('span').eq(0).html().trim();
+                    data.Phone = item.find('p').eq(0).find('span').eq(1).html().trim();
+                    data.Address = item.find('p').eq(1).find('span').eq(0).html().trim() + ' ' + item.find('p').eq(1).find('span').eq(1).html().trim() + ' ' + item.find('p').eq(2).find('span').eq(0).html().trim() + ' ' + item.find('p').eq(2).find('span').eq(1).html().trim();
+                    // #endregion
+                }
+                var count = 0;
+                $('.pay-mode .pay-mode-list li').each(function () {
+                    if ($(this).hasClass('active')) {
+                        if (count === 0) {
+                            data.payType = '支付宝';
+                        }
+                        else if (count === 1) {
+                            data.payType = '微信';
+                        }
+                        else {
+                            data.payType = '线下支付';
+                        }
+                    }
+                    count = count + 1;
+                });
+                data.ShopCartIds = $('#ShopCartId').val();
+                //加载层-风格3
+                layer.load(2);
+                //此处演示关闭
+                setTimeout(function () {
+                    layer.closeAll('loading');
+                }, 5000);
+                jQuery.axpost("../../api/order/AddOrder", JSON.stringify(data), function (datas) {
+                    if (data.payType == '支付宝') {
+                        $('body').html(datas.Message);
+                    }
+                    else if (data.payType == "微信") {
+                        fCharge(datas.Model1);
+                    }
+                    else {
+                        window.location.href = '../../../userinfo/MyOrderList';
+                    }
+                });
+            });
+            // #region 是否为空
+            function IsNullOrEmpty(value) {
+                if (value == null || value == undefined || value == "") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            function IsNullOrEmpty2(value) {
+                if (value == null || value == undefined || value == "" || value == -1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            // #endregion
+            // #endregion
+
+            // #region 绑定默认地址
+            function bindDefaultAddr() {
+                // #region 设置为默认地址
+                $('.default-address-btn').unbind('click');
+                $('.default-address-btn').click(function () {
+                    var data = new Object();
+                    var that = this;
+                    data.Id = $(that).parent().find('.AddressId').val();
+                    jQuery.axpost("../../api/user/UpAddrTime", JSON.stringify(data), function (datas) {
+                        $('.address-btn.default').each(function () {
+                            $(this).css('display', 'none');
+                        })
+                        $('.default-address-btn').each(function () {
+                            $(this).css('display', 'block');
+                        })
+                        //
+                        $(that).parent().find('.address-btn').css('display', 'block');
+                        $(that).css('display', 'none');
+                    });
+                });
+                // #endregion
+
+                // #region 收货人选中
+                $('.receipt-text p').click(function () {
+                    $('.receipt-text').each(function () {
+                        $(this).removeClass('active');
+                    })
+                    $(this).parent().addClass('active');
+                });
+                // #endregion
+
+                // #region 修改收货地址
+                $('.edit-address-btn').unbind('click');
+                $('.edit-address-btn').click(function () {
+                    $(".EditPayThing").hide();
+                    $(".payAddress").show();
+                    $(".payInfo").hide();
+                    $('#editIndex').html('修改');
+                    var item = $(this).parent();
+                    $('.add-people-info .cennter-box .input#name').val(item.find('p:first span:first').html().trim());
+                    $('.add-people-info .cennter-box .input#number').val(item.find('p:first span:last').html().trim());
+                    $('textarea').val(item.find('p').eq(2).find('span').eq(1).html().trim());
+                    $("#province").find("option[value='" + item.find('p').eq(1).find('span').eq(0).html().trim() + "']").attr("selected", true);
+                    $("#province").find("option[value='" + item.find('p').eq(1).find('span').eq(0).html().trim() + "']")[0].selected = true;
+                    $("#province").trigger("change");
+                    $("#city").find("option[value='" + item.find('p').eq(1).find('span').eq(1).html().trim() + "']").attr("selected", true);
+                    $("#city").find("option[value='" + item.find('p').eq(1).find('span').eq(1).html().trim() + "']")[0].selected = true;
+                    $("#city").trigger("change");
+                    $("#area").find("option[value='" + item.find('p').eq(2).find('span').eq(0).html().trim() + "']").attr("selected", true);
+                    $("#area").find("option[value='" + item.find('p').eq(2).find('span').eq(0).html().trim() + "']")[0].selected = true;
+                    $('#hiddenAddressId').val(item.find('.AddressId').val());
+                });
+                // #endregion
+
+                // #region 删除收货地址
+                $('.shopmain .inforlist ul li .rightitem a.del').unbind('click');
+                $('.shopmain .inforlist ul li .rightitem a.del').click(function () {
+                    var item = $(this).parent().parent();
+                    var data = new Object();
+                    data.Id = $(item).find('.AddressId').val();
+                    jQuery.axpost("../../api/user/DeleteAddr", JSON.stringify(data), function (datas) {
+                        layer.msg('删除成功！');
+                        $(item).remove();
+                    });
+                });
+                // #endregion
+            }
+            bindDefaultAddr();
+
+            // #region 保存按钮
+            $('.add-people-info .action-btn').click(function () {
+                var data = new Object();
+                data.ContactName = $('.add-people-info .cennter-box .input#name').val();
+                data.ContactPhone = $('.add-people-info .cennter-box .input#number').val();
+                if ($('#province').find("option:selected").val() == undefined || $('#province').find("option:selected").val() == "-1" ||
+                    $('#city').find("option:selected").val() == undefined || $('#city').find("option:selected").val() == "-1" ||
+                    $('#area').find("option:selected").val() == undefined || $('#area').find("option:selected").val() == "-1") {
+                    layer.msg('请填写完整的收货地址！');
+                    return;
+                }
+                data.AddrArea = $('#province').find("option:selected").text() + ',' + $('#city').find("option:selected").text() + ',' + $('#area').find("option:selected").text();
+                data.AddrDetail = $('textarea').val();
+                if ($('#editIndex').html().trim() == '新增') {
+                    jQuery.axpost("../../api/user/AddressAdd", JSON.stringify(data), function (datas) {
+                        var item = datas.Model1;
+                        var AddrAreaArry = item.AddrArea.split(',');
+                        var AddrArea = AddrAreaArry[0] + " " + AddrAreaArry[1] + " " + AddrAreaArry[2] + " " + item.AddrDetail;
+                        var str = '<div class="receipt-text">\
+                                                            <p><span>'+ item.ContactName + '</span><span>' + item.ContactPhone + '</span></p>\
+                                                            <p><span>'+ AddrAreaArry[0] + '</span><span>' + AddrAreaArry[1] + '</span></p>\
+                                                            <p><span>'+ AddrAreaArry[2] + '</span><span>' + item.AddrDetail + '</span></p>\
+                                                            <input type="hidden" class="AddressId" value="'+ item.Id + '" />\
+                                                            <button type="button" class="address-btn default" style="display:none;">默认地址</button>\
+                                                            <button type="button" class="address-btn default-address-btn">设为默认</button>\
+                                                            <button type="button" class="address-btn edit-address-btn">修改地址</button>\
+                                                        </div>'
+                        $('.receipt-info').append(str);
+                        bindDefaultAddr();
+                    });
+                }
+                else {
+                    data.Id = $('#hiddenAddressId').val();
+                    var that = this;
+                    jQuery.axpost("../../api/user/UpdateAddrr", JSON.stringify(data), function (datas) {
+                        var model = datas.Model1;
+                        $('.AddressId').each(function () {
+                            if ($(this).val() == $('#hiddenAddressId').val()) {
+                                var AddrAreaArry = model.AddrArea.split(',');
+                                var item = $(this).parent();
+                                item.find('p').eq(0).find('span').eq(0).html(model.ContactName);
+                                item.find('p').eq(0).find('span').eq(1).html(model.ContactPhone);
+                                item.find('p').eq(1).find('span').eq(0).html(AddrAreaArry[0]);
+                                item.find('p').eq(1).find('span').eq(1).html(AddrAreaArry[2]);
+                                item.find('p').eq(2).find('span').eq(0).html(AddrAreaArry[3]);
+                                item.find('p').eq(2).find('span').eq(1).html(model.AddrDetail);
+                                PayInfo();
+                            }
+                        });
+                    });
+                }
+
+
+            })
+            // #endregion
+
+            // #endregion
+        })
+
+        // #region 页面切换
+        function PayInfo() {
+            $(".EditPayThing").hide();
+            $(".payAddress").hide();
+            $(".payInfo").show();
+        }
+
+        function EditPayThing() {
+            $(".EditPayThing").show();
+            $(".payAddress").hide();
+            $(".payInfo").hide();
+        }
+
+        //新增地址
+        function payAddress() {
+            $(".EditPayThing").hide();
+            $(".payAddress").show();
+            $(".payInfo").hide();
+            $('.add-people-info .cennter-box .input#name').val('');
+            $('.add-people-info .cennter-box .input#number').val('');
+            $('textarea').val('');
+            $('#editIndex').html('新增');
+            $('#province').each(function () {
+                $(this).removeAttr("selected");
+                $(this)[0].selected = false;
+            })
+            $('#area').find("option:gt(0)").remove();
+            $('#city').find("option:gt(0)").remove();
+        }
+
+        //修改地址
+        function payAddress() {
+            $(".EditPayThing").hide();
+            $(".payAddress").show();
+            $(".payInfo").hide();
+            $('.add-people-info .cennter-box .input#name').val('');
+            $('.add-people-info .cennter-box .input#number').val('');
+            $('textarea').val('');
+            $('#editIndex').html('新增');
+            $('#province').each(function () {
+                $(this).removeAttr("selected");
+                $(this)[0].selected = false;
+            })
+            $('#area').find("option:gt(0)").remove();
+            $('#city').find("option:gt(0)").remove();
+        }
+        // #endregion
+
+        // #region 省份信息
+        //省份开始
+        $(function () {
+            GetData($("#province"), 'province', '');
+            province();
+            $("#province").bind("change", function () {
+                $('#area').find("option:gt(0)").remove();
+                if ($("#province").val() != '-1') {
+                    GetData($("#city"), "city", $("#province").val());
+                }
+            });
+
+            $("#city").bind("change", function () {
+                if ($("#city").val() != '-1') {
+                    GetData($("#area"), "area", $("#city").val());
+                }
+            });
+
+            $("#div1 select").change(function () {
+                $(this).next('input[type=hidden]').val($(this).val());
+            });
+
+        });
+
+        function GetData(sel, Level, Name) {
+            sel.find("option:gt(0)").remove();
+            $.ajax({
+                type: "post",
+                url: "../../Api/Home/GetProvinceInfo",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                data: "Level=" + Level + "&AreaName=" + Name,
+                datatype: "json",
+                async: false,
+                success: function (data) {
+                    var json = eval(data);
+                    if (!json) return;
+                    $.each(json, function (i, n) {
+                        sel.append($("<option value='" + n.name + "'>" + n.name + "</option>"));
+                    });
+                },
+                error: function (e, x) {
+                    alert(e.responseText);
+                }
+            });
+        }
+
+        var province = function () {
+            if ($("#hidProvince").val() != '') {
+                setTimeout(function () { $("#province").val($("#hidProvince").val()); }, 1);
+                setTimeout(function () { $("#province").change(); }, 1);
+            }
+            if ($("#hidCity").val() != '' && $("#city").val() == '-1') {
+                setTimeout(function () { $("#city").val($("#hidCity").val()); }, 1);
+                setTimeout(function () { $("#city").change(); }, 1);
+            }
+
+            if ($("#hidArea").val() != '' && $("#area").val() == '-1') {
+                setTimeout(function () { $("#area").val($("#hidArea").val()); }, 1);
+                setTimeout(function () { $("#area").change(); }, 1);
+            }
+
+        };
+        //省份结束
+        // #endregion
+
+        // #region 微信支付模块
+        //初始化微信支付环境
+        function fCharge(Model) {
+            if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                }
+            } else {
+                fPostCharge(Model);
+            }
+        }
+        //提交订单数据
+        function fPostCharge(Model) {
+            var index = layer.load(1);
+            $.ajax({
+                type: "post",
+                data: "totalfee=" + Model.TotalPrice + "&out_trade_no=" + Model.OrderNo,
+                url: "/Home/MeterRecharge",
+                success: function (json) {
+                    layer.close(index);
+                    onBridgeReady(json);
+                },
+                error: function () {
+                    layer.close(index);
+                    layer.msg('调用微信支付模块失败，请稍后再试。');
+                }
+            })
+        }
+        //调用微信支付模块
+        function onBridgeReady(json) {
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest', {
+                    "appId": json.appId,     //公众号名称，由商户传入
+                    "timeStamp": json.timeStamp,         //时间戳，自1970年以来的秒数
+                    "nonceStr": json.nonceStr, //随机串
+                    "package": json.packageValue,
+                    "signType": "MD5",         //微信签名方式:
+                    "paySign": json.paySign //微信签名
+                },
+                function (res) {
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        //alert("支付成功,请稍后查询余额,如有疑问,请联系管理员.");
+                        location.href = "../../UserInfo/MyOrderList";
+                    }
+                    else {
+                        location.href = "../../UserInfo/MyOrderList";
+                    }
+                }
+            );
+        }
+        // #endregion
+    </script>
+}
+
+<div class="payInfo" style="display:block;">
+    <div style="display:none">
+        <input type="hidden" id="ShopCartId" value="@ViewBag.ShopCartId" />
+        <input type="hidden" id="hiddenAddressId" value="" />
+    </div>
+    <!--面包屑-->
+    <div class="public-crumbs border-b1s-ccc bgfff">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="../../ShopCart/Index">购物车</a></li>
+            <li><a href="#">结算</a></li>
+        </ul>
+    </div>
+    <div class="shopping-cart shop-settlement-box">
+        @if (userInfo == null)
+        {
+            <div class="notlogin">
+                <div class="hd">填写并核对订单信息</div>
+                @*<div class="order-title shop-settlement">
+                        <p>订单编号：W5981358</p>
+                    </div>*@
+                <div class="hd hd2">收货人信息</div>
+                <div class="shop-settlement-form">
+                    <!--表单-->
+
+                    <form class="mt20 add-people-info" action="">
+                        <div class="bgfff cennter-box">
+                            <div>
+                                <label for="name">姓名：</label>
+                                <input class="input" type="text" id="name" placeholder="请输入姓名" value="">
+                            </div>
+
+                            <div>
+                                <label for="number">电话：</label>
+                                <input class="input" type="text" id="number" placeholder="请输入电话号码" value="">
+                            </div>
+                            <div>
+                                <label>地址：</label>
+                                <select name="province" id="province">
+                                    <option value="">省</option>
+                                </select>
+                                省
+                                <select name="city" id="city">
+                                    <option value="">市</option>
+                                </select>
+                                市
+                                <select name="area" id="area">
+                                    <option value="">县</option>
+                                </select>
+                                区
+                            </div>
+                            <div>
+                                <textarea></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <!--表单 end-->
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="loginIn" style="display:block;">
+                <div class="hd">填写并核对订单信息</div>
+                @*<div class="order-title shop-settlement">
+                        <p>订单编号：W5981358</p>
+                    </div>*@
+                <div class="receipt-info">
+                    <div class="hd hd2">收货人信息 <a onclick="payAddress()" class="more">&gt;</a></div>
+                    @foreach (var item in addressList)
+                    {
+                        var ContactPhone = "";
+                        if (item.ContactPhone != null)
+                        {
+                            //ContactPhone = item.ContactPhone.Substring(0, 3) + "****" + item.ContactPhone.Substring(7, 4);
+                            ContactPhone = item.ContactPhone;
+                        }
+                        var AddrArray = item.AddrArea.Split(',');
+                        <div class="receipt-text">
+                            <p><span>@item.ContactName</span><span>@ContactPhone</span></p>
+                            <p><span>@AddrArray[0]</span><span>@AddrArray[1]</span></p>
+                            <p><span>@AddrArray[2]</span><span>@item.AddrDetail</span></p>
+                            <input type="hidden" class="AddressId" value="@item.Id" />
+                            @if (addressFlag)
+                            {
+                                addressFlag = false;
+                                <button type="button" class="address-btn default">默认地址</button>
+                                <button type="button" class="address-btn default-address-btn" style="display:none;">设为默认</button>
+                                <button type="button" class="address-btn edit-address-btn">修改地址</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="address-btn default" style="display:none;">默认地址</button>
+                                <button type="button" class="address-btn default-address-btn">设为默认</button>
+                                <button type="button" class="address-btn edit-address-btn">修改地址</button>
+                            }
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+        <div class="pay-mode">
+            <div class="hd hd2">支付方式</div>
+            <div class="pay-mode-list">
+                <ul class="clearfix">
+                    <li style="display:none;"><a href="javascript:;"><img src="~/base/images/pay-img_03.png" alt=""></a><i class="icon"></i></li>
+                    <li><a href="javascript:;"><img src="~/base/images/pay-img_05.png" alt=""></a><i class="icon"></i></li>
+                    <li class="active"><a href="javascript:;"><img src="~/base/images/pay-img_07.png" alt=""></a><i class="icon"></i></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="user-product-info">
+            <div class="hd hd2">产品信息</div>
+            <div class="shopping-cart-list user-product-info-list">
+                <ul>
+                    @{
+                        if (ViewBag.ShopCartId != null)
+                        {
+                            var array = ((string)ViewBag.ShopCartId).Split(',').Where(p => p != null && p != "").ToList();
+                            var ListHisdesign = (List<SLSM.MoblieWeb.Models.Response.ShopCart.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+                            foreach (var item in array)
+                            {
+                                var hisdesign = ListHisdesign.Where(p => p.ShopCartId.ToString() == item).FirstOrDefault();
+                                if (hisdesign != null)
+                                {
+                                    price = price + hisdesign.Price;
+                                    <li>
+                                        <div class="img">
+                                            <a>
+                                                <img src="@ViewBag.AdminUrl@hisdesign.CommodityImg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h6>@hisdesign.CommodityName</h6>
+                                            <p><span>@hisdesign.Color</span>丨<span> @hisdesign.Attr</span>丨<span>@hisdesign.PrintingMethod</span></p>
+                                            <div class="customized">
+                                                <span>@hisdesign.Amount</span>
+                                                <a>定制效果</a>
+                                                <input type="hidden" class="hidBackView" value="@hisdesign.BackView" />
+                                                <input type="hidden" class="hidForntView" value="@hisdesign.ForntView" />
+                                            </div>
+                                        </div>
+                                        <div class="all-money">
+                                            <p>¥@hisdesign.Price</p>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="open-invoice">
+            <div class="hd hd2">开具发票 <a onclick="EditPayThing()" class="more">&gt;</a></div>
+            <div class="invoice-text">
+                <p>发票抬头：杭州晖鸿科技有限公司</p>
+                <p>发票明细：办公用品</p>
+            </div>
+        </div>
+
+        <div class="clearfix total-money">
+            <div class="fl"><p>总计</p></div>
+            <div class="fr"><p>¥@price</p></div>
+        </div>
+        <div class="clearfix vip-discount public-padding">
+            <div class="fl">
+                <p>优惠</p>
+            </div>
+            <div class="fr">
+                @if (ViewBag.Discount != null)
+                {
+                    decountprice = price * (decimal)(1 - (double)ViewBag.Discount);
+                    payprice = price * (decimal)ViewBag.Discount;
+                    <p>会员折扣：<strong>-￥@System.Decimal.Round(decountprice.Value, 2)</strong></p>
+                }
+                else
+                {
+                    decountprice = 0;
+                    payprice = price;
+                    <p>暂无</p>
+                }
+
+            </div>
+        </div>
+
+        <div class="clearfix total-money total-money2">
+            <div class="fr"><p>应付：<span>￥@payprice</span></p></div>
+        </div>
+
+        <div class="public-padding look-contract">
+            <label class="check-inline"><input type="checkbox"></label><p>查看并同意 <a href="#">电子合同</a></p>
+        </div>
+    </div>
+    <div style="height: 1.3rem"></div>
+    <div class="pay-btn">
+        <a class="btn btn-block">确认支付</a>
+    </div>
+
+</div>
+
+<div class="EditPayThing" style="display:none;">
+    <!--面包屑-->
+    <div class="public-crumbs border-b1s-ccc bgfff">
+        <ul class="clear">
+            <li class="home"><a href="#"><i class="icon-home"></i></a></li>
+            <li><a href="../../ShopCart/Index">购物车</a></li>
+            <li><a onclick="PayInfo()">结算</a></li>
+            <li><a href="#">发票信息</a></li>
+        </ul>
+    </div>
+    <div class="public-title">
+        <span>发票信息</span>
+    </div>
+    <div class="invoice-info-box">
+        <form action="">
+            <div class="input-group">
+                <label>发票抬头 ：</label>
+                <div class="group-con">
+                    <select class="cell-select">
+                        <option value="">个人</option>
+                        <option value="">个人</option>
+                        <option value="">个人</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="help-info">
+                    <p><i class="icon"></i>根据最新增值税管理办法，如需企业抬头发票，请填写有效税号信息。</p>
+                </div>
+            </div>
+            <div class="input-group invoice-inp">
+                <label>新增单位发票 ：</label>
+                <div class="group-con">
+                    <input type="text" value="" placeholder="请输入公司名称" class="input">
+                </div>
+            </div>
+            <div class="input-group">
+                <a href="#" class="look-invoice">查询发票税号</a>
+            </div>
+            <div class="input-group invoice-inp">
+                <label>纳税人识别号 ：</label>
+                <div class="group-con">
+                    <input type="text" value="45678E567FGEWHHT81" placeholder="" class="input">
+                </div>
+            </div>
+            <div class="input-group btn-group">
+                <button type="button" class="btn small-btn" onclick="PayInfo()">取消</button>
+                <button type="button" class="btn big-btn">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (userInfo != null)
+{
+    <div class="payAddress" style="display:none">
+        <!--面包屑-->
+        <div class="public-crumbs bgfff border-b1s-ccc">
+            <ul class="clear">
+                <li class="home"><a href="#"><i class="icon-home"></i></a></li>
+                <li><a href="../../ShopCart/Index">购物车</a></li>
+                <li><a onclick="PayInfo()">结算</a></li>
+                <li><a href="#">收货人信息</a></li>
+                <li><a id="editIndex" href="#">新增</a></li>
+            </ul>
+        </div>
+
+
+        <!--表单-->
+
+        <form class="mt20 add-people-info" action="">
+            <div class="bgfff cennter-box">
+                <div>
+                    <label for="name">姓名：</label>
+                    <input class="input" type="text" id="name" placeholder="请输入姓名" value="">
+                </div>
+
+                <div>
+                    <label for="number">电话：</label>
+                    <input class="input" type="text" id="number" placeholder="请输入电话号码" value="">
+                </div>
+                <div>
+                    <label>地址：</label>
+                    <select name="province" id="province">
+                        <option value="">选择省</option>
+                    </select>
+                    省
+                    <select name="city" id="city">
+                        <option value="">选择市</option>
+                    </select>
+                    市
+                    <select name="area" id="area">
+                        <option value="">选择县</option>
+                    </select>
+                    区
+                </div>
+                <div>
+                    <textarea></textarea>
+                </div>
+            </div>
+            <div>
+                <input class="action-btn" type="submit" value="确定">
+            </div>
+        </form>
+
+        <!--表单 end-->
+    </div>
+}
+
+
+<div id="tong" class="hide" style="display:none;">
+    <div class="designContainer" id="designContainer">
+        <div class="skuimgs">
+            <div class="designImg">
+                <img class="itemImg sku_img_checked" src="#">
+                <label style="display: block;font-size:12px;">正面定制</label>
+            </div>
+            <div class="designImg">
+                <img class="itemImg" src="#">
+                <label style="display: block;font-size:12px;">背面定制</label>
+            </div>
+        </div>
+        <div style="float: left; position: relative;" id="imgbox" class="imgbox">
+            <img id="showImg" class="showImg" src="#">
+        </div>
+    </div>
+</div>

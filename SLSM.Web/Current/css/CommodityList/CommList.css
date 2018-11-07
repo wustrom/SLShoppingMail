@@ -1,0 +1,53 @@
+﻿.CommListcontainer {
+    width: 1200px;
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+/*导航栏开始*/
+section.title {
+    position: relative;
+    width: 100%;
+    min-width: 1200px;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+    section.title .section_container .breadcrumbs {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        text-transform: capitalize;
+        font-size: 12px;
+    }
+
+    section.title .section_container .breadcrumb_item {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font-weight: 400;
+        vertical-align: baseline;
+        background: transparent;
+    }
+
+.breadcrumb_item + .breadcrumb_item:before {
+    content: "/\A0";
+    margin: 0 5px;
+    color: #ccc;
+}
+
+section.title .section_container li a {
+    color: #707473;
+}
+
+section.title .section_container li:last-child {
+    cursor: default;
+    pointer-events: none;
+    color: #979797;
+}
+
+/*导航栏结束*/

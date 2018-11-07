@@ -1,0 +1,624 @@
+﻿@{
+    ViewBag.Title = "PurchaseGuide";
+    Layout = "~/Views/Shared/_LayoutHelper.cshtml";
+}
+@section css{
+    <link href="~/Current/css/Helper/purchase.css" rel="stylesheet" />
+}
+
+@section js{
+    <script>
+        $(function () {
+            $(".care-tab-box").click(function () {
+                $(".care-tab").toggle();
+            })
+
+            $(".care-tab li a").click(function () {
+                $(".part-faq.tab-pane.fade").hide();
+                $($(this).attr('dataid')).show();
+                $(this).parent().parent().parent().find('#select-bar .text').html($(this).html());
+            })
+
+             $(".care-tab-box .care-tab li a").each(function () {
+                var tabName = $(this).attr("dataid");
+                if (tabName == "#@ViewBag.tabname") {
+                    $(this).trigger("click");
+                }
+                $(".care-tab-box .care-tab").hide();
+             })
+        })
+    </script>
+}
+<div class="PurchaseGuid">
+    <div class="breadcrumb-nav">
+        <div class="container">
+            <h1 class="title">
+                <span>购买指南</span>
+            </h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="../../Main/Index">首页</a>
+                </li>
+                <li>
+                    <a href="javascript:;">服务与支持</a>
+                </li>
+                <li>购买指南</li>
+            </ul>
+        </div>
+    </div>
+    <div class="container purchase">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="care-tab-box closed">
+                    <a id="select-bar" herf="javacript:;" class="selected visible-xs-block">
+                        <h4 class="text">账号管理</h4>
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul role="tablist" class="care-tab">
+                        <li>
+                            <a href="javascript:;" dataid="#account_management" data-toggle="tab" role="tab" class="select-item account_management">账号管理</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" dataid="#shopping_guide" data-toggle="tab" role="tab" class="select-item shopping_guide">购物帮助</a>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:;" dataid="#payment_method" data-toggle="tab" role="tab" class="select-item payment_method" aria-expanded="true">支付方式与发票</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" dataid="#order_info" data-toggle="tab" role="tab" class="select-item order_info">订单帮助</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" dataid="#shipping_and_delivery" data-toggle="tab" role="tab" class="select-item shipping_and_delivery">物流和发货</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" dataid="#refund_and_return_policy" data-toggle="tab" role="tab" class="select-item refund_and_return_policy">退换货政策</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-9 tab-content">
+                <div id="account_management" role="tabpanel" class="part-faq tab-pane fade">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#1-1" data-ga-label="purchasing-account_management-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            1. 如何注册SYLOON账号？
+                                        </h4>
+                                    </a>
+                                    <div id="1-1" class="collapse content">
+                                        <div class="desc">
+                                            进入赛龙商城网站<a href="https://www.syloon.cn/">www.syloon.cn</a>，点击右上角“注册”按钮，根据要求填写“手机号”，“用户名”，“密码”和“确认密码”等信息。请确保您输入了正确有效的手机号码，并保存好注册密码。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#1-2" data-ga-label="purchasing-account_management-2" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            2. 如何找回密码？
+                                        </h4>
+                                    </a>
+                                    <div id="1-2" class="collapse content">
+                                        <div class="desc">点击官方网站右上角“登录”按钮，填写注册时使用的手机号码，使用“验证码登录”，然后在“我的账号”中修改密码。</div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#1-3" data-ga-label="purchasing-account_management-3" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            3. 如何修改密码？
+                                        </h4>
+                                    </a>
+                                    <div id="1-3" class="collapse content">
+                                        <div class="desc">登录个人账号，选择页面左侧“我的账号”，在手机号码的下面有“修改密码”按钮，点击按钮后，按照网页提示，输入“当前密码”，”新密码”，”重复新密码“后点击”保存“。</div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#1-4" data-ga-label="purchasing-account_management-4" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            4. 如何更改账号？
+                                        </h4>
+                                    </a>
+                                    <div id="1-4" class="collapse content">
+                                        <div class="desc">请您在注册时注意使用正确有效的手机号码。SYLOON账号注册后无法更改。建议您重新注册新手机号码。</div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div id="shopping_guide" role="tabpanel" class="part-faq tab-pane fade" style="display:none;">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#2-1" data-ga-label="purchasing-shopping_guide-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            1. 如何注册SYLOON账号？
+                                        </h4>
+                                    </a>
+                                    <div id="2-1" class="collapse content">
+                                        <div class="desc">
+                                            1) 进入赛龙商城网站
+                                            <a href="https://mobile.syloon.cn">mobile.syloon.cn</a>
+                                            <br>2) 填写客户信息并点击注册
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#2-2" data-ga-label="purchasing-shopping_guide-2" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            2. 如何进行购买？
+                                        </h4>
+                                    </a>
+                                    <div id="2-2" class="collapse content">
+                                        <div class="desc">
+                                            1) 选择商品，加入购物车
+                                            <br>2) 结算
+                                            <br>3) 填写收货信息和支付信息等内容并提交订单
+                                            <br>4) 按照网页指示付款
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#2-3" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shopping_guide-3" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            3. 可以拨打客服热线订购商品吗？
+                                        </h4>
+                                    </a>
+                                    <div id="2-3" class="collapse content">
+                                        <div class="desc">
+                                            暂不提供电话订购服务，请您登陆注册后自助下单。
+                                            <br>详情请点击查看如何进行购买
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div id="payment_method" role="tabpanel" class="part-faq tab-pane fade active in" style="display:none;">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            1. 支付方式
+                                        </h4>
+                                    </a>
+                                    <div id="3-1" class="collapse content">
+                                        <div class="desc">
+                                            <p>中国大陆地区，赛龙商城支持以下支付方式：</p>
+                                            <ul>
+                                                <li>- 支付宝</li>
+                                                <li>- 微信扫码支付</li>
+                                                <li>- 银联支付</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-2" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-3" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            2. 银行转账
+                                        </h4>
+                                    </a>
+                                    <div id="3-2" class="collapse content">
+                                        <div class="desc">
+                                            中国大陆地区，赛龙商城支持“银行转账”来支付订单，选购商品并于付款页面中选择“银行转账”提交订单后，您就可以通过国内任何一家银行，向赛龙商城在宁波银行开立的指定账户汇款。
+                                            <br>
+                                            <br>选择“银行转账”付款方式的购物流程如下：
+                                            <br>1) 选购商品并于付款页面中选择“银行转账”提交订单；
+                                            <br>2) 订单提交成功后，请于7个工作日内通过国内任何一家银行，向大疆商城在中国招商银行开立的指定账户汇款；
+                                            <br>3) 汇款成功后，请及时将汇款凭证通过邮件发送至：lp@syloon.com,请务必以订单号作为邮件标题，汇款凭证附在邮件内容中。
+                                            <br>4) 到款时间一般为1-3工作日，相应款项经确认收款后，您的订单将会进入备货流程，等待发货。
+                                            <br>
+                                            <br>支付形式
+                                            <br>个人银行转帐
+                                            <br>公司银行转帐（*选择使用公司银行转帐的帐户名称必须与注册的公司名称一致）
+                                            <br>
+                                            <br>注意事项
+                                            <br>1) 选择银行转账的订单，订单提交后将保留7个工作日， 请及时汇款；
+                                            <br>2) 转账付款时，附上您的订单编号将有助于我们帮您进行订单收款确认；
+                                            <br>3) 若款项汇出5个工作日内未帮您进行订单收款确认，请致电 400-858-0505 咨询。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-3" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-5" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            3. 如何使用积分抵扣支付?
+                                        </h4>
+                                    </a>
+                                    <div id="3-3" class="collapse content">
+                                        <div class="desc">在提交订单页面右侧选择使用积分抵扣支付。使用积分抵扣，请输入需要抵扣的金额。</div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-4" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-8" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            4. 如何确定在线支付是否成功？
+                                        </h4>
+                                    </a>
+                                    <div id="3-4" class="collapse content">
+                                        <div class="desc">一般情况下，您的每笔在线支付的订单，支付成功后，银行页面都会有“支付成功”的字样进行提示，如果没在当时就看到支付结果，您也可以通过银行网站查询交易明细，或者致电银行的客服。同时您也可以登入赛龙个人账户查询，如果您是游客身份购买，请查收我们给您订单上邮箱地址发送的支付成功通知邮件。</div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-5" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-9" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            5. 已支付却显示订单未支付怎么办？
+                                        </h4>
+                                    </a>
+                                    <div id="3-5" class="collapse content">
+                                        <div class="desc">
+                                            第三方支付平台或银行对支付的确认可能延迟，致使官网商城后台支付状态的更新有延迟，建议稍晚查看支付状态。如确认已经支付，请发送相关支付证明给客服核查。联系方式如下：
+                                            <br>客服邮箱：
+                                            <a href="mailto:kf@syloon.com ">kf@syloon.com </a>
+                                            <br>客服电话：400-858-0505
+                                            <br>给您带来不便，非常抱歉。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-6" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-10" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            6. 哪些原因会造成支付不成功？
+                                        </h4>
+                                    </a>
+                                    <div id="3-6" class="collapse content">
+                                        <div class="desc">
+                                            1) 您的银行卡尚未开通网上银行支付功能，建议您到当地营业厅开通网上银行；
+                                            <br>2) 所用银行卡超出该银行支持地域范围，请您更换银行卡试试；
+                                            <br>3) 银行卡已过期、作废、挂失或者余额不足等，建议您咨询您的开户行；
+                                            <br>4) 输入的银行卡号、密码或证件号等与预置的不符，建议您重新输入正确的卡密码或证件号等，如果您忘记了密码，请您及时与所属银行联系办理密码重置；
+                                            <br>5) 银行系统数据传输可能出现异常，建议您刷新页面或者稍后重启电脑；
+                                            <br>6) 部分银行设置有支付金额限制，如限制支付金额不能操作1500，超过1500的订单则无法支付成功，您可以联系发卡银行详细了解；
+                                            <br>7) 快捷支付异常可能是您账户绑定的银行卡过期或者您换了新的银行卡没有重新绑定，还请您根据系统提示查看下具体原因再次操作付款；
+                                            <br>8) 如遇活动高峰期导致付款不成功，建议您重新打开页面进行支付。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-7" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-11" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            7. 如何重新选择支付方式？
+                                        </h4>
+                                    </a>
+                                    <div id="3-7" class="collapse content">
+                                        <div class="desc">
+                                            第一步：登入您的SYLOON账户
+                                            <br>第二步：进入【我的订单】，选择需要重新支付的订单，点击“支付”按钮，重新选择支付方式
+                                            <br>说明：如果您是游客身份下单，直接使用您的下单手机登入，使用“验证码登录” 即可。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-8" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-12" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            8. 什么是电子发票? 如何开具？
+                                        </h4>
+                                    </a>
+                                    <div id="3-8" class="collapse content">
+                                        <div class="desc">
+                                            电子发票是指在购销商品、提供或者接受服务以及从事其他经营活动中，开具、收取的以电子方式存储的收付款凭证 。 电子发票在具有纸质发票同等的法律效力基础上，获取更便捷，可重复下载，避免丢失，方便查验，售后维权更有保障。而且，发货效率更高，退换货更方便，低碳环保，节能减排。选择电子发票，省力省心，更能为环境保护贡献一份力。SYLOON赛龙官方商城开具的电子发票均为真实有效的合法发票，与传统纸质发票具有同等法律效力，可作为用户维权、保修的有效凭据。
+                                            <br>
+                                            <br>确保电子发票具有法律效力的相关规定有哪些？
+                                            <br>国家发改委、商务部等八部委联合下发的《关于促进电子商务健康快速发展有关工作的通知》（发改办高技〔2012〕226号）和国家税务总局2013年颁布的 《网络发票管理办法》（国家税务总局令第30号）以及北京市国家税务局、北京市地方税务局、北京市商务委员会、北京市工商行政管理局《关于电子发票应用试 点若干事项的公告》（2013年第8号）、《关于扩大电子发票应用试点范围若干事项的公告》（2013年第18号文）等。
+                                            <br>
+                                            <br>在SYLOON赛龙官方商城购买哪些品类商品可以开电子发票？
+                                            <br>目前电子发票项目分阶段实施，目前PC端用户购买赛龙官方商城商品并选择电子发票，发票内容默认为明细，用户也可选择开具纸质发票或者不需要发票。
+                                            <br>
+                                            <br>用户如何选择开具电子发票？
+                                            <br>在订单结算页，可以选择电子发票选项。
+                                            <br>
+                                            <br>电子发票开具的时间是什么时候，顾客下单后，什么时间能获得电子发票？
+                                            <br>订单在收到SYLOON赛龙官方商城发货邮件后，即在已发货状态后，用户可根据自己需要下载。
+                                            <br>
+                                            <br>如果选择了电子发票，后来又想要纸质的发票怎么办？
+                                            <br>电子发票与纸质普票具有相同法律效力，是售后维修、用户维权的有效凭据，个人用户选择开具电子发票后无法换取个人抬头的纸质普票，请谨慎选择发票类型。
+                                            <br>
+                                            <br>遇到质量问题，电子发票是否能作为维权的依据？
+                                            <br>根据北京市国家税务局、北京市地方税务局、北京市商务委员会、北京市工商行政管理局《关于电子发票应用试点若干事项的公告》（2013年第8号）、《关于扩 大电子发票应用试点范围若干事项的公告》（2013年第18号文），电子发票与纸质发票具有相同法律效力，可作为售后、维权凭据。
+                                            <br>
+                                            <br>选择开具电子发票的顾客如何办理退换货流程？
+                                            <br>和原有退换货流程一样 ，唯一区别是选择了电子发票的用户在办理退换货时无需用户退回电子发票，我司直接按电子发票冲红处理。如用户换新或退货后重新购买，我司会为您重新开具一张电子发票，原电子发票作废。
+                                            <br>
+                                            <br>选择开具电子发票的顾客申请部分退货，发票如何处理？
+                                            <br>开具电子发票的订单申请部分退货，原电子发票会通过系统自动冲红（原电子发票显示无效），并对未发生退货的商品重新自动开具电子发票。如整单退货，则我司将原电子发票做冲红处理（原电子发票显示无效）。
+                                            <br>
+                                            <br>顾客在下单时选择开具电子发票后，在未开具前，如顾客想修改发票开具的形式，是否可以？
+                                            <br>不可以。因为电子发票是系统自动处理，一旦提交申请，无法修改，所以请您下单时谨慎选择填写。
+                                            <br>
+                                            <br>电子发票如何查看证书？
+                                            <br>下载电子发票后，建议您使用 Adobe Reader 10.0 以上版本进行查看。
+                                            <br>
+                                            <br>电子发票如何验证？
+                                            <br>电子发票下载成功后，客户可凭借电子发票上所标示的发票代码、发票号码、防伪码在国家税局网站进行验证，也可通过国税局授权的发票服务平台发票通www.fapiao.com进行查询验证。
+                                            <br>
+                                            <br>电子发票可以用于商品维修吗？
+                                            <br>可以。根据北京市国家税务局、北京市地方税务局、北京市商务委员会、北京市工商行政管理局《关于电子发票应用试点若干事项的公告》（2013年第8号）和 《关于扩大电子发票应用试点范围若干事项的公告》（2013年第18号文），电子发票与纸质发票具有相同法律效力，可作为售后、维权凭据。用户可直接向维修站点和厂家提供电子发票进行维修。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-9" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-13" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            9. 如何开具增值税普通发票？
+                                        </h4>
+                                    </a>
+                                    <div id="3-9" class="collapse content">
+                                        <div class="desc">
+                                            目前官方商城仅提供电子版普通发票，请在下单时勾选“增值税普通发票（电子）”进行开具。
+                                            <br>开票金额为客户实际付款金额（不包含任何形式优惠券与积分部分）。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-10" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-14" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            10. 如何开具增值税专用发票？
+                                        </h4>
+                                    </a>
+                                    <div id="3-10" class="collapse content">
+                                        <div class="desc">
+                                            如您需要开具增值税专用发票，请您将订单号和开票信息的word版本发送到
+                                            <a href="mailto:kf@SYLOON.con">kf@SYLOON.con</a>。我们会有专人处理。
+                                            <br>开票信息包括但不限于抬头，税号，开户行，银行账户，公司地址，联系人，联系方式等信息。
+                                            <br>开票金额为客户实际付款金额（不包含任何形式优惠券与DJI币部分）
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#3-15" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-payment_method-15" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            15.我所购产品发票上的销售方是哪家公司？
+                                        </h4>
+                                    </a>
+                                    <div id="3-15" class="collapse content">
+                                        <div class="desc">宁波赛龙礼品有限公司。</div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div id="order_info" role="tabpanel" class="part-faq tab-pane fade" style="display:none;">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#5-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-order_info-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            1. 如果我是以游客的身份购买，如何查看订单状态？
+                                        </h4>
+                                    </a>
+                                    <div id="5-1" class="collapse content">
+                                        <div class="desc">
+                                            订单一旦生成，系统会自动为您注册一个SYLOON账号，账号用户名为您的下单手机号。 请通过以下链接登入SYLOON 账号内查看订单状态:
+                                            <br>
+                                            <a href="http://moblie.syloon.cn/UserInfo/MyOrderList">http://moblie.syloon.cn/UserInfo/MyOrderList</a>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#5-2" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-order_info-2" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            2.如何查询订单状态？
+                                        </h4>
+                                    </a>
+                                    <div id="5-2" class="collapse content">
+                                        <div class="desc">
+                                            1) 客户可以登录自己的SYLOON账户查询
+                                            <br>2) 联系客服查询
+                                            <br>电话：4007000303
+                                            <br>邮件：
+                                            <a href="mailto:kf@SYLOON.con ">kf@SYLOON.con </a>.
+                                            <br>在线聊天：商城页面右下角聊天窗口
+                                            <br>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#5-3" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-order_info-3" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            3. 如何修改订单？
+                                        </h4>
+                                    </a>
+                                    <div id="5-3" class="collapse content">
+                                        <div class="desc">订单提交后（发货前），需提供有效证明(SYLOON账号，产品信息，收件人信息及付款证明等)，证明您是购买者本人后，客服可为您修改收件人信息和收货地址。但产品数量，种类，颜色等都无法修改。</div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#5-4" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-order_info-4" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            4.如何取消订单？
+                                        </h4>
+                                    </a>
+                                    <div id="5-4" class="collapse content">
+                                        <div class="desc">
+                                            1）如果您的订单未支付或确认印刷，您可以登录SYLOON账号，在“我的订单”页面点击订单右边的按钮取消。
+                                            <br>2) 如果您的订单已发货，订单无法取消。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#5-5" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-order_info-5" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            5.如何拆分订单？
+                                        </h4>
+                                    </a>
+                                    <div id="5-5" class="collapse content">
+                                        <div class="desc">不同产品的预计发货时间可能不同，SYLOON商城默认不会拆分订单发货，如果您对到货时间有要求，建议您分次下单。每个产品的预计出货时间请参考产品购买页面。</div>
+                                    </div>
+                                </dd>
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div id="shipping_and_delivery" role="tabpanel" class="part-faq tab-pane fade" style="display:none;">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#6-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shipping_and_delivery-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            1.配送服务
+                                        </h4>
+                                    </a>
+                                    <div id="6-1" class="collapse content">
+                                        <div class="desc">
+                                            中国大陆地区，全场默认发EMS，您也可以选择顺丰速运或者申通快递（可能会产生额外费用）。
+                                            <br>顺丰快递网点覆盖不到的地方我司则会选择用EMS安排。
+                                            <br>具体覆盖网点请参考：
+                                            <a href="http://www.sf-express.com/cn/sc/">顺丰官网</a>/
+                                            <a href="http://www.ems.com.cn/">EMS官网</a>
+                                            <br>
+                                            <br>运费说明:
+                                            <br>1) 全场EMS包邮（拿样品的订单除外）
+                                            <br>2) 不满足包邮条件的，在结算订单时运费会出现在填写地址页面。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#6-2" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shipping_and_delivery-2" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            2. 发货前用户须知
+                                        </h4>
+                                    </a>
+                                    <div id="6-2" class="collapse content">
+                                        <div class="desc">
+                                            如果您对发货有任何特别要求，请一定提前联系我们的售前客服进行咨询。
+                                            <br>请您在付款前核对收货信息,如因个人疏忽填错地址，请及时与客服联系，我们会尽量为您联系快递协商处理，但因地址修改而产生的风险和费用需要由客户承担。
+                                            <br>下单时请准确填写您的真实姓名、送货地址及有效联系方式；便于我们及时安排派送。
+                                            <br>
+                                            <br>因以下原因导致延误或退回的，大疆将不承担责任：
+                                            <br>1) 部份城市的偏远地区因交通等问题，配送时间可能在预计到达时间基础上延后1-2天;
+                                            <br>2) 因买家原因（更改收货地址、地址不详、地址错误、联系不上、拒收、无代收人等）导致包裹延误派送或无法送达的;
+                                            <br>3) 因不可抗力造成延误的（“不可抗力”指不可预见、不可避免或不可克服的客观情况以及其他影响配送时间、造成包裹配送延误的客观情况，包括但不限于全国性或区域性空中或地面交通系统管制或中断（如天气原因等）、或通讯系统干扰或故障、或政府行为、邮政主管部门政策变化、战争、地震、台风、洪水、火灾、大雨、大雾等其他类似事件）
+                                            <br>4) 航空违禁品、手机、电子类产品、易碎品等因航空安检查验导致无法正常配载航班或改走陆路运输的;
+                                            <br>5) 寄递物品违反禁、限寄规定或有关运输管理条例，经有关部门没收或依照有关法规、规定处理的;
+                                            <br>5) 收件人地址为机关、单位等机构，而周六、周日和公众节假日不接收邮件、包裹，造成延误的;
+                                            <br>7) 收件人学校、单位或住宅小区不允许投递人员入内，或买家代收方原因，导致造成延误的。
+                                            <br>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#6-3" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shipping_and_delivery-3" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            3. 发货时间与规则
+                                        </h4>
+                                    </a>
+                                    <div id="6-3" class="collapse content">
+                                        <div class="desc">
+                                            不同产品有着不同的发货时间，具体请参考购买产品时页面显示的预计发货时间。
+                                            <br>请注意，若您同一个订单中包含多件商品，订单的预计发货时间取决于订单中预计发货时间最长的商品，我司不会拆分多个订单分别发出。套装产品处理方式与多件商品订单相同，不会拆分发货。
+                                            <br>对于预售的产品，官方商城无法承诺将满足所有已在页面确认的订单。官方商城保留拒绝、取消订单和在特定订单中灵活处理产品供给数量的权利。但如有这种情况发生，我们会及时通知到您。
+                                            <br>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#6-4" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shipping_and_delivery-4" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            4. 订单跟踪
+                                        </h4>
+                                    </a>
+                                    <div id="6-4" class="collapse content">
+                                        <div class="desc">
+                                            订单发货后，您将收到一封包含运单号的通知邮件及短信（可在下单时勾选短信通知）。由于快递单号系统传送的延迟，可能在发货后一到两天才能查到运单号。收到后请到快递公司官网查询：
+                                            <br>
+                                            <a href="http://www.kuaidi100.com/all/sf.shtml?from=openv">SF</a>
+                                            <br>
+                                            <a href="http://www.kuaidi100.com/all/sf.shtml?from=openv">EMS</a>
+                                            <br>或者您可以联系我们的客服查询订单状态。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#6-5" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shipping_and_delivery-5" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            5. 订单验货与签收
+                                        </h4>
+                                    </a>
+                                    <div id="6-5" class="collapse content">
+                                        <div class="desc">
+                                            请您务必在收到商品时进行验货；如果发现邮寄包装破损、货物在运输途中破损等情况，请当场指出并拒收，拒收后请致电官方商城客服。
+                                            <br>请您在收到货物时当场仔细检查发票及货品与送货单的商品是否一致，如果发现商品缺少或已破损等情况，请当场（即配送人员还在现场时）与官方商城客服联系。
+                                            <br>如您已签收或他人代为签收，则视为商品外包装，商品数量及内容无误。为保证您的权益，我们极力推荐您拍摄完整的开箱视频。
+                                            <br>飞行器产品性质特殊，不允许试用，激活即视为使用，影响该商品的二次销售；试用后退货将产生额外费用。
+                                            <br>所有订单收货异常，请您务必在收货5天内与我们进行联系。
+                                            <br>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#6-6" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-shipping_and_delivery-6" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            6. 订单特殊情况处理方式
+                                        </h4>
+                                    </a>
+                                    <div id="6-6" class="collapse content">
+                                        <div class="desc">
+                                            重复派送、拒收快件是否收取运费？
+                                            <br>
+                                            <br>1) 由于收件人个人原因导致物流公司多次派送无果的，物流公司如果要求补偿重复派送的费用，由收件人自行与物流公司协商并承担。
+                                            <br>2) 在我司安排发出货物后要求取消订单的，或者拒收后退回所产生的费用，需要由客户承担 由于我司的产品价值相对较高，建议您在收到包裹时候，对包裹的外包装进行检查，如果发现有破损或者变形，请不要打开包裹并马上联系我司解决；外包装严重损毁的情况建议拒收。
+                                            <br>
+                                            <br>订单收到时，少配件或零件怎么办？
+                                            <br>一般我们的订单由顺丰发货，大件商品和订单内有多件商品可能由子母件形式寄出，请您到顺丰官网查询确认是否已经收到完整的包裹。
+                                            <br>我司产品出厂前都经过严格检查，推荐您拍摄开箱视频并仔细检查包裹，按照包装清单确认是否收到所有物品。如果收到包裹发现物品缺失，请在3个工作日内联系我司客服处理。
+                                            <br>标配产品零配件遗漏或销售套装内单品遗漏，请联系kf@syloon.com 或致电400-858-0505
+                                            <br>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div id="refund_and_return_policy" role="tabpanel" class="part-faq tab-pane fade" style="display:none;">
+                    <div class="row">
+                        <div class="col-sm-12 faq-report">
+                            <dl class="faq-list faq">
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#7-1" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-refund_and_return_policy-1" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            1. 退货政策
+                                        </h4>
+                                    </a>
+                                    <div id="7-1" class="collapse content">
+                                        <div class="desc">
+                                            由于定制产品的特殊性，本商城不接受无理由退货。
+                                            <br>如符合以下条件之一，可以要求退货
+                                            <br>1) 产品质量问题；
+                                            <br>2) 印刷质量问题；
+                                            <br>3) 约定发货时间延误导致错过使用机会。
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="faq-item">
+                                    <a data-toggle="collapse" href="#7-2" data-ga-category="support-center-v1" data-ga-action="click" data-ga-label="purchasing-refund_and_return_policy-2" class="toggle collapsed item-title ga-data">
+                                        <h4 class="font-opensans">
+                                            2. 退货须知
+                                        </h4>
+                                    </a>
+                                    <div id="7-2" class="collapse content">
+                                        <div class="desc">
+                                            1). 关于退款时间
+                                            <br>本地信用卡／借记卡，支付宝， 退款会于收到退货后的10个工作日内转至发卡银行。请联络发卡银行查询；
+                                            国际信用卡和 Visa／Master 信用卡退款，退款将在 1 至 2 周内转至发卡银行。
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

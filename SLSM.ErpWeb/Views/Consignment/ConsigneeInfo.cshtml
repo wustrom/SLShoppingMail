@@ -1,0 +1,78 @@
+﻿@using DbOpertion.Models
+@{
+    Layout = null;
+    int Id = ViewBag.Id;
+    var Production = ViewBag.Production == null ? new Production_Orderdetail_View() : (Production_Orderdetail_View)ViewBag.Production;
+}
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+<style>
+    .layui-form-item .layui-input-inline {
+        width: 126px;
+    }
+</style>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <input type="hidden" name="id" value="@Id">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:90px;padding-left:5px">收件人姓名:</label>
+            <div class="layui-input-block">
+                <input type="text" name="AddresseeName" value="@Production.BuyName" lay-verify="required" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收件人电话:</label>
+            <div class="layui-input-block">
+                <input type="text" name="AddresseePhone" value="@Production.userphone" lay-verify="required" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收件人地址:</label>
+            <div class="layui-input-block">
+                <input type="text" name="Addressee" value="@Production.Address" lay-verify="required" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:90px;padding-left: 5px;">选择快递公司:</label>
+            <div class="layui-input-inline" style="width: 270px;">
+                @if (Production.ExpressCompany == null)
+                {
+            <select name="ExpressCompany" style="width:380px;" lay-verify="" lay-search class="layui-input">
+                <option value="韵达">韵达</option>
+                <option value="顺丰">顺丰</option>
+                <option value="百世">百世</option>
+                <option value="申通">申通</option>
+                <option value="圆通">圆通</option>
+                <option value="中通">中通</option>
+                <option value="天天">天天</option>
+                <option value="EMS">EMS</option>
+                <option value="邮政">邮政</option>
+            </select>
+                }
+                else
+                {
+                    <input type="text" class="layui-input" style="width:360px" value="@Production.ExpressCompany" readonly />           
+                }
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">快递单号:</label>
+            <div class="layui-input-block">
+                <input type="text" name="ExpressNo" value="@Production.ExpressNo" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">称重重量:</label>
+            <div class="layui-input-block">
+                <input type="text" name="ExpressWeight" value="@Production.ExpressWeight" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注:</label>
+            <div class="layui-input-block">
+                <textarea name="ExpressContext"  style="resize:none;height:100px;width:100%;padding-left:5px;padding-top:5px;">@Production.ExpressContext</textarea>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

@@ -1,0 +1,797 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "OrderPayPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var OrderInfo = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
+    var OrderDetailInfo = ViewBag.OrderDetailInfo == null ? new List<Order_Detail_View>() : (List<Order_Detail_View>)ViewBag.OrderDetailInfo;
+
+    OrderInfo.Freight = string.IsNullOrEmpty(OrderInfo.Freight) ? "0" : OrderInfo.Freight;
+    OrderInfo.UserDesign = OrderInfo.UserDesign == null ? "" : OrderInfo.UserDesign;
+    var DesignerZipList = OrderInfo.UserDesign.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+    Random random = new Random();
+}
+<link href="~/Current/css/PayPage/OrderPayPage.css?version=1.08" rel="stylesheet" />
+<script src="~/Base/js/jquery-2.1.4.min.js"></script>
+<script>
+    // #region 微信支付模块
+    //初始化微信支付环境
+
+    var stateObj = { foo: "我的订单" }; history.replaceState(stateObj, "page 2", "../userInfo/MyOrderList");
+
+    function fCharge() {
+        if (typeof WeixinJSBridge == "undefined") {
+            if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        } else {
+            fPostCharge();
+        }
+    }
+    //提交订单数据
+    function fPostCharge() {
+        var index = layer.load(1);
+        $.ajax({
+            type: "post",
+            data: "totalfee=@(OrderInfo.TotalPrice)&out_trade_no=@($"{OrderInfo.OrderNo}_{random.Next(999).ToString("d3")}")",
+            url: "/Home/MeterRecharge",
+            success: function (json) {
+                layer.close(index);
+                onBridgeReady(json);
+            },
+            error: function () {
+                layer.close(index);
+                layer.msg('调用微信支付模块失败，请稍后再试。');
+            }
+        })
+
+
+    }
+    //调用微信支付模块
+    function onBridgeReady(json) {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+                "appId": json.appId,     //公众号名称，由商户传入
+                "timeStamp": json.timeStamp,         //时间戳，自1970年以来的秒数
+                "nonceStr": json.nonceStr, //随机串
+                "package": json.packageValue,
+                "signType": "MD5",         //微信签名方式:
+                "paySign": json.paySign //微信签名
+            },
+            function (res) {
+                //alert(JSON.stringify(res));
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    $.ajax({
+                        type: "post",
+                        data: "OrderNo=@(OrderInfo.OrderNo)",
+                        url: "../../../api/Order/SureWeiChatOrder",
+                        success: function (json) {
+                        }
+                    })
+                    location.href = "../../UserInfo/MyOrderList";
+                }
+            }
+        );
+    }
+
+    function WechatPay() {
+        $('.backgroundpage').hide();
+        $('.wecharPayPage').show();
+        fCharge();
+    }
+
+    function OtherPay() {
+        $('.backgroundpage').show();
+        $('.wecharPayPage').hide();
+    }
+
+    function alisumbit() {
+        if (!is_weixn()) {
+            $("#alipaysubmit").submit();
+        }
+        else {
+            layer.msg("请在微信外打开此网页！");
+        }
+
+    }
+    $(function () {
+        if (!is_weixn()) {
+            $(".wechatInfo").hide();
+        }
+        else {
+            $(".alipatInfo").hide();
+        }
+    })
+    function is_weixn() {
+        var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // #endregion
+</script>
+@Html.Raw(ViewBag.aliOrder)
+<div class="backgroundpage">
+    <div class="order-info-container" style="background-color:white;">
+        <div class="order-summary-wrapper">
+            <div class="order-summary-inner-wrapper">
+                <img src="https://pay.djicdn.com/assets/order/created-b351a4df893518accf89c573b24ca39bb13f691f31f81bcb37f0559387693821.png">
+                <p>订单已提交</p>
+                <p>请及时完成付款</p>
+            </div>
+        </div>
+        <div class="order-detail-wrapper">
+            <div class="order-info-row">
+                <label>订单号</label>
+                <p>@OrderInfo.OrderNo</p>
+            </div>
+            <div class="order-info-row">
+                <label>下单时间</label>
+                <p>@OrderInfo.OrderTime.Value.ToString("yyyy-MM-dd")</p>
+            </div>
+            <div class="order-info-row">
+                <label>订单项</label>
+                @foreach (var item in OrderDetailInfo)
+                {
+                    <p>@item.Name X @item.Amount</p>
+                }
+            </div>
+            <div class="order-info-row">
+                <label>收货信息</label>
+                <p>@OrderInfo.BuyName&nbsp;</p>
+                <p>@OrderInfo.Address</p>
+            </div>
+            <div class="order-info-row">
+                <label>应付金额：</label>
+                <p class="amount js-amount-need-to-pay-target">¥@Decimal.Round(OrderInfo.TotalPrice.Value, 2)</p>
+            </div>
+            <div class="hidden just-for-ui-and-will-not-post-to-backend-server">
+                <div class="hidden js-order-rest-amount-need-to-pay" data-value="¥ 3,199.00"></div>
+                <div class="hidden js-amount-use-dji-coins" data-value="¥ 3,199.00"></div>
+            </div>
+        </div>
+    </div>
+    <div class="divider-block"></div>
+    <form class="new_transaction" id="new_transaction" action="/zh-CN/orders/7d35e1b096c80136661212ae9608b6c2/transactions?_m=dji-online-store&amp;_p=h5" accept-charset="UTF-8" method="post">
+        <input name="utf8" type="hidden" value="✓">
+        <input type="hidden" name="authenticity_token" value="H45oqqhf7H+lUaRwW/ufkO7cJKFs1c5rjlA2qGlMPAtLllk47S9pP0qqis4X08ScqelUkE6rGrjA1rmagnZVfQ==">
+        <input id="js-use-dji-credit" name="use_dji_coin" type="hidden" value="0">
+        <input id="js-payment-id" name="transaction[payment_id]" type="hidden" value="">
+        <div class="payments-list-wrapper" style="background-color:white;">
+            <h1 class="weui-cells-title">支付方式</h1>
+            <ul class="weui-cells payments-list">
+                <li class="weui-cell weui-cell-access alipatInfo" onclick="alisumbit()">
+                    <div class="weui-cell-hd">
+                        <img src="https://pay.djicdn.com/assets/payments/alipay-a57861b83662ddbebfc8e0e3139f12023ad3fe202bdb70253111df2036fb42cb.png" alt="Alipay">
+                    </div>
+                    <div class="weui-cell-bd">
+                        <p class="alipay-unionpay-cell-body-text">
+                            <span>支付宝</span>
+                            <span class="desc">大额支付推荐支付宝</span>
+                        </p>
+                    </div>
+                    <div class="weui-cell-ft"></div>
+                </li>
+                <li class="weui-cell weui-cell-access wechatInfo" onclick="WechatPay()">
+                    <div class="weui-cell-hd">
+                        <img src="https://pay.djicdn.com/assets/payments/wxpay-0f43c2047277f65a170caccbde38935abca98e34eb31b8398ada7e446553667a.png">
+                    </div>
+                    <div class="weui-cell-bd">
+                        <p>微信支付</p>
+                    </div>
+                    <div class="weui-cell-ft"></div>
+                </li>
+                <li class="weui-cell weui-cell-access" data-ga-event-label="rmb_transfer_payment" data-payment-id="42">
+                    <div class="weui-cell-hd"><img src="https://pay.djicdn.com/assets/payments/rmb_transfer-fde5924e5df3d238c5023f033d06333cd289af30044706249433efd003d4257a.png" alt="Rmb transfer"></div>
+                    <div class="weui-cell-bd"><p>银行转账</p></div><div class="weui-cell-ft"></div>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+
+
+<div class="wecharPayPage" style="display:none;">
+    <nav class="site-navbar">
+        <div class="site-navbar-container">
+            <img src="~/Base/images/logo.png" style="display: inline-block;height: 1.2rem;margin-top: .2rem;margin-right: -.2rem;" />
+            <img src="~/Base/images/safePay.png" style="display:  inline-block;height:  1.2rem;" />
+        </div>
+    </nav>
+    <div class="img-wrapper">
+        <img src="https://pay.djicdn.com/assets/v1/funnel-1934f1dc805fd98e18ebe1a6756dada51a6bce9ce1995085ad2c7ffd90c8917c.png" alt="Funnel">
+    </div>
+    <div class="notice not-ready" id="notice-wrapper">
+        <h1 class="notice-title" id="notice-title" style="font-weight: 800;font-size: 15px;">正在使用微信支付......</h1>
+        <h1>.....</h1>
+        <p>请您在微信中进行支付,支付完成后该页面会自动刷新</p>
+        <div class="btns">
+            <a style="background: #008375;color: white;border: 1px solid #008375;" onclick="fCharge()">打开微信支付</a>
+        </div>
+    </div>
+    <div class="help">
+        <p>支付遇到问题？</p>
+        <div class="btns">
+            <a onclick="OtherPay()" href="javascript:;">使用其他的支付方式</a>
+        </div>
+    </div>
+
+</div>
+<style>
+    .TransferPayment {
+        background-color: white;
+    }
+
+    .transfer-payment-section {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        padding-bottom: 14px
+    }
+
+        .transfer-payment-section > h1 {
+            font-size: 12px;
+            line-height: 18px;
+            margin: 0 0 10px 0
+        }
+
+        .transfer-payment-section > p {
+            margin: 10px 0;
+            padding: 0;
+            color: #707473;
+            font-size: 12px;
+            line-height: 18px
+        }
+
+        .transfer-payment-section ul {
+            display: block;
+            margin: 0;
+            padding: 0;
+            list-style: none
+        }
+
+            .transfer-payment-section ul > li:after {
+                display: block;
+                content: ' ';
+                clear: both
+            }
+
+            .transfer-payment-section ul > li > label {
+                float: left;
+                width: 60px;
+                color: #333;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 24px;
+                text-align: right;
+                word-wrap: break-word
+            }
+
+            .transfer-payment-section ul > li > p {
+                margin-left: 70px;
+                font-size: 12px;
+                line-height: 24px;
+                color: #333;
+                word-wrap: break-word
+            }
+
+        .transfer-payment-section .lg-label > li > label {
+            width: 90px
+        }
+
+        .transfer-payment-section .lg-label > li > p {
+            margin-left: 100px
+        }
+
+        .transfer-payment-section .llg-label > li > label {
+            width: 110px
+        }
+
+        .transfer-payment-section .llg-label > li > p {
+            margin-left: 120px
+        }
+
+    ul.account-infos-lg > li {
+        margin-bottom: 10px
+    }
+
+        ul.account-infos-lg > li > h1 {
+            color: #333;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 24px;
+            word-wrap: break-word
+        }
+
+        ul.account-infos-lg > li > p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 24px;
+            color: #333;
+            word-wrap: break-word
+        }
+
+    .transfer-payment-clipboard-wrapper {
+        text-align: center;
+        margin-top: 6px;
+        margin-bottom: 60px
+    }
+
+        .transfer-payment-clipboard-wrapper > a {
+            font-size: 12px;
+            line-height: 18px;
+            color: #008375
+        }
+
+    .internation-page-header {
+        margin: 20px 20px 15px 20px;
+        padding: 0;
+        border-bottom: 1px solid #EEE
+    }
+
+        .internation-page-header > h1 {
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 10px 0;
+            padding: 0
+        }
+
+        .internation-page-header > p {
+            font-size: 12px;
+            line-height: 18px;
+            color: #008375;
+            margin: 0 0 10px 0;
+            padding: 0
+        }
+
+            .internation-page-header > p a {
+                color: #008375;
+                text-decoration: none
+            }
+
+    .internation-page-body {
+        padding: 0 20px
+    }
+
+    .installment-notice-wrapper {
+        margin: 20px 0 0 0;
+        padding: 0
+    }
+
+        .installment-notice-wrapper > p {
+            margin: 0 0 15px 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 18px;
+            color: #707473
+        }
+
+    .page-heading {
+        display: block;
+        height: 52px;
+        margin: 0px 20px 15px 20px;
+        padding: 0;
+        border-bottom: 1px solid #EEE;
+        padding-top: 20px;
+    }
+
+        .page-heading > span {
+            font-size: 16px;
+            line-height: 24px;
+            color: #333
+        }
+
+        .page-heading > a {
+            display: inline-block;
+            font-size: 14px;
+            line-height: 24px;
+            color: #008375
+        }
+
+    .page-body {
+        padding: 0 20px
+    }
+
+    .installment-notice-wrapper {
+        margin: 20px 0 0 0;
+        padding: 0
+    }
+
+        .installment-notice-wrapper > p {
+            margin: 0 0 15px 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 18px;
+            color: #707473
+        }
+
+    .page-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 44px
+    }
+
+        .page-footer > button {
+            border: none;
+            color: white;
+            background-color: #008375;
+            font-size: 14px;
+            line-height: 44px;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            outline: none
+        }
+
+    .installments {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent
+    }
+
+        .installments > li {
+            display: block;
+            border: 1px solid #CCC;
+            margin: 0 0 10px 0;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 2px
+        }
+
+            .installments > li:hover, .installments > li.active {
+                border-color: rgba(68,168,242,0.5);
+                border-width: 2px;
+                padding: 14px
+            }
+
+            .installments > li > .txt-installment-month {
+                font-size: 14px;
+                line-height: 18px;
+                font-weight: normal;
+                margin: 0 0 5px 0;
+                padding: 0;
+                text-align: center;
+                color: #008375
+            }
+
+            .installments > li > .txt-installment-month-fee {
+                font-size: 12px;
+                line-height: 12px;
+                font-weight: normal;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                color: #707473
+            }
+
+    #installment-explaination {
+        margin: 15px 0;
+        padding: 0
+    }
+
+        #installment-explaination > p {
+            font-size: 12px;
+            line-height: 18px;
+            color: #707473;
+            margin-bottom: 15px
+        }
+
+    .submit-wrapper {
+        margin: 15px 0;
+        padding: 0
+    }
+
+    .link-return {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+        color: #008375;
+        border: 2px solid #008375;
+        background-color: white;
+        margin: 15px 0 0 0;
+        padding: 12px 0;
+        outline: none
+    }
+
+    .blue-text {
+        color: #008375
+    }
+
+    #installment-partner {
+        margin-top: 30px;
+        padding: 0
+    }
+
+        #installment-partner h3 {
+            font-size: 14px;
+            line-height: 18px;
+            color: #333;
+            margin: 0 0 15px 0;
+            padding: 0
+        }
+
+        #installment-partner > p {
+            font-size: 12px;
+            font-weight: normal;
+            color: #707473;
+            margin-bottom: 12px
+        }
+
+        #installment-partner .partner-logo-wrapper {
+            margin: 10px 0
+        }
+
+            #installment-partner .partner-logo-wrapper img {
+                display: inline-block;
+                width: 24px;
+                vertical-align: top
+            }
+
+            #installment-partner .partner-logo-wrapper > .image {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+                vertical-align: top
+            }
+
+            #installment-partner .partner-logo-wrapper > .image-text {
+                font-size: 14px;
+                line-height: 24px;
+                color: #008375;
+                vertical-align: top
+            }
+
+    .btn-jike-land {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+        line-height: 18px;
+        text-align: center;
+        border: 2px solid #008375;
+        background-color: #008375;
+        color: white;
+        margin: 0;
+        padding: 12px 0;
+        outline: none
+    }
+
+    .alipay-unionpay-form-wrapper select {
+        display: block;
+        width: 100%;
+        font-size: 12px;
+        line-height: 12px;
+        color: #333;
+        border: 1px solid #CCC;
+        background-color: #FFF;
+        outline: none;
+        border-radius: 2px;
+        margin: 0;
+        padding: 13px;
+        height: 44px;
+        box-sizing: border-box
+    }
+
+        .alipay-unionpay-form-wrapper select:focus, .alipay-unionpay-form-wrapper select:active, .alipay-unionpay-form-wrapper select.selected {
+            color: #333;
+            border-color: #008375;
+            background-color: #FFF
+        }
+
+    .split-bill-function {
+        margin-top: 10px;
+        padding: 15px 0
+    }
+
+    .split-bill-checkbox {
+        color: #44ABF2
+    }
+
+        .split-bill-checkbox > .checkbox {
+            float: left;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #44ABF2;
+            vertical-align: top
+        }
+
+            .split-bill-checkbox > .checkbox.checked > span {
+                display: inline-block;
+                width: 8px;
+                height: 14px;
+                border-color: #44ABF2;
+                border-style: solid;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+                margin-left: 5px;
+                vertical-align: top
+            }
+
+        .split-bill-checkbox label {
+            display: block;
+            font-size: 14px;
+            line-height: 24px;
+            color: #333;
+            margin-left: 40px
+        }
+
+    #split-bill-panel {
+        margin: 24px 0 0 0;
+        padding: 0;
+        font-size: 12px;
+        line-height: 18px
+    }
+
+        #split-bill-panel .amount {
+            color: #008375
+        }
+
+    .split-bill-amount-control-wrapper {
+        padding: 0
+    }
+
+        .split-bill-amount-control-wrapper input {
+            display: block;
+            width: 100%;
+            color: #333;
+            font-size: 12px;
+            line-height: 24px;
+            margin: 10px 0 6px 0;
+            padding: 9px 10px;
+            border: 1px solid #CCC;
+            border-radius: 2px;
+            outline: none;
+            box-sizing: border-box
+        }
+
+            .split-bill-amount-control-wrapper input:focus {
+                color: #333;
+                border-color: #008375
+            }
+
+    #js-human-amount-control-help {
+        display: block;
+        margin: 6px 0 0 0;
+        padding: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #f97b7b
+    }
+
+    .wxpay-js-scan-mobile {
+        margin-bottom: 60px
+    }
+
+        .wxpay-js-scan-mobile .qrcode-image-wrapper {
+            text-align: center
+        }
+
+        .wxpay-js-scan-mobile p {
+            padding: 0 15px
+        }
+
+        .wxpay-js-scan-mobile .qrcode-container > p {
+            margin-top: 20px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #707473;
+            text-align: center
+        }
+
+            .wxpay-js-scan-mobile .qrcode-container > p a {
+                color: #008375
+            }
+
+        .wxpay-js-scan-mobile img {
+            width: 180px;
+            height: 180px
+        }
+</style>
+<div class="TransferPayment">
+    <div class="page-heading">
+        <span>转账付款</span>
+        <a class="pull-right" onclick="if(window.GA_TRACK_LINK){window.GA_TRACK_LINK('click_button_to_reselect_payment', '', '/zh-CN/orders/dd9e47f0c39f0136674a12ae9608b6c2/transactions/new?_m=dji-online-store&amp;_p=h5');return false;}" href="/zh-CN/orders/dd9e47f0c39f0136674a12ae9608b6c2/transactions/new?_m=dji-online-store&amp;_p=h5">更换支付方式</a>
+    </div>
+    <div class="page-body">
+        <div class="installment-notice-wrapper">
+            <p>请尽快转账，到账周期一般为 1-3 个工作日。汇款金额请与应付金额保持一致，请勿多汇款或者少汇款。</p>
+        </div>
+        <div class="transfer-payment-section">
+            <h1>第一步：转账汇款</h1>
+            <p>请将您的订单款项转入以下账号</p>
+            <ul class="account-infos">
+                <li>
+                    <label>户名：</label>
+                    <p>深圳市大疆百旺科技有限公司</p>
+                </li>
+                <li>
+                    <label>账号：</label>
+                    <p>7559 2510 0410 901</p>
+                </li>
+                <li>
+                    <label>开户行：</label>
+                    <p>招商银行深圳科技园支行</p>
+                </li>
+            </ul>
+        </div>
+        <div class="transfer-payment-section">
+            <h1>第二步：发送邮件</h1>
+            <p>
+                <span>汇款完成后请将您的汇款信息以邮件的形式发送至&nbsp;</span>
+                <span style="color:#008375;">banktransfer@dji.com</span>
+                <span>，邮件格式如下：</span>
+            </p>
+            <ul class="account-infos"></ul>
+            <p>邮件标题</p>
+            <p style="color:#333;">0866658000539</p>
+            <p>邮件内容（例）：</p>
+            <ul class="account-infos lg-label">
+                <li>
+                    <label>订单号：</label>
+                    <p>0866658000539</p>
+                </li>
+                <li>
+                    <label>DJI账号：</label>
+                    <p>d9f152b590014540b2c43a22c9ac7b85@sudo8diov.dji.com</p>
+                </li>
+                <li>
+                    <label>汇款人姓名：</label>
+                    <p>张三</p>
+                </li>
+                <li>
+                    <label>汇款卡号：</label>
+                    <p>622202154889036523</p>
+                </li>
+                <li>
+                    <label>汇款金额：</label>
+                    <p>RMB: ¥3,199.00</p>
+                </li>
+                <li>
+                    <label>汇款银行支行：</label>
+                    <p>中国建设银行深圳科技园支行</p>
+                </li>
+            </ul>
+        </div>
+        <div class="transfer-payment-clipboard-wrapper">
+            <a class="color-blue" data-clipboard-action="copy" data-clipboard-text="订单号：0866658000539
+      DJI账号：d9f152b590014540b2c43a22c9ac7b85@sudo8diov.dji.com
+      汇款人姓名：张三
+      汇款卡号：622202154889036523
+      汇款金额：RMB: ¥3,199.00
+      汇款银行支行：中国建设银行深圳科技园支行" id="btn-copy-example">复制邮件格式</a>
+        </div>
+    </div>
+    <br>
+    <br>
+    <script>
+        $(function () {
+            var instance = new Clipboard('#btn-copy-example');
+            instance.on('success',
+                function () {
+                    alert("复制成功");
+                });
+            instance.on('error',
+                function () {
+                    alert("复制失败");
+                });
+        });
+    </script>
+</div>

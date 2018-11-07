@@ -1,0 +1,61 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var News = ViewBag.News == null ? new News() : (News)ViewBag.News;
+    var Id = News == null ? 0 : News.Id;
+    var ValidityTime = News.ValidityTime != null ? News.ValidityTime.Value.ToString("yyyy-MM-dd") : "";
+}
+
+
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="Id" id="Id" value="@Id" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="Time" id="date" lay-verify="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})" value="@ValidityTime">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="MainTitle" placeholder="请输入消息标题" lay-verify="required" autocomplete="off" class="layui-input" value="@News.MainTitle">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">消息内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor">@Html.Raw(News.Content)</textarea>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script>
+    layui.use('layedit', function () {
+        var layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: '../../../Api/UpImg/LayerEdit' //接口url
+                , type: 'post' //默认post
+            }
+        });
+        var demoId = layedit.build('LAY_demo_editor'); //建立编辑器
+        setInterval(function () {
+            if (layedit.getContent(demoId)){
+                $('#LAY_demo_editor').val(layedit.getContent(demoId));
+                $('#LAY_demo_editor').html(layedit.getContent(demoId))
+            }
+        }, 1000);
+    });
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+    }
+</style>

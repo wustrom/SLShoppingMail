@@ -1,0 +1,168 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var OrderTuple = ViewBag.OrderInfo == null ? new Tuple<Order_Allinfo, List<Order_Detail_View>>(item1: new Order_Allinfo(), item2: new List<Order_Detail_View>()) : (Tuple<Order_Allinfo, List<Order_Detail_View>>)ViewBag.OrderInfo;
+    List<Colorinfo> colorList = (List<Colorinfo>)ViewBag.ColorInfo;
+    var AddrArea = OrderTuple.Item1.Address == null ? OrderTuple.Item1.AddrArea + OrderTuple.Item1.AddrDetail : OrderTuple.Item1.Address;
+    var BuyName = OrderTuple.Item1.BuyName == null ? OrderTuple.Item1.Name : OrderTuple.Item1.BuyName;
+    var InvoiceArray = OrderTuple.Item1.Invoice == null ? new List<string>() : OrderTuple.Item1.Invoice.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+}
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+        padding-right: 10px;
+        border: 1px solid DarkGray;
+    }
+</style>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单编号</label>
+            <div class="layui-input-block">
+                <input type="text" autocomplete="off" class="layui-input" readonly="readonly" value="@OrderTuple.Item1.OrderNo">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">购买人姓名</label>
+            <div class="layui-input-block">
+                <input type="text" autocomplete="off" class="layui-input" readonly="readonly" value="@BuyName">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" readonly="readonly" value="@AddrArea">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单价格</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" readonly="readonly" value="@OrderTuple.Item1.TotalPrice">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单类型</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" readonly="readonly" value="@ViewBag.PayType">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单状态</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" readonly="readonly" value="@ViewBag.Status">
+            </div>
+        </div>
+        @if (OrderTuple.Item1.DiscountPrice != null)
+        {
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠价格</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" readonly="readonly" value="@OrderTuple.Item1.DiscountPrice ">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠原因</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" readonly="readonly" value="@OrderTuple.Item1.DisCountResult ">
+                </div>
+            </div>
+        }
+
+        @if (InvoiceArray.Count == 2)
+        {
+            <div class="layui-form-item">
+                <label class="layui-form-label">发票抬头</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" readonly="readonly" value="@(InvoiceArray.Count>0?InvoiceArray[0]:"")">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">企业税号</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" readonly="readonly" value="@(InvoiceArray.Count>1?InvoiceArray[1]:"")">
+                </div>
+            </div>
+        }
+        @if (OrderTuple != null)
+        {
+            int i = 1;
+            foreach (var item in OrderTuple.Item2)
+            {
+                //var ForntImage = item.FrontImage == null ? item.FrontView : item.FrontImage;
+                //var BackImage = item.BackImage == null ? item.BackView : item.BackImage;
+                var color = colorList.Where(p => p.Id == item.Color).FirstOrDefault();
+                <fieldset class="layui-elem-field" style="margin-top: 50px;">
+                    <legend>订单明细第 @i 个</legend>
+                    @*<div class="layui-field-box">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">正面图片</label>
+                                    <div class="layui-input-block">
+                                        <img id="btn-img" src="@ForntImage" />
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">背面图片</label>
+                                    <div class="layui-input-block">
+                                        <img id="btn-img" src="@BackImage" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    @if (item.Image != null && item.Image != "")
+                    {
+                        <div class="layui-field-box">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">上传图片</label>
+                                <div class="layui-input-block">
+                                    @{
+                                        var arry = item.Image.Split(';').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                        foreach (var arrayItem in arry)
+                                        {
+                                            <div style="width:85px;height:80px;float: left;">
+                                                <img src="@arrayItem" style="width:80px;height:80px;">
+                                            </div>
+                                        }
+                                    }
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="layui-field-box">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" readonly="readonly" value="@item.Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-field-box">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品颜色</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" readonly="readonly" value="@color.ChinaDescribe">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                i = i + 1;
+            }
+        }
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+
+    <script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+    <script>
+        $(function () {
+            $('img').click(function () {
+                var src = $(this).attr('src');
+                open(src);
+            });
+        });
+    </script>
+</div>

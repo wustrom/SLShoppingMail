@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="60px" viewBox="0 0 80 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-message</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M6,7.99328744 C6,6.89242519 6.88989258,6 7.99970728,6 L40.0002927,6 C41.1047006,6 42,6.89971268 42,7.99328744 L42,33.0067126 C42,34.1075748 41.1054862,35 40.0059397,35 L27.9940603,35 C26.8927712,35 25.2646761,35.5147267 24.3599011,36.1480692 L17.6400989,40.8519308 C16.7342973,41.4859919 16,41.1134452 16,39.9940809 L16,37.0059191 C16,35.8980806 15.1125667,35 14.000385,35 L7.99961498,35 C6.89525812,35 6,34.1002873 6,33.0067126 L6,7.99328744 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="36" height="34.3205796" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <circle id="path-3" cx="16.5" cy="16.5" r="1.5"></circle>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="3" height="3" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <circle id="path-5" cx="30.5" cy="16.5" r="1.5"></circle>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="3" height="3" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-message" transform="translate(16.000000, 6.000000)" stroke="#707473">
+            <use id="Rectangle-4" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+            <use id="Oval-2" mask="url(#mask-4)" stroke-width="2" fill="#707473" fill-rule="evenodd" xlink:href="#path-3"></use>
+            <use id="Oval-2-Copy-2" mask="url(#mask-6)" stroke-width="2" fill="#707473" fill-rule="evenodd" xlink:href="#path-5"></use>
+            <path d="M14,22 C16.1151075,25.1857083 19.6189903,27.2684594 23.4832269,27.2684594 C27.4252856,27.2684594 30.8678829,25.3129056 33,22" id="Oval-9" stroke-width="1" stroke-linecap="round"></path>
+        </g>
+    </g>
+</svg>

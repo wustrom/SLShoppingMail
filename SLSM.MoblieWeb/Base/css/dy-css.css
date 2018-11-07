@@ -1,0 +1,223 @@
+/**/
+
+
+.border-b1s-ccc {
+    border-bottom: 1px solid #ccc;
+}
+.clearfix::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.page-banner-box {
+    min-height: 4.8rem;
+}
+
+.swiper-slide img {
+    width: 100%;
+    vertical-align: middle;
+}
+
+.page-banner-box .swiper-pagination span {
+    width: .25rem;
+    height: .25rem;
+    background: #fff;
+    opacity: .5;
+}
+
+.page-banner-box span.swiper-pagination-bullet-active {
+    background: #008373;
+    opacity: 1;
+}
+
+.plpr20 {
+    padding-left: .2rem;
+    padding-right: .2rem;
+}
+
+.public-box-title {
+    font-size: .55rem;
+    padding: .42rem 0;
+    font-weight: normal;
+}
+
+.page-good-banner .swiper-slide {
+    border: 1px solid #eee;
+}
+
+.page-good-banner .swiper-slide section {
+    background: #fafbff;
+    border-top: 1px solid #eee;
+
+    padding: .3rem .2rem;
+}
+
+.page-good-banner .swiper-slide h4 {
+    font-size: .42rem;
+    font-weight: normal;
+}
+
+.page-good-banner .swiper-slide h4 ~ p {
+    margin-top: .36rem;
+}
+
+.page-good-banner .swiper-slide p {
+    font-size: .36rem;
+}
+
+.page-goods-class {
+
+}
+
+.page-goods-class .public-box-title {
+    padding: .2rem 0;
+}
+
+.page-goods-class li {
+    float: left;
+    text-align: center;
+    margin-right: .32rem;
+}
+
+.page-goods-class li figure {
+    width: 4.98rem;
+    height: 4.98rem;
+    line-height: 4.98rem;
+    border: 1px solid #eee;
+}
+
+.page-goods-class img {
+    width: 4.98rem;
+    height: 4.98rem;
+    vertical-align: middle;
+}
+
+.page-goods-class li h5 {
+    width: 100%;
+    font-size: .32rem;
+    line-height: .48rem;
+    padding: .1rem 0 .3rem;
+    color: #666666;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.page-goods-class li:nth-child(2n) {
+    margin-right:0;
+}
+
+.page-propaganda {
+    line-height: .72rem;
+    padding: 0 .4rem;
+    margin-top: .8rem;
+}
+.page-propaganda h2 {
+    font-size: .42rem;
+    border-bottom: 1px solid #000;
+    font-weight: normal;
+    padding: .2rem 0;
+}
+.page-propaganda p {
+    font-size: .36rem;
+    color: #666666;
+}
+
+/*收货地址*/
+
+.add-people-info {
+
+}
+.add-people-info .cennter-box {
+    padding: .3rem 0;
+    font-size: .36rem;
+}
+.add-people-info .cennter-box>div {
+    position: relative;
+    padding-left: 1.6rem;
+}
+.add-people-info .cennter-box>div ~ div {
+    margin-top: .2rem;
+}
+.add-people-info .cennter-box label {
+    position: absolute;
+    font-size: .36rem;
+    top: 35%;
+    left: .42rem;
+    transform: translate(0, -50%);
+}
+.add-people-info .cennter-box .input {
+    width: 6.9rem;
+    height: .68rem;
+    border: 1px solid #ccc;
+    text-indent: .15rem;
+}
+
+.add-people-info .cennter-box select {
+    display: inline-block;
+    width: 1.8rem;
+    height: .68rem;
+    border-color: #ccc;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: .54rem;
+    padding-left: 1.5%;
+    background: url(../images/icon-04.png) no-repeat calc( 100% - .18rem ) center /.36rem .3rem;
+}
+.add-people-info .cennter-box textarea {
+    width: 6.9rem;
+    height: 1.64rem;
+    padding: .1rem;
+    border-color: #ccc;
+
+}
+.add-people-info .action-btn {
+    width: 6rem;
+    height: 1.1rem;
+    background: #008373;
+    color: #ffffff;
+    font-size: .48rem;
+    border-radius: .1rem;
+    display: block;
+    margin: .3rem auto 0;
+    border: 0;
+}
+
+/*分类*/
+.page-class-box {
+
+}
+.page-class-box .list-box {
+    padding: .3rem 0 .86rem .86rem;
+}
+
+.page-class-box .list-box h2 {
+    font-size: .48rem;
+    font-weight: normal;
+    padding-bottom: .42rem;
+    color: #252525;
+}
+.page-class-box .list-box dl {
+    line-height: .74rem;
+    font-size: .36rem;
+    color: #555555;
+}
+.page-class-box .list-box dt,
+.page-class-box .list-box dd {
+    background:  url(../images/icon-05.png) no-repeat left center/.18rem .21rem;
+    padding-left: .32rem;
+}
+.page-class-box .list-box dd {
+    margin-left: .32rem;
+    display: none;
+}
+.page-class-box .list-box a {
+    color: #555555;
+}
+
+
+
+
+
+

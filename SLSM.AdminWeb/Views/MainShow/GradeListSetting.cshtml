@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/global.css" rel="stylesheet" />
+
+    <link href="~/Base/css/table.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=2.00"></script>
+    <script src="~/Current/Scripts/MainShow/GradeListSetting.js?version=2.00"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+</head>
+<body>
+    <div class="hidden-div">
+    </div>
+    <div class="admin-main">
+        <fieldset class="layui-elem-field">
+            <legend>分类推荐列表设置(首页只显示前八项)</legend>
+            <div class="layui-field-box layui-form">
+                <table class="layui-table admin-table">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>分类名称</th>
+                            <th>分类图片</th>
+                            <th>父节点名称</th>
+                            <th>推荐时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content"></tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="admin-table-page">
+            <div id="paged" class="page">
+            </div>
+        </div>
+    </div>
+    <!--模板-->
+    <script type="text/html" id="tpl">
+        {{# layui.each(d.list, function(index, item){ }}
+        <tr>
+            <td>{{ index+1 }}</td>
+            <td>{{ item.Name }}</td>
+            <td><img src="{{ item.Img }}" style="width:40px;height:20px;" /></td>
+            <td>{{ item.parentName }}</td>
+            <td>{{ item.HotGradeTime }}</td>
+            <td>
+                <a onclick="TopItem({{ item.Id }})" class="layui-btn layui-btn-mini">置顶</a>
+            </td>
+        </tr>
+        {{# }); }}
+    </script>
+</body>
+</html>

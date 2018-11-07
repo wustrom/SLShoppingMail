@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "AllGrade";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    <link rel="stylesheet" href="~/Base/css/dy-css.css" />
+}
+
+@section js{
+
+}
+
+<link rel="stylesheet" href="~/Base/css/swiper.min.css">
+<link rel="stylesheet" type="text/css" href="~/Base/css/ydui.css" />
+<link rel="stylesheet" type="text/css" href="~/Base/css/public.css?version=20181012" />
+@*<link rel="stylesheet" href="css/dy-css.css">*@
+
+
+
+
+
+<div id="panel" class="public-content-box">
+
+
+    <!--搜索框 end-->
+    <!--面包屑-->
+    <div class="public-crumbs border-b1s-ccc">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="#">查看所有分类</a></li>
+        </ul>
+    </div>
+    @{
+        var allGrade = new List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>();
+        allGrade = ViewBag.allGrade ?? new List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>();
+
+    }
+
+    <div class="page-class-box">
+        @{
+            foreach (var item in allGrade)
+            {
+                <div class="list-box">
+                    <h2>@item.name</h2>
+                    @{ foreach (var item2 in item.listGrade)
+                        {
+                            <dl>
+                                <dt>@item2.name</dt>
+                                @{ foreach (var item3 in item2.listGrade)
+                                    {
+                                        <dd><a href="/commoditylist/index?gradeid=@item3.id">@item3.name</a></dd>
+                                    }}
+                            </dl>
+                        }}
+                </div>
+            }
+        }
+    </div>
+
+   
+
+
+    <!--尾部 end-->
+    <!--浮动nav-->
+    <div class="go-top"></div>
+
+</div>
+
+
+<script src="~/Base/js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/Base/js/slideout.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/Base/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/Base/js/ydui.flexible.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/Base/js/ydui.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/Base/js/public.js?version=20181911" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+    $(function () {
+        $('.page-class-box .list-box dt').click(function () {
+            $(this).parent().find('dd').toggle();
+        });
+    });
+
+</script>
+

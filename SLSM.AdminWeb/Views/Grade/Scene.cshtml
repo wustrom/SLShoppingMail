@@ -1,0 +1,74 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/global.css" rel="stylesheet" />
+
+    <link href="~/Base/css/table.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=2.00"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00?ver201803231002"></script>
+    <script src="~/Current/Scripts/grade/scene.js?version=2.00?ver201803231005"></script>
+    <link href="~/Current/css/Grade/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="admin-main">
+    </div>
+    <div class="layui-collapse" id="content" lay-accordion="">
+    </div>
+    <!--模板-->
+    <script type="text/html" id="tpl">
+        {{# layui.each(d.list, function(index, item){ }}
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">
+                {{item.name}}<i class="layui-icon layui-colla-icon">{{item.icon}}</i>
+                <font>
+                    <a data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-xs layui-btn-mini btn-edit" onclick="GradeEdit(this)">编辑</a>
+                    <a data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini btn-del" onclick="GradeDel(this)">删除</a>
+                    <a data-id="{{ item.id }}" data-opt="{{ item.name }}" class="layui-btn layui-btn-warm layui-btn-mini btn-del" onclick="GradeShow(this)">设置展示商品</a>
+                </font>
+            </h2>
+        </div>
+        {{# }); }}
+        <a href="javascript:;" class="layui-btn layui-btn-small btn-add">
+            <i class="layui-icon"></i> 添加一级分类
+        </a>
+
+
+        @*{{# layui.each(d.list, function(index, item){ }}
+            <tr>
+                <td><input type="checkbox" lay-skin="primary"></td>
+                <td>{{ item.Name }}</td>
+                <td>{{ item.GradeAttr }}</td>
+                <td>{{ item.parentName }}</td>
+                <td>
+                    <a href="/detail-1" target="_blank" class="layui-btn layui-btn-normal layui-btn-mini">预览</a>
+                    <a data-id="{{item.Id}}" data-name="{{item.Name}}" data-parentId="{{item.parentId}}" data-parentName="{{item.parentName}}" class="btn-edit layui-btn layui-btn-mini">编辑</a>
+                    <a href="javascript:;" data-id="{{ item.Id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+                </td>
+            </tr>
+            {{# }); }}*@
+    </script>
+
+    <script>
+        layui.use(['element', 'layer'], function () {
+            var element = layui.element;
+            element = layui.element();
+            var layer = layui.layer;
+
+            //监听折叠
+            element.on('collapse(test)', function (data) {
+                layer.msg('展开状态：' + data.show);
+            });
+        });
+    </script>
+</body>
+</html>

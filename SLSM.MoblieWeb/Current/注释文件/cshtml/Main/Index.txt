@@ -1,0 +1,32 @@
+﻿<!--88-123-->
+<!--产品推荐-->
+<div class="page-good-banner plpr20">
+    <h2 class="public-box-title">推荐产品</h2>
+</div>
+
+<div class="">
+    <ul class="index__products___38r_i">
+        @foreach (var commrecommend in List_Commrecommends)
+        {
+            var item = List_Comm.Where(p => p.Id == commrecommend.CommId).FirstOrDefault();
+            if (item != null)
+            {
+                <li class="index__product___2o7DE index__product-large___oLfW3">
+                    <a href="../../Commodity/Index?CommodityId=@item.Id" class="Item__product___2gc66">
+                        <div class="Item__image-holder___HhoSf">
+                            <img class="Item__image___3NVC9" src="@ViewBag.AdminUrl@item.Image">
+                        </div>
+                        <div class="Item__info___3VZYt">
+                            <div class="Item__title___3Q70F">@item.Name</div>
+                            <div class="Price__info___1vzHs Price__visible___3735J">
+                                <span class="Price__price___334ig">¥@item.minPrice</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+
+        }
+    </ul>
+</div>
+<!--产品推荐 end-->

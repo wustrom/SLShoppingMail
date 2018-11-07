@@ -1,0 +1,147 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css{
+    <link href="~/Current/css/DaJiangBase.css?version=1.01" rel="stylesheet" />
+    <link href="~/Current/css/NoLogin.css" rel="stylesheet" />
+}
+
+@section js{
+    <script>
+        $(function () {
+            $('.VaildInputDiv input').focus(function () {
+                $(this).parent().addClass('SmallLabel').removeClass('NoThing');
+            })
+            $('.VaildInputDiv input').blur(function () {
+                if ($(this).val() == "" || $(this).val() == undefined) {
+                    $(this).parent().removeClass('SmallLabel').addClass('NoThing');
+                }
+            })
+            $('span.tab').click(function () {
+                if (!$(this).hasClass('tab-active')) {
+                    if ($(this).html().trim() == "密码登录") {
+                        $('.PassDiv').show();
+                        $('.VaildDiv').hide();
+                    }
+                    else if ($(this).html().trim() == "验证码登录") {
+                        $('.PassDiv').hide();
+                        $('.VaildDiv').show();
+                    }
+                    $('#VaildPhone').parent().removeClass('SmallLabel').removeClass('NoThing');
+                    $('#VaildPassword').val('');
+                    $('#VaildPassword').parent().removeClass('SmallLabel').removeClass('NoThing');
+                    $('#VaildCode').val('');
+                    $('#VaildCode').parent().removeClass('SmallLabel').removeClass('NoThing');
+
+                    $('.row.justify-content-center.text-center .tab').removeClass('tab-active');
+                    $(this).addClass('tab-active');
+                }
+
+            })
+
+            $('.base__captcha-img___3umGK.s-btn.s-blue-btn').click(function () {
+                var datas = new Object();
+                datas.UserPhone = $('#VaildPhone').val();
+                if (datas.UserPhone == undefined || $('#VaildPhone').val().length != 11) {
+                    layer.msg("用户手机号不正确！");
+                    return;
+                }
+                jQuery.axpost('../../Api/Login/SendPhoneCode', JSON.stringify(datas), function (data) {
+                    layer.msg('已发送');
+                })
+            })
+
+            $('.login_btn').click(function () {
+                var obj = new Object();
+                obj.UserPhone = $('#VaildPhone').val();
+                if (obj.UserPhone == undefined || obj.UserPhone.length != 11) {
+                    layer.msg("用户手机号不正确！");
+                    return;
+                }
+                if ($('span.tab.tab-active').html() == "密码登录") {
+                    obj.Password = $('#VaildPassword').val();
+                }
+                else {
+                    obj.PhoneCode = $('#VaildCode').val();
+                }
+                jQuery.axpost('../../Api/Login/LoginByPhone', JSON.stringify(obj), function (data) {
+                    layer.confirm('您已成功登录', {
+                        btn: ['确定'] //按钮
+                    }, function () {
+                        YDUI.dialog.loading.close();
+                        location.reload();
+                    });
+                });
+            });
+        })
+    </script>
+    <style>
+        .s-btn:active {
+            background-color: #D9D9D9 !important;
+            border: 2px solid #D9D9D9 !important;
+        }
+    </style>
+}
+
+<div id="dji-store-page">
+    <div id="userLogin">
+        <div class="base__option-block___2mNOf container" style="padding-bottom:1.008rem;">
+            <div class="row justify-content-center text-center">
+                <span class="text-center tab align-middle ">密码登录</span>
+                <span class="text-center tab align-middle tab-active">验证码登录</span>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="base__input-content___19lm-">
+                <div class="VaildInputDiv MoblieDiv">
+                    <label>手机号</label>
+                    <input type="number" pattern="\d*" id="VaildPhone">
+                    <div>
+                        <hr>
+                        <hr class="ChangeHr">
+                    </div>
+                    <div class="ErrorInfo">请输入手机号</div>
+                </div>
+                <div class="VaildInputDiv PassDiv" style="display:none;">
+                    <label>密码</label>
+                    <input type="password" id="VaildPassword" value="">
+                    <div>
+                        <hr>
+                        <hr class="ChangeHr">
+                    </div>
+                    <div class="ErrorInfo">请输入密码</div>
+                </div>
+                <div class="VaildDiv VaildInputDiv">
+                    <div class="VaildInputDiv">
+                        <label>验证码</label>
+                        <input type="number" pattern="\d*" id="VaildCode">
+                        <div>
+                            <hr class="ChangeHr">
+                        </div>
+                        <div class="ErrorInfo">请输入验证码</div>
+                    </div>
+                    <a class="base__captcha-img___3umGK s-btn s-blue-btn">
+                        发送验证码
+                    </a>
+
+                </div>
+            </div>
+            <button class="s-btn s-blue-btn login_btn" style="margin-bottom:0.576rem;color:#fff;background: #008376;">登录</button>
+        </div>
+    </div>
+    <div id="userGuest">
+        <div>
+            <div class="base__option-block___2mNOf container" style="padding-bottom:1.584rem;">
+                <div>
+                    <div class="base__third-login-cn___3eESm">
+                        <span class="base__third-login-tip___2faiw">或者</span>
+                    </div>
+                    <button class="s-btn s-blue-btn" style="margin-top:.1rem;color:#fff;background: #008376;" onclick="location.href = '../../PayPage/Index?ShopcartId='+@ViewBag.ShopCartId+'&NoLogin=true';">以游客身份购买</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

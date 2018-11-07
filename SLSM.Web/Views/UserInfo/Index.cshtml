@@ -1,0 +1,283 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Info";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    User userinfo = ViewBag.UserInfo;
+    var List_Order = (List<SLSM.Web.Models.Response.Order.OrderInfoResponse>)ViewBag.Order;
+}
+@section js{
+
+}
+@section css{
+    <style>
+        .btn {
+            display: inline-block;
+            margin-bottom: 0;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.428571429;
+            border-radius: 4px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .user-center-content {
+            font-size: 13px;
+        }
+
+            .user-center-content a {
+                color: #44a8f2;
+            }
+
+        .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-sm-12, .col-md-12, .col-lg-12 {
+            position: relative;
+            min-height: 1px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+            float: left;
+        }
+
+        .col-xs-2 {
+            width: 150px;
+        }
+
+        .user-center-bg .user-center-content .user-info .right {
+            padding-top: 10px;
+        }
+
+        .col-xs-5 {
+            width: 41.6666666667%;
+        }
+
+        .btn:hover {
+            box-shadow: 0px 0px 3px #999;
+        }
+
+        .row {
+            width: 100%;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .user-center-bg .user-center-content .user-info {
+            height: 180px;
+            border: 1px solid #eee;
+            padding: 29px 0px 0px 30px;
+        }
+
+            .user-center-bg .user-center-content .user-info .right h3 {
+                font-size: 24px;
+                text-transform: none;
+                color: #707473;
+                margin-bottom: 20px;
+            }
+
+            .user-center-bg .user-center-content .user-info .right .edit {
+                padding-top: 15px;
+            }
+
+                .user-center-bg .user-center-content .user-info .right .edit i {
+                    font-style: normal;
+                    padding: 0 5px;
+                    color: #006eb9;
+                }
+
+        .user-center-bg .user-center-content .user-order {
+            border: 1px solid #eee;
+            min-height: 315px;
+            display: inline-block;
+            width: 100%;
+            margin-top: 20px !important;
+        }
+
+            .user-center-bg .user-center-content .user-order .panel {
+                border-bottom: 1px solid #eee !important;
+            }
+
+        .user-center-bg .user-center-content .panel {
+            background: none;
+            border-radius: 0px;
+            border: none;
+            margin-bottom: 0px;
+            box-shadow: none;
+        }
+
+        .panel-heading {
+            padding: 15px 15px;
+            border-bottom: 1px solid transparent;
+            border-top-right-radius: 3px;
+            border-top-left-radius: 3px;
+            height: 43px;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .user-center-bg .user-center-content .user-order .order-info {
+            padding: 20px;
+            width: 100%;
+            padding-bottom: 0px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .user-center-bg .user-center-content .user-order .order-info th {
+            background: #f5f5f5;
+            border-top: none;
+            padding: 15px 0;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .table > thead > tr > th,
+        .table > thead > tr > td,
+        .table > tbody > tr > th,
+        .table > tbody > tr > td,
+        .table > tfoot > tr > th,
+        .table > tfoot > tr > td {
+            padding: 8px;
+            line-height: 1.428571429;
+            vertical-align: top;
+            border-top: 1px solid #dddddd;
+        }
+
+        .user-center-bg .user-center-content .user-order .order-info td {
+            border-top: none;
+            vertical-align: middle;
+            padding-left: 0px;
+        }
+
+        .cancel-btn {
+            display: inline-block;
+        }
+
+            .cancel-btn .btn-default {
+                border: 2px solid #44a8f2 !important;
+                color: #44a8f2 !important;
+                text-transform: uppercase !important;
+                border-radius: 2px;
+                background-color: white;
+                margin-left: 20px
+            }
+
+        .user-center-bg .user-center-content .user-order .order-info .btn-new {
+            margin-left: 10px;
+        }
+
+        .btn.btn-primary.btn-new {
+            color: white;
+            background-color: #44a8f2;
+        }
+
+        .user-center-bg .user-center-content .user-order .order-info .no-order {
+            text-align: center;
+            padding-top: 70px;
+        }
+
+            .user-center-bg .user-center-content .user-order .order-info .no-order .fa {
+                float: none;
+                color: #c9c9c9;
+            }
+
+        .fa-3x {
+            font-size: 3em;
+        }
+
+        .user-center-bg .user-center-content .user-order .order-info p {
+            padding-top: 10px;
+            color: #777;
+        }
+    </style>
+}
+<section class="user-info">
+    <div class="row">
+        <div class="col-xs-2">
+            <a><img alt="pic" src="@ViewBag.AdminUrl@userinfo.Image" /></a>
+        </div>
+        <div class="col-xs-5 right">
+            <h3>@userinfo.Name</h3>
+            <span>手机号&nbsp;@userinfo.Phone</span>
+            <div class="edit">
+                <a href="/UserInfo/Info">编辑我的个人资料</a>
+                <i>|</i>
+                <a href="/UserInfo/password">修改密码</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="user-order mt2">
+    <div class="panel">
+        <div class="panel-heading">
+            我的最新订单
+            <a class="pull-right" href="/UserInfo/MyOrderList">更多&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+    </div>
+    <div class="order-info">
+        @if (List_Order != null && List_Order.Count != 0)
+        {
+            <table class="table col-md-12">
+                <tbody>
+                    <tr>
+                        <th style="width:32%;text-align:center;">订单号</th>
+                        <th style="width:3%;text-align:center;"></th>
+                        <th style="width:20%;">总计</th>
+                        <th style="width:4%;text-align:center;"></th>
+                        <th style="width:41%;">支付状态</th>
+                    </tr>
+                    @foreach (var item in List_Order)
+                    {
+                        <tr>
+                            <td class="order-number">
+                                <img src="@ViewBag.AdminUrl@item.ListDetail[0].Image" style="width:100px" />
+                                <a style="padding-left:20px;">@item.OrderNo</a>
+                            </td>
+                            <td>
+                                <img src="~/Base/images/border-right.png" />
+                            </td>
+                            <td>
+                                &yen;@item.TotalPrice
+                            </td>
+                            <td>
+                                <img src="~/Base/images/border-right.png" />
+                            </td>
+                            <td>
+                                @item.Status
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-order">
+                <i class="fa fa-list-alt fa-3x" style="font-size:3em;"></i>
+                <p>
+                    您的账户暂时没有订单。&nbsp;<a href="http://www.syloon.cn">
+                        去 DJI 官方商城&nbsp;
+                        <i class="fa fa-angle-right" style="color:#006eb9;"></i>
+                    </a>
+                </p>
+            </div>
+        }
+
+    </div>
+</section>
+<section style="min-height:40px;"></section>    

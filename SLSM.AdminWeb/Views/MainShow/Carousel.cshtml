@@ -1,0 +1,93 @@
+﻿@{
+    Layout = null;
+    var Images = (List<DbOpertion.Models.Carousel_Image>)ViewBag.Images;
+    var MobileImages = (List<DbOpertion.Models.Carousel_Image>)ViewBag.MobileImages;
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>轮播图设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Current/css/MainShow/Carousel.css?version=2.00" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+    <script src="~/Current/Scripts/MainShow/Carousel.js?version=201811071556"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+</head>
+<body>
+    <div style="margin: 15px;">
+        @for (int i = 6; i >= 1; i--)
+        {
+            var thisImage = Images.Where(p => p.OrderID == i).FirstOrDefault();
+            var count = 6 - i + 1;
+            <fieldset class="layui-elem-field carousel-content" style="height:190px;">
+                <legend>电脑轮播图第<label>@count</label>张</legend>
+                <div class="layui-field-box">
+                    <div class="left-part">
+                        @if (thisImage != null)
+                        {
+                            <img src="@thisImage.Image" />
+                        }
+                        else
+                        {
+                            <img />
+                        }
+                    </div>
+                    <div class="right-part">
+                        @if (thisImage == null)
+                        {
+                            <button class="layui-btn" onclick="AddImage(@i,true)">添加</button>
+                        }
+                        else
+                        {
+                            <button class="layui-btn layui-btn-normal" onclick="EditImage(@thisImage.Id,true)">修改</button>
+                            <br />
+                            <button class="layui-btn layui-btn-danger" onclick="DeleteImage(@thisImage.Id,true)">删除</button>
+                        }
+                    </div>
+                    <div style="clear:both;" />
+                </div>
+            </fieldset>
+        }
+        @for (int i = 6; i >= 1; i--)
+        {
+            var thisImage = MobileImages.Where(p => p.OrderID == i).FirstOrDefault();
+            var count = 6 - i + 1;
+            <fieldset class="layui-elem-field carousel-content" style="height:190px;">
+                <legend>手机轮播图第<label>@count</label>张</legend>
+                <div class="layui-field-box">
+                    <div class="left-part">
+                        @if (thisImage != null)
+                        {
+                            <img src="@thisImage.Image" />
+                        }
+                        else
+                        {
+                            <img />
+                        }
+                    </div>
+                    <div class="right-part">
+                        @if (thisImage == null)
+                        {
+                            <button class="layui-btn" onclick="AddImage(@i,false)">添加</button>
+                        }
+                        else
+                        {
+                            <button class="layui-btn layui-btn-normal" onclick="EditImage(@thisImage.Id,false)">修改</button>
+                            <br />
+                            <button class="layui-btn layui-btn-danger" onclick="DeleteImage(@thisImage.Id,false)">删除</button>
+                        }
+                    </div>
+                    <div style="clear:both;" />
+                </div>
+            </fieldset>
+        }
+        <div style="clear:both;" />
+    </div>
+</body>
+</html>

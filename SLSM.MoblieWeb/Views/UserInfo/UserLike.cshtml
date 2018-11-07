@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "UserLike";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var List_UserLike = (List<SLSM.MoblieWeb.Models.Response.Order.LikeCommodityResponse>)ViewBag.LikeList;
+}
+<div class="hiddenDiv">
+    <input type="hidden" id="hiddPageCount" value="@ViewBag.PageCount" />
+</div>
+<div id="panel" class="public-content-box" style="background: #f4f4f4;">
+    <!--面包屑-->
+    <div class="public-crumbs border-b1s-ccc bgfff">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="../../UserInfo/Index">个人中心</a></li>
+            <li><a href="../../UserInfo/UserLike">我的收藏</a></li>
+        </ul>
+    </div>
+
+    <div class="my_sc">
+        <ul>
+            @foreach (var item in List_UserLike)
+            {
+                <li>
+                    <img src="@item.Image" alt="" />
+                    <dl>
+                        <dd><strong>@item.Name</strong><span>最低￥ @item.minPrice 起</span></dd>
+                        <dd><p><a href="#" class="look_info">查看详情</a></p></dd>
+                        <dd><p><em>@item.Introduce</em> <a href="#" title="删除" class="del" onclick="DelLike(@item.Id)"></a></p></dd>
+                    </dl>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+@section js
+{
+    <script src="~/Current/js/UserInfo/UserLike.js"></script>
+}

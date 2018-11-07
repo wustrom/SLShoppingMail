@@ -1,0 +1,85 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/global.css" rel="stylesheet" />
+    <link href="~/Base/css/table.css" rel="stylesheet" />
+    <link href="~/Base/css/btable.css" rel="stylesheet" />
+    <link href="~/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
+    <script src="~/Base/js/layui-xtree.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/ajax.js?ver201803231002"></script>
+    <script src="~/Current/Scripts/Erpuser/ErpIndex.js?version=20181017001"></script>
+
+    <style>
+        body {
+        }
+
+        .fl {
+            float: left;
+        }
+
+        .fr {
+            float: right;
+        }
+
+        .fc {
+            clear: both;
+        }
+
+        .layui-collapse h2 {
+            line-height: 42px;
+        }
+
+
+        .btn-edit {
+            margin-left: 10px;
+        }
+
+        .layui-colla-item h2 a {
+        }
+
+        .layui-colla-item font {
+            float: right;
+        }
+    </style>
+</head>
+<body style="width:400px">
+    <div class="admin-main">
+    </div>
+    <div class="layui-collapse" id="content" lay-accordion="">
+    </div>
+    <!--模板-->
+    <script type="text/html" id="tpl">
+        {{# layui.each(d.list, function(index, item){}}
+        <div class="layui-colla-item" onclick="Show(this)">
+            <h2 class="layui-colla-title">
+                <input id="Radio1" type="radio" name="radio" value="{{ item.ErproleId }}" class="sss" />
+                {{item.ErproleName}}
+                <font>
+                    <a data-id="{{ item.ErproleId }}" data-opt="edit" class="layui-btn layui-btn-xs layui-btn-mini btn-edit" onclick="GradeEdit(this)">编辑</a>
+                    <a data-id="{{ item.ErproleId }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini btn-del" onclick="GradeDel(this)">删除</a>
+                </font>
+            </h2>
+        </div>
+        {{# }); }}
+        <a href="javascript:;" class="layui-btn layui-btn-small btn-add">
+            <i class="layui-icon"></i> 添加角色
+        </a>
+    </script>
+    <div style="margin-top:10px;margin-left:280px">
+        <button class="layui-btn" id="Add" onclick="AddJurisdiction()">添加页面权限</button>
+    </div>
+    <form class="layui-form">
+        <div id="xtree1" style="width:800px;border:1px solid black;margin-right:-1020px;margin-top:-378px;float:right"></div>
+    </form>
+</body>
+</html>
+

@@ -1,0 +1,586 @@
+﻿@using DbOpertion.Models;
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    ViewBag.Title = "_UserLayout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = (User)ViewBag.UserInfo;
+    var ListHisdesign = (List<SLSM.Web.Models.Response.Address.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+    var ListGrade = (List<GradeRes>)ViewBag.listGradeOfTitle;
+    var listScence = (List<GradeRes>)ViewBag.listScence;
+    var ListCommShow = (List<Commshow>)ViewBag.CommShowList;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    List<Grade> List_Grade = ViewBag.AllListGrade == null ? new List<Grade>() : (List<Grade>)ViewBag.AllListGrade;
+    List<Showgradeinfo> List_Showgrade = ViewBag.ShowgradeList == null ? new List<Showgradeinfo>() : (List<Showgradeinfo>)ViewBag.ShowgradeList;
+    List_Showgrade = List_Showgrade.OrderBy(p => p.OrderCount).ToList();
+    List<int> list = new List<int>();
+    foreach (var item in ListGrade)
+    {
+        list.Add(item.id);
+    }
+    List<int> listScenceid = new List<int>();
+    foreach (var item in listScence)
+    {
+        listScenceid.Add(item.id);
+    }
+
+    var ListScence = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listScence;
+    var colorList = ViewBag.ColorList == null ? new List<Colorinfo>() : (List<Colorinfo>)ViewBag.ColorList;
+}
+@section js{
+    @RenderSection("js", required: false)
+}
+@section css{
+    @RenderSection("css", required: false)
+}
+
+@section top_part{
+    <!--头部开始-->
+    <div class="top-part">
+        <div class="first-line">
+            <div class="title-part">
+                <div class="Company_Name">
+                    <a class="Top__link___1Te6a" href="../../Main/Index">
+                        <img src="~/Base/images/SyloonLogo.png" />
+                        <div class="signInfo">赛龙礼品 点亮你的品牌</div>
+                    </a>
+                </div>
+                <div class="Tip_Sign">
+                    <marquee scrolldelay="1" scrollamount="1">专业定制化促销礼品供应商，企业定制化解决方案，支持支付宝、微信支付</marquee>
+                </div>
+                <div class="right-part">
+                    <ul class="first_ul">
+                        <li>
+                            <a href="../../../shopcart/Index">
+                                <span class="ShopCart_Img"></span>
+                                <span class="ShopCart_Text">购物车</span>
+                                <span class="shopcart-num">@ListHisdesign.Count</span>
+                            </a>
+                        </li>
+                        @if (user != null)
+                        {
+                            <li>
+                                <a href="../../userinfo/Info">欢迎 @user.Name</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="login" href="../Main/Login?Login=login">登录</a>
+                            </li>
+                        }
+                        <li>
+                            <a href="javjscript:;" class="lang">中国大陆(简体中文 / ¥ CNY)</a>
+                        </li>
+                    </ul>
+
+                    <div class="dropdown_cart" style="display: none;">
+                        @if (ListHisdesign.Count != 0)
+                        {
+                            <div class="cart_list">
+                                <div class="scroll-view">
+                                    <ul class="shopcart_ul">
+                                        @foreach (var item in ListHisdesign)
+                                        {
+                                            var thisColor = colorList.Where(p => p.ChinaDescribe == item.Color && p.ParentId != 0).FirstOrDefault();
+                                            var ImageList = item.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList();
+                                            string Image = "";
+                                            foreach (var ImageInfo in ImageList)
+                                            {
+                                                var ImageArray = ImageInfo.Split(';');
+                                                if (ImageArray[0] == $"{thisColor.Id}")
+                                                {
+                                                    Image = ImageArray[1];
+                                                }
+                                            }
+                                            <li>
+                                                <div class="cart-product" onclick="window.location.href='../../diy/Index?CommodityId=@item.CommodityId'">
+                                                    <img src="@ViewBag.AdminUrl@Image" alt="@item.CommodityName"
+                                                         class="Item__image___1sqHK" />
+                                                    <div class="Item__info">
+                                                        <p class="Item__name">@item.CommodityName</p>
+                                                        <p class="Item__price">@item.Amount x ¥@item.OnePrice</p>
+                                                    </div>
+                                                </div>
+                                                <div style="clear:both"></div>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <div style="clear:both"></div>
+                                </div>
+                            </div>
+                            <div class="cart_bottom">
+                                <div class="bottom_cartinfo">
+                                    <p>@ViewBag.HisdesignCount 件商品</p>
+                                    <p>
+                                        <span class="bottom_price">¥@ViewBag.HisdesignPrice</span>
+                                    </p>
+                                </div>
+                                <a class="button" href="../../../shopcart/Index">去结算</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="height:20px;background-color:white;padding-top:30px;padding-bottom:30px;padding-left:120px;color:#979797">
+                                购物车为空
+                            </div>
+                        }
+                    </div>
+                    @if (user != null)
+                    {
+                        <div class="LoginInfo" style="display:none;">
+                            <ul class="">
+                                <li class="">
+                                    <a href="../../userinfo/Index">我的帐号</a>
+                                </li>
+                                <li class="">
+                                    <a href="../../userinfo/MyOrderList">我的订单</a>
+                                </li>
+                                <li class="-">
+                                    <a id="ExitH2">退出</a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="second-line">
+            <div class="title-part">
+                <div class="left-part">
+                    <ul>
+                        <li class="commdity_type">
+                            <a href="javascript:;">商品分类</a>
+                            <div class="arrow-bottom arrow-box">
+                                <b class="bottom-arrow">
+                                    <i class="bottom-arrow1"></i>
+                                    <i class="bottom-arrow2"></i>
+                                </b>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li class="scence_type">
+                            <a href="javascript:;">应用场景</a>
+                            <div class="arrow-bottom arrow-box">
+                                <b class="bottom-arrow">
+                                    <i class="bottom-arrow1"></i>
+                                    <i class="bottom-arrow2"></i>
+                                </b>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li><a href="javascript:;">工艺介绍</a></li>
+                        <li class="adoutus">
+                            <a href="http://www.syloon.cn/Helper/AboutUs?tabname=company_profile">关于我们</a>
+                            <div class="arrow-bottom arrow-box">
+                                <b class="bottom-arrow">
+                                    <i class="bottom-arrow1"></i>
+                                    <i class="bottom-arrow2"></i>
+                                </b>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-part">
+                    <img src="~/Base/images/Layout/serach.png" />
+                    <input type="text" class="search-input" placeholder="搜索商品..." value="@ViewBag.text" />
+                </div>
+                <div class="left-part ConnectInfo">
+                    <div class="Connect">
+                        服务热线：<label>400-858-0505</label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="third-line">
+            <div class="title-part">
+                <ul style="float:left;">
+                    <li>
+                        <a href="../../Main/Index">
+                            首页
+                        </a>
+                    </li>
+                    @foreach (var item in List_Showgrade)
+                    {
+                        var grade = List_Grade.Where(p => p.Id == item.GradeId).FirstOrDefault();
+                        if (grade != null)
+                        {
+                            <li>
+                                <a href="../../../CommodityList/Index?gradeId=@grade.Id">
+                                    @(grade.IsScene == true ? grade.Name.Replace("#", "") : grade.Name)
+                                </a>
+                            </li>
+                        }
+
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slidedown_list commdity_type" style="display: none;">
+        <div class="content">
+            <div class="menu_list" style="margin-left:240px;">
+                <div class="left-part">
+                    <ul>
+                        @foreach (var showgrade in List_Showgrade)
+                        {
+                            GradeRes item = null;
+                            foreach (var grade in ListGrade)
+                            {
+                                if (grade.id == showgrade.GradeId)
+                                {
+                                    item = grade;
+                                }
+                                var result = grade.listGrade.Where(p => p.id == showgrade.GradeId).FirstOrDefault();
+                                if (result != null)
+                                {
+                                    item = result;
+                                }
+                            }
+                            if (item != null)
+                            {
+                                <li>
+                                    <a href="../../../CommodityList/Index?gradeId=@item.id">
+                                        @item.name
+                                        <i class="fa fa-angle-right"></i>
+                                        <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                                    </a>
+                                </li>
+                                foreach (var grade in item.listGrade)
+                                {
+                                    var showItem = List_Showgrade.Where(p => p.GradeId == grade.id).FirstOrDefault();
+                                    if (showItem == null)
+                                    {
+                                        <li>
+                                            <a href="../../../CommodityList/Index?gradeId=@grade.id" style="width: 181px;margin-left: 30px;">
+                                                @grade.name
+                                                <i class="fa fa-angle-right"></i>
+                                                <input type="hidden" class="gradeInfo_Id" value="@grade.id" />
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        }
+                        @foreach (var id in list)
+                        {
+                            var item = ListGrade.Where(p => p.id == id).FirstOrDefault();
+                            var showItem = List_Showgrade.Where(p => p.GradeId == id).FirstOrDefault();
+                            if (showItem == null)
+                            {
+                                <li>
+                                    <a href="../../../CommodityList/Index?gradeId=@item.id">
+                                        @item.name
+                                        <i class="fa fa-angle-right"></i>
+                                        <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                                    </a>
+                                </li>
+                                foreach (var grade in item.listGrade)
+                                {
+                                    showItem = List_Showgrade.Where(p => p.GradeId == grade.id).FirstOrDefault();
+                                    if (showItem == null)
+                                    {
+                                        <li>
+                                            <a href="../../../CommodityList/Index?gradeId=@grade.id" style="width: 181px;margin-left: 30px;">
+                                                @grade.name
+                                                <i class="fa fa-angle-right"></i>
+                                                <input type="hidden" class="gradeInfo_Id" value="@grade.id" />
+                                            </a>
+                                        </li>
+                                    }
+
+                                }
+                            }
+
+                        }
+                    </ul>
+                </div>
+                <div class="right_part">
+                    @foreach (var id in list)
+                    {
+                        var item = ListGrade.Where(p => p.id == id).FirstOrDefault();
+                        var commShow = ListCommShow.Where(p => p.GradeId == item.id).ToList();
+                        List<int> childIdList = new List<int>();
+                        childIdList.Add(id);
+                        foreach (var listGrade1 in item.listGrade)
+                        {
+                            childIdList.Add(listGrade1.id);
+                            foreach (var listGrade2 in listGrade1.listGrade)
+                            {
+                                childIdList.Add(listGrade2.id);
+                            }
+                        }
+                        var count = 0;
+                        <div class="type_part" style="display:none;">
+                            <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                            <div class="part_line">
+                                <h3>
+                                    @item.name
+                                    <span>
+                                        <a href="../../../CommodityList/Index?gradeId=@item.id">查看所有</a>
+                                    </span>
+                                </h3>
+                                <div class="itemList">
+                                    <ul>
+                                        @foreach (var itemShow in commShow)
+                                        {
+                                            count++;
+                                            if (count <= 8)
+                                            {
+                                                var comm = List_Comm.Where(p => p.Id == itemShow.CommId).FirstOrDefault();
+                                                if (comm != null)
+                                                {
+                                                    <li>
+                                                        <a href="../../Diy/Index?CommodityId=@comm.Id">
+                                                            <div class="ImageBox">
+                                                                <img src="@ViewBag.AdminUrl@comm.Image" alt="@comm.Name" />
+                                                            </div>
+                                                            <div class="product-name">@comm.Name</div>
+                                                            <div style="clear: both;"></div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                        @{
+                                            var ListCommId = commShow.Select(p => p.CommId).ToList();
+                                            var commList = List_Comm.Where(p => !ListCommId.Contains(p.Id) && childIdList.Contains(p.GradeId.Value)).ToList();
+                                        }
+                                        @foreach (var commitem in commList)
+                                        {
+                                            count++;
+                                            if (count <= 8)
+                                            {
+                                                <li>
+                                                    <a href="../../Diy/Index?CommodityId=@commitem.Id">
+                                                        <div class="ImageBox">
+                                                            <img src="@ViewBag.AdminUrl@commitem.Image" alt="@commitem.Name" />
+                                                        </div>
+                                                        <div class="product-name">@commitem.Name</div>
+                                                        <div style="clear: both;"></div>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        foreach (var grade in item.listGrade)
+                        {
+                            item = grade;
+                            count = 0;
+                            childIdList.Clear();
+                            childIdList.Add(grade.id);
+                            commShow = ListCommShow.Where(p => p.GradeId == item.id).ToList();
+                            foreach (var listGrade1 in item.listGrade)
+                            {
+                                childIdList.Add(listGrade1.id);
+                            }
+                            <div class="type_part" style="display:none;">
+                                <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                                <div class="part_line">
+                                    <h3>
+                                        @item.name
+                                        <span>
+                                            <a href="../../../CommodityList/Index?gradeId=@item.id">查看所有</a>
+                                        </span>
+                                    </h3>
+                                    <div class="itemList">
+                                        <ul>
+                                            @foreach (var itemShow in commShow)
+                                            {
+                                                count++;
+                                                if (count <= 8)
+                                                {
+                                                    var comm = List_Comm.Where(p => p.Id == itemShow.CommId).FirstOrDefault();
+                                                    if (comm != null)
+                                                    {
+                                                        <li>
+                                                            <a href="../../Diy/Index?CommodityId=@comm.Id">
+                                                                <div class="ImageBox">
+                                                                    <img src="@ViewBag.AdminUrl@comm.Image" alt="@comm.Name" />
+                                                                </div>
+                                                                <div class="product-name">@comm.Name</div>
+                                                                <div style="clear: both;"></div>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                            }
+                                            @{
+                                                var List_CommId = commShow.Select(p => p.CommId).ToList();
+                                                var comm_List = List_Comm.Where(p => !List_CommId.Contains(p.Id) && childIdList.Contains(p.GradeId.Value)).ToList();
+                                            }
+                                            @foreach (var commitem in comm_List)
+                                            {
+                                                count++;
+                                                if (count <= 8)
+                                                {
+                                                    <li>
+                                                        <a href="../../Diy/Index?CommodityId=@commitem.Id">
+                                                            <div class="ImageBox">
+                                                                <img src="@ViewBag.AdminUrl@commitem.Image" alt="@commitem.Name" />
+                                                            </div>
+                                                            <div class="product-name">@commitem.Name</div>
+                                                            <div style="clear: both;"></div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <div class="slidedown_list scence_type" style="display: none;">
+        <div class="content">
+            <div class="menu_list" style="margin-left:357px">
+                <div class="left-part">
+                    <ul>
+                        @foreach (var showgrade in List_Showgrade)
+                        {
+                            GradeRes item = listScence.Where(p => p.id == showgrade.GradeId).FirstOrDefault();
+                            if (item != null && !item.name.Contains("#"))
+                            {
+                                <li>
+                                    <a href="../../../CommodityList/Index?gradeId=@item.id">
+                                        @item.name
+                                        <i class="fa fa-angle-right"></i>
+                                        <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                                    </a>
+                                </li>
+                            }
+                        }
+                        @foreach (var id in listScenceid)
+                        {
+                            var item = listScence.Where(p => p.id == id).FirstOrDefault();
+                            var showItem = List_Showgrade.Where(p => p.GradeId == id).FirstOrDefault();
+                            if (showItem == null && !item.name.Contains("#"))
+                            {
+                                <li>
+                                    <a href="../../../CommodityList/Index?gradeId=@item.id">
+                                        @item.name
+                                        <i class="fa fa-angle-right"></i>
+                                        <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                                    </a>
+                                </li>
+
+                            }
+                        }
+                    </ul>
+                </div>
+
+                <div class="right_part">
+                    @foreach (var id in listScenceid)
+                    {
+                        var item = listScence.Where(p => p.id == id).FirstOrDefault();
+                        var commShow = ListCommShow.Where(p => p.GradeId == item.id).ToList();
+                        var count = 0;
+                        <div class="type_part" style="display:none;">
+                            <input type="hidden" class="gradeInfo_Id" value="@item.id" />
+                            <div class="part_line">
+                                <h3>
+                                    @item.name
+                                    <span>
+                                        <a href="../../../CommodityList/Index?gradeId=@item.id">查看所有</a>
+                                    </span>
+                                </h3>
+                                <div class="itemList">
+                                    <ul>
+                                        @foreach (var itemShow in commShow)
+                                        {
+                                            count++;
+                                            if (count <= 8)
+                                            {
+                                                var comm = List_Comm.Where(p => p.Id == itemShow.CommId).FirstOrDefault();
+                                                if (comm != null)
+                                                {
+                                                    <li>
+                                                        <a href="../../Diy/Index?CommodityId=@comm.Id">
+                                                            <div class="ImageBox">
+                                                                <img src="@ViewBag.AdminUrl@comm.Image" alt="@comm.Name" />
+                                                            </div>
+                                                            <div class="product-name">@comm.Name</div>
+                                                            <div style="clear: both;"></div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                        @{
+                                            var List_CommId = commShow.Select(p => p.CommId).ToList();
+                                            var comm_List = List_Comm.Where(p => !List_CommId.Contains(p.Id) && (p.ScenceIds != null && p.ScenceIds.Contains($",{id}|"))).ToList();
+                                        }
+                                        @foreach (var commitem in comm_List)
+                                        {
+                                            count++;
+                                            if (count <= 8)
+                                            {
+                                                <li>
+                                                    <a href="../../Diy/Index?CommodityId=@commitem.Id">
+                                                        <div class="ImageBox">
+                                                            <img src="@ViewBag.AdminUrl@commitem.Image" alt="@commitem.Name" />
+                                                        </div>
+                                                        <div class="product-name">@commitem.Name</div>
+                                                        <div style="clear: both;"></div>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <div class="slidedown_list adoutus" style="display: none;">
+        <div class="content">
+            <div class="menu_list" style="margin-left:600px;">
+                <div class="left-part">
+                    <ul>
+                        <li>
+                            <a href="../../Helper/AboutUs?tabname=company_profile">公司介绍</a>
+                        </li>
+                        <li>
+                            <a href="../../Helper/AboutUs?tabname=exhibition">展会信息</a>
+                        </li>
+                        <li>
+                            <a href="../../Helper/AboutUs?tabname=recruitment_elites">人才招聘</a>
+                        </li>
+                        <li>
+                            <a href="../../Helper/AboutUs?tabname=news">最新动态</a>
+                        </li>
+                        <li>
+                            <a href="../../Helper/AboutUs?tabname=contact_the_salon">联系我们</a>
+                        </li>
+                    </ul>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <!--头部结束-->
+}
+
+@RenderBody()

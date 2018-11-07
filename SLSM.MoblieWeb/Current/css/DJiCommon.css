@@ -1,0 +1,2574 @@
+﻿@font-face {
+    font-family: Open Sans;
+    src: url(//asset2.djicdn.com/assets/font/OpenSans-Regular-f3c1b65376aa313387af47ae780b4a93.eot);
+    src: url(//asset2.djicdn.com/assets/font/OpenSans-Regular-f3c1b65376aa313387af47ae780b4a93.eot?#iefix) format("embedded-opentype"),url(//asset4.djicdn.com/assets/font/OpenSans-Regular-0d01fe061d54861eaae8cc5fbbb342b8.woff) format("woff"),url(//asset4.djicdn.com/assets/font/OpenSans-Regular-f0924a5382038c3d3ad9456f174cddf9.ttf) format("truetype"),url(//asset1.djicdn.com/assets/font/OpenSans-Regular-da35ae468af73a5f55e488852ff1c93c.svg#OpenSans-Regular) format("svg")
+}
+
+@font-face {
+    font-family: OpenSansLight;
+    src: url(//asset2.djicdn.com/assets/font/OpenSans-Light-9c113d5387e9de23c817a4ead9dac8de.eot);
+    src: url(//asset2.djicdn.com/assets/font/OpenSans-Light-9c113d5387e9de23c817a4ead9dac8de.eot?#iefix) format("embedded-opentype"),url(//asset4.djicdn.com/assets/font/OpenSans-Light-271bf21910bf0915bd28015c0f56765b.woff) format("woff"),url(//asset4.djicdn.com/assets/font/OpenSans-Light-ef621aea838415a0f989912f09d5513a.ttf) format("truetype"),url(//asset1.djicdn.com/assets/font/OpenSans-Light-96bfa01f4c1be7b759dcf1f6761521c3.svg#OpenSans-Light) format("svg")
+}
+
+@font-face {
+    font-family: 'Dji';
+    font-weight: 600;
+    src: url(//asset2.djicdn.com/assets/font/Demi/Dji-Demi-0edde390ef2fcf15f919bca47afe3129.eot);
+    src: url(//asset2.djicdn.com/assets/font/Demi/Dji-Demi-0edde390ef2fcf15f919bca47afe3129.eot?#iefix) format("embedded-opentype"),url(//asset4.djicdn.com/assets/font/Demi/Dji-Demi-2be3a5a6a9e9d884ae343106f555b3e1.woff) format("woff"),url(//asset4.djicdn.com/assets/font/Demi/Dji-Demi-57b35af80ed6a4872c308620dbeb88d2.ttf) format("truetype"),url(//asset1.djicdn.com/assets/font/Demi/Dji-Demi-3cb87e2c0fe5109a8905f67c55f4354d.svg#gotham-book) format("svg")
+}
+
+@font-face {
+    font-family: 'Gotham';
+    font-weight: 300;
+    src: url(//asset2.djicdn.com/assets/font/Gotham-Light-cc851ed5a953db2d813ea7a128a28cd7.eot);
+    src: url(//asset2.djicdn.com/assets/font/Gotham-Light-cc851ed5a953db2d813ea7a128a28cd7.eot?#iefix) format("embedded-opentype"),url(//asset4.djicdn.com/assets/font/Gotham-Light-61f6578a556158b61a8fb75fe65d9a9e.woff) format("woff"),url(//asset4.djicdn.com/assets/font/Gotham-Light-6df661c1c7435b4457ba4baf2f893397.ttf) format("truetype"),url(//asset1.djicdn.com/assets/font/Gotham-Light-9f38737a5e6c9512fbb0cb0d8564881a.svg#gotham-book) format("svg")
+}
+
+@font-face {
+    font-family: 'Gotham';
+    font-weight: 400;
+    src: url(//asset2.djicdn.com/assets/font/gotham-book-b0ec94589c8be6756a2827894261d515.eot);
+    src: url(//asset2.djicdn.com/assets/font/gotham-book-b0ec94589c8be6756a2827894261d515.eot?#iefix) format("embedded-opentype"),url(//asset3.djicdn.com/assets/font/gotham-book-8d6c2e89ce0810fa271c9319cbda6343.woff2) format("woff2"),url(//asset4.djicdn.com/assets/font/Gotham-Book-c890acfc6cf2d99d0ac7061d25ac717e.woff) format("woff"),url(//asset4.djicdn.com/assets/font/Gotham-Book-abbbe80938313ca46f366048c8a44188.ttf) format("truetype"),url(//asset1.djicdn.com/assets/font/Gotham-Book-7f2329e7a7d662728f5afa19dc918443.svg#gotham-book) format("svg")
+}
+
+@font-face {
+    font-family: 'Gotham';
+    font-weight: 500;
+    src: url(//asset2.djicdn.com/assets/font/Gotham-Medium-36191e246ca3176c8bc86981ffbf8050.eot);
+    src: url(//asset2.djicdn.com/assets/font/Gotham-Medium-36191e246ca3176c8bc86981ffbf8050.eot?#iefix) format("embedded-opentype"),url(//asset4.djicdn.com/assets/font/Gotham-Medium-3abdf1eb876ff405f41cd968dcb1c95d.woff) format("woff"),url(//asset4.djicdn.com/assets/font/Gotham-Medium-494972fc17924fc3ac0f1d63bb703693.ttf) format("truetype"),url(//asset1.djicdn.com/assets/font/Gotham-Medium-7de6607a9b148bfa8af0fb7246563606.svg#gotham-book) format("svg")
+}
+
+body {
+    overflow: auto;
+    font-family: "微软雅黑"
+}
+
+.dji-font {
+    font-family: "Gotham", "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
+    font-weight: 400
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "Gotham", "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
+    font-weight: 400
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 100%
+    }
+}
+
+label {
+    font-weight: 400 !important
+}
+
+.notice-warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999
+}
+
+    .notice-warning a {
+        color: #8a6d3b;
+        display: block;
+        padding: 15px 5px 15px 5px;
+        text-align: center;
+        font-size: 13px
+    }
+
+.notice-dismissable, .notice-dismissible {
+    padding-right: 25px
+}
+
+.notice {
+    margin-bottom: 0px;
+    border: 1px solid transparent
+}
+
+.notice-dismissible .close {
+    position: relative;
+    background-color: transparent;
+    border: none;
+    vertical-align: middle
+}
+
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2
+}
+
+.notice-wrap {
+    padding-bottom: 10px !important;
+    padding-top: 10px
+}
+
+    .notice-wrap .notice {
+        color: #cf220b;
+        border: none
+    }
+
+    .notice-wrap .fixed-notice {
+        color: #cf220b;
+        border: none
+    }
+
+#page .form-control {
+    height: 45px;
+    margin-bottom: 10px;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif
+}
+
+#page header {
+    position: relative;
+    background: #fff;
+    height: 55px
+}
+
+    #page header .nav-bar {
+        padding: 0 15px
+    }
+
+    #page header nav {
+        height: 50px;
+        background: #fff;
+        padding: 0 15px;
+        border-bottom: 2px solid #e6e6e6;
+        max-width: 750px;
+        width: 100%;
+        position: fixed;
+        z-index: 999
+    }
+
+        #page header nav .menu.back, #page header nav .menu.user {
+            min-width: 40px
+        }
+
+        #page header nav .icon {
+            float: left
+        }
+
+            #page header nav .icon i {
+                font-size: 45px;
+                line-height: 59px;
+                cursor: hand;
+                cursor: pointer;
+                color: #3F91CA
+            }
+
+        #page header nav .cart-num {
+            vertical-align: middle;
+            padding-top: 4px;
+            position: absolute;
+            background-color: #fc495f;
+            top: -10px;
+            right: -12px;
+            font-size: 10px;
+            border-radius: 50%;
+            color: #fff;
+            height: 24px;
+            width: 24px;
+            text-align: center
+        }
+
+        #page header nav .logo {
+            text-align: center
+        }
+
+            #page header nav .logo a {
+                margin-top: 11px;
+                display: block
+            }
+
+            #page header nav .logo img {
+                height: 24px
+            }
+
+        #page header nav .btn-back {
+            margin-right: 10px
+        }
+
+        #page header nav .nav-menu {
+            padding: 12px 0px
+        }
+
+            #page header nav .nav-menu #btn-nav-menu {
+                display: inline-block;
+                width: 25px;
+                height: 25px;
+                background-image: url(//asset1.djicdn.com/assets/mobile/nav_icon_menu@2x-a610e9624281b94513df20dd02f64718.png);
+                background-repeat: no-repeat;
+                background-size: 25px 25px
+            }
+
+        #page header nav .nav-home {
+            padding: 10px 0px
+        }
+
+            #page header nav .nav-home #btn-nav-home {
+                display: inline-block;
+                width: 25px;
+                height: 24px;
+                background-image: url(//asset1.djicdn.com/assets/mobile/nav_icon_home@2x-ff6343925f03498d2b42d70d65e9d2d8.png);
+                background-repeat: no-repeat;
+                background-size: 25px 24px
+            }
+
+        #page header nav .go-back {
+            padding: 11px 0px;
+            margin-right: 10px
+        }
+
+            #page header nav .go-back #btn-go-back {
+                display: inline-block;
+                height: 28px;
+                width: 28px;
+                background-image: url(//asset1.djicdn.com/assets/mobile/go-back@2x-3cd2f36ecd1581bf94dfd2735c28bd10.png);
+                background-repeat: no-repeat;
+                background-size: 28px 28px
+            }
+
+        #page header nav .shopping-cart {
+            float: right;
+            padding: 14px 0px
+        }
+
+            #page header nav .shopping-cart #btn-shopping-cart {
+                display: inline-block;
+                height: 24px;
+                width: 24px;
+                background-image: url(//asset1.djicdn.com/assets/mobile/nav_icon_cart@2x-111dc8e34d50fdbe108abbf3b82883ea.png);
+                background-repeat: no-repeat;
+                position: relative;
+                background-size: 24px 24px
+            }
+
+    #page header h3 {
+        color: #707372
+    }
+
+    #page header .action {
+        right: 10px;
+        top: 20px
+    }
+
+        #page header .action a {
+            color: #006eb9
+        }
+
+#custom-info {
+    overflow-x: hidden
+}
+
+    #custom-info #use-history {
+        color: #006eb9;
+        padding: 0 10px
+    }
+
+    #custom-info .action-bar {
+        overflow: hidden;
+        margin-top: 55px;
+        margin-bottom: 10px
+    }
+
+        #custom-info .action-bar a {
+            text-decoration: none !important;
+            color: #44abf2;
+            text-transform: uppercase
+        }
+
+            #custom-info .action-bar a.remove {
+                color: #E71039;
+                margin-left: 5px
+            }
+
+    #custom-info .more {
+        text-align: center;
+        padding-bottom: 10px
+    }
+
+        #custom-info .more a {
+            color: #44abf2;
+            text-transform: uppercase
+        }
+
+#custom-pay .pay-way {
+    line-height: 40px !important
+}
+
+    #custom-pay .pay-way label span {
+        line-height: 30px;
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        right: 0px;
+        font-size: 12px
+    }
+
+        #custom-pay .pay-way label span.payment-text {
+            right: 18%
+        }
+
+        #custom-pay .pay-way label span .fa-angle-right {
+            margin-top: 0px
+        }
+
+#custom-pay .pay-title {
+    font-size: 16px;
+    color: #666
+}
+
+@media screen and (max-width: 450px) {
+    #custom-pay .info-row .col-xs-6 {
+        width: 100%
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #custom-pay .pay-way .pull-right {
+        display: block !important
+    }
+
+    #custom-pay .pay-info .pay-way {
+        padding: 15px 10px 15px 10px
+    }
+
+    #custom-pay .pay-way label img {
+        margin: 0;
+        height: 20px
+    }
+
+    #custom-pay .pay-way label span {
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        right: 0px;
+        text-align: right;
+        line-height: 22px;
+        font-size: 12px
+    }
+
+        #custom-pay .pay-way label span.payment-text {
+            right: 11%
+        }
+
+        #custom-pay .pay-way label span .fa-angle-right {
+            margin-top: 0px
+        }
+}
+
+#custom-order .disabled {
+    pointer-events: none;
+    opacity: 0.6
+}
+
+#custom-order .use-discount-box {
+    margin-top: 20px
+}
+
+    #custom-order .use-discount-box .error-use .notice {
+        color: #cf220b;
+        border: none
+    }
+
+    #custom-order .use-discount-box .nav-tabs {
+        margin-bottom: 10px;
+        text-align: center
+    }
+
+        #custom-order .use-discount-box .nav-tabs li {
+            padding: 0;
+            border-bottom: none;
+            background: #fff
+        }
+
+            #custom-order .use-discount-box .nav-tabs li a {
+                color: #777;
+                margin: 0;
+                border: 0;
+                border-radius: 0
+            }
+
+                #custom-order .use-discount-box .nav-tabs li a:hover, #custom-order .use-discount-box .nav-tabs li a:focus {
+                    background-color: #fff
+                }
+
+            #custom-order .use-discount-box .nav-tabs li.active a {
+                background-color: #006eb9;
+                color: #fff
+            }
+
+#custom-order #use-discount {
+    margin-bottom: 15px;
+    margin-top: 10px
+}
+
+#custom-order .goods-list .goods-item-title {
+    padding: 10px 0
+}
+
+#custom-order .goods-list a {
+    color: #666
+}
+
+#custom-order .goods-list .title {
+    margin-bottom: 10px
+}
+
+    #custom-order .goods-list .title span {
+        font-size: 15px;
+        color: #666
+    }
+
+#custom-order .goods-list .price {
+    color: #44abf2;
+    text-align: right
+}
+
+#custom-order .goods-list .goods-item {
+    padding: 10px 0;
+    background: #fff
+}
+
+#custom-order .invoice-info {
+    background: #fff;
+    padding-top: 15px
+}
+
+    #custom-order .invoice-info.order-box {
+        padding-bottom: 0px
+    }
+
+    #custom-order .invoice-info .invoice-title {
+        padding-bottom: 10px
+    }
+
+    #custom-order .invoice-info #invoice-input {
+        margin-bottom: 15px
+    }
+
+#custom-order #use-invoice {
+    display: inline-block;
+    width: 43px;
+    height: 25px;
+    background-image: url(//asset1.djicdn.com/assets/mobile/switch-open-9959eb77c5152ed593c8b12e3e486ca6.jpg);
+    background-repeat: no-repeat;
+    background-size: 43px 25px;
+    float: right
+}
+
+    #custom-order #use-invoice.cancel {
+        background-image: url(//asset1.djicdn.com/assets/mobile/switch-close-2f52917f180aae4e074755cc6c4dd0c7.jpg)
+    }
+
+#custom-order .price_total {
+    border-top: 1px dashed #ddd;
+    padding-top: 10px;
+    font-size: 16px
+}
+
+    #custom-order .price_total label {
+        color: #666
+    }
+
+    #custom-order .price_total span {
+        color: #44abf2
+    }
+
+#custom-order .order-detail-label {
+    color: #7f8084
+}
+
+.use-new-discount-box {
+    overflow: hidden;
+    background: #fff;
+    padding: 0px 15px !important
+}
+
+    .use-new-discount-box .error-use .notice {
+        color: #cf220b;
+        border: none
+    }
+
+    .use-new-discount-box .not-use .notice {
+        color: #7f8084;
+        border: none
+    }
+
+    .use-new-discount-box .credit-wrap {
+        overflow: hidden;
+        border-bottom: 1px solid #e7e7e7;
+        padding-bottom: 10px;
+        padding-top: 15px
+    }
+
+    .use-new-discount-box .available-credits {
+        float: left
+    }
+
+        .use-new-discount-box .available-credits i {
+            color: #44abf2
+        }
+
+        .use-new-discount-box .available-credits span {
+            color: #44abf2
+        }
+
+    .use-new-discount-box #use-corn {
+        display: inline-block;
+        width: 43px;
+        height: 25px;
+        background-image: url(//asset1.djicdn.com/assets/mobile/switch-open-9959eb77c5152ed593c8b12e3e486ca6.jpg);
+        background-repeat: no-repeat;
+        background-size: 43px 25px;
+        float: right
+    }
+
+        .use-new-discount-box #use-corn.cancel {
+            background-image: url(//asset1.djicdn.com/assets/mobile/switch-close-2f52917f180aae4e074755cc6c4dd0c7.jpg);
+            background-repeat: no-repeat;
+            background-size: 43px 25px
+        }
+
+    .use-new-discount-box .coupon-wrap {
+        padding-top: 15px;
+        padding-bottom: 10px;
+        margin: 0 -15px
+    }
+
+        .use-new-discount-box .coupon-wrap .use-coupon-text {
+            cursor: pointer;
+            color: #44abf2
+        }
+
+        .use-new-discount-box .coupon-wrap #coupon-input {
+            margin-bottom: 0px
+        }
+
+        .use-new-discount-box .coupon-wrap #new-coupon-input {
+            margin-bottom: 0px
+        }
+
+.dji-top-list {
+    position: fixed;
+    top: -400px;
+    left: 5px;
+    width: 150px;
+    -webkit-transition: all 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    transition: all 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    z-index: 101;
+    font-family: "Helvetica"
+}
+
+.dji-top-list-show {
+    top: 56px;
+    z-index: 201
+}
+
+.dji-top-list-triangle {
+    position: absolute;
+    border-width: 6px;
+    border-color: transparent transparent rgba(0,0,0,0.7) transparent;
+    left: 18px;
+    top: -11px;
+    width: 0;
+    height: 0;
+    font-size: 0;
+    border-style: solid;
+    overflow: hidden
+}
+
+.dji-top-dialog {
+    display: none;
+    position: fixed;
+    top: 50px;
+    width: 100%;
+    height: 100%;
+    height: calc(100% - 50px);
+    background-color: rgba(255,255,255,0.5);
+    z-index: 200
+}
+
+.dji-top .dji-dialog-menu {
+    display: block;
+    background-color: transparent
+}
+
+    .dji-top .dji-dialog-menu .dji-dialog-content {
+        display: none
+    }
+
+.dji-dialog-content {
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    width: 60%;
+    background-color: #666;
+    font-size: 2rem;
+    color: white;
+    height: 5rem;
+    line-height: 5rem;
+    text-align: center;
+    border-radius: 5px
+}
+
+.dji-dialog-icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+    left: 10%;
+    vertical-align: top;
+    height: 2px;
+    width: 20px;
+    z-index: 200px
+}
+
+    .dji-dialog-icon:before, .dji-dialog-icon:after {
+        position: absolute;
+        content: "";
+        background-color: white;
+        height: 100%;
+        width: 100%
+    }
+
+    .dji-dialog-icon:before {
+        left: 3px;
+        width: 10px;
+        transform: translateY(2px) rotate(50deg);
+        -webkit-transform: translateY(2px) rotate(50deg)
+    }
+
+    .dji-dialog-icon:after {
+        left: 3px;
+        width: 20px;
+        transform: translateX(5px) rotate(135deg);
+        -webkit-transform: translateX(5px) rotate(135deg)
+    }
+
+.dji-dialog-span {
+    margin-left: 4.5rem
+}
+
+.top-lists {
+    background-color: rgba(0,0,0,0.7);
+    box-shadow: 0 1px 1px -1px #333;
+    -moz-box-shadow: 0 1px 1px -1px #333;
+    -webkit-box-shadow: 0 1px 1px -1px #333;
+    height: 100%;
+    overflow: hidden;
+    margin-left: 0px;
+    padding-left: 0px
+}
+
+    .top-lists .top-list-li {
+        float: left;
+        width: 90%;
+        margin-left: 5%;
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.31)
+    }
+
+.top-list-li .top-list-country {
+    display: inline-block;
+    float: right;
+    margin-right: 2.5rem
+}
+
+.top-lists .top-list-li:last-child {
+    border-bottom: none
+}
+
+.top-lists .top-list-li a {
+    display: block;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: "Gotham-Book";
+    text-align: center
+}
+
+.pos-rel {
+    position: relative !important
+}
+
+.country-icon {
+    float: left;
+    width: 32px;
+    height: 22px;
+    margin-left: 0.6rem;
+    margin-top: 0.75rem
+}
+
+.country-select-cn .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -5px;
+    background-size: 225px 215px
+}
+
+.country-select-dk .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -5px;
+    background-size: 225px 215px
+}
+
+.country-select-li .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -5px;
+    background-size: 225px 215px
+}
+
+.country-select-ca .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -113px -5px;
+    background-size: 225px 215px
+}
+
+.country-select-lu .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -151px -5px;
+    background-size: 225px 215px
+}
+
+.country-select-tw .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -188px -5px;
+    background-size: 225px 215px
+}
+
+.country-select-cy .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -30px;
+    background-size: 225px 215px
+}
+
+.country-select-at .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -30px;
+    background-size: 225px 215px
+}
+
+.country-select-gr .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -77px -30px;
+    background-size: 225px 215px
+}
+
+.country-select-de .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -113px -30px;
+    background-size: 225px 215px
+}
+
+.country-select-it .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -151px -30px;
+    background-size: 225px 215px
+}
+
+.country-select-lv .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -188px -30px;
+    background-size: 225px 215px
+}
+
+.country-select-no .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -4px -57px;
+    background-size: 225px 215px
+}
+
+.country-select-cz .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -57px;
+    background-size: 225px 215px
+}
+
+.country-select-mc .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -77px -57px;
+    background-size: 225px 215px
+}
+
+.country-select-si .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -114px -57px;
+    background-size: 225px 215px
+}
+
+.country-select-sg .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -152px -57px;
+    background-size: 225px 215px
+}
+
+.country-select-nz .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -189px -57px;
+    background-size: 225px 215px
+}
+
+.country-select-jp .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -83px;
+    background-size: 225px 215px
+}
+
+.country-select-be .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -83px;
+    background-size: 225px 215px
+}
+
+.country-select-fr .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -78px -83px;
+    background-size: 225px 215px
+}
+
+.country-select-pl .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -114px -83px;
+    background-size: 225px 215px
+}
+
+.country-select-au .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -152px -83px;
+    background-size: 225px 215px
+}
+
+.country-select-mo .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -190px -83px;
+    background-size: 225px 215px
+}
+
+.country-select-ie .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-ee .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-se .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -78px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-ch .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -115px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-us .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -153px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-fi .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -188px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-gb .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-nl .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-pt .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -188px -110px;
+    background-size: 225px 215px
+}
+
+.country-select-es .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-kr .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-hk .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -78px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-mt .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -115px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-global .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -153px -136px;
+    background-size: 225px 215px
+}
+
+.country-select-bg .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -78px -162px;
+    background-size: 225px 215px
+}
+
+.country-select-hr .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -115px -162px;
+    background-size: 225px 215px
+}
+
+.country-select-hu .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -153px -162px;
+    background-size: 225px 215px
+}
+
+.country-select-lt .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -188px -162px;
+    background-size: 225px 215px
+}
+
+.country-select-ro .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -5px -188px;
+    background-size: 225px 215px
+}
+
+.country-select-sk .country-icon {
+    background: url(//asset1.djicdn.com/assets/mobile/country-d9e745a4c87c92214e4c145f1c4e2b9a.png) no-repeat -41px -188px;
+    background-size: 225px 215px
+}
+
+.address-title {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px
+}
+
+.support-content {
+    width: 100%;
+    background-color: #fff;
+    overflow: hidden
+}
+
+.support-content-item {
+    display: none;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden
+}
+
+    .support-content-item.active {
+        display: block
+    }
+
+    .support-content-item p {
+        margin: 0px;
+        padding: 0px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #000
+    }
+
+    .support-content-item dt.item-title, .support-content-item dd.item-line {
+        width: 100%;
+        border-top: 1px solid #ddd;
+        box-sizing: border-box
+    }
+
+    .support-content-item dt.item-title {
+        padding: 10px 15px;
+        background-color: #e5e5e5
+    }
+
+        .support-content-item dt.item-title p {
+            text-align: center
+        }
+
+        .support-content-item dt.item-title .text-red {
+            color: red
+        }
+
+    .support-content-item dd.item-line {
+        margin: 0px;
+        overflow: hidden
+    }
+
+        .support-content-item dd.item-line p {
+            padding: 10px 15px;
+            color: #434343;
+            box-sizing: border-box
+        }
+
+            .support-content-item dd.item-line p.last {
+                margin: 15px 0;
+                color: #707070
+            }
+
+        .support-content-item dd.item-line a {
+            display: block;
+            margin: 0px;
+            padding: 10px 15px;
+            color: #006eb9;
+            font-size: 12px;
+            line-height: 14px;
+            word-break: break-word;
+            box-sizing: border-box
+        }
+
+        .support-content-item dd.item-line p.line-title {
+            float: left;
+            width: 28%;
+            padding-right: 0px
+        }
+
+        .support-content-item dd.item-line p.line-text, .support-content-item dd.item-line a.line-link {
+            float: left;
+            width: 72%;
+            min-height: 48px;
+            border-left: 1px solid #d5dfe8
+        }
+
+    .support-content-item.support-content-china dt.item-title p {
+        text-align: left;
+        font-size: 14px;
+        color: #000
+    }
+
+    .support-content-item.support-content-china dd.item-line p.line-title {
+        float: left;
+        width: 44%;
+        padding-right: 0px
+    }
+
+    .support-content-item.support-content-china dd.item-line p.line-text, .support-content-item.support-content-china dd.item-line a.line-link {
+        float: left;
+        width: 56%;
+        min-height: 34px;
+        border-left: 1px solid #ddd
+    }
+
+    .support-content-item dd.item-line p.line-text.last {
+        width: 100%
+    }
+
+    .support-content-item dd.item-line.item-th p {
+        font-weight: 900
+    }
+
+.paypal-ec-summary {
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid #e7e7e7;
+    padding: 10px
+}
+
+    .paypal-ec-summary .order-table .left {
+        padding-left: 0px
+    }
+
+    .paypal-ec-summary .order-table .right {
+        padding-right: 0px
+    }
+
+.nav-wrap {
+    background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12);
+    position: fixed;
+    top: 0px;
+    z-index: 2000;
+    width: 100%
+}
+
+    .nav-wrap .navbar-header {
+        height: 55px
+    }
+
+    .nav-wrap .navbar-toggle {
+        float: left
+    }
+
+    .nav-wrap .logo-link {
+        display: block;
+        width: 100%;
+        height: 55px;
+        background: url(//asset1.djicdn.com/assets/mobile/store-logo@2x-549bb8abcd3061c487059445d73b8d55.png) center no-repeat;
+        background-size: 90px
+    }
+
+    .nav-wrap .navbar-menu {
+        box-sizing: border-box;
+        position: fixed;
+        top: 55px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-top: 1px solid #F7F8F9;
+        background: #f7f8f9;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch
+    }
+
+        .nav-wrap .navbar-menu a:hover {
+            text-decoration: none
+        }
+
+        .nav-wrap .navbar-menu .get-go-app {
+            display: block;
+            padding-left: 15px;
+            margin-bottom: 10px;
+            line-height: 54px;
+            background: #fff;
+            color: #707473
+        }
+
+        .nav-wrap .navbar-menu .user-info {
+            height: 74px;
+            background: #F7F8F9;
+            padding-top: 20px
+        }
+
+            .nav-wrap .navbar-menu .user-info .user-photo {
+                float: left;
+                padding-right: 10px
+            }
+
+                .nav-wrap .navbar-menu .user-info .user-photo img {
+                    height: 42px;
+                    width: 42px;
+                    border-radius: 50%;
+                    display: inline-block;
+                    border: solid 1px rgba(0,0,0,0.08);
+                    margin-left: 16px
+                }
+
+            .nav-wrap .navbar-menu .user-info .login-info {
+                color: #008374;
+                float: left
+            }
+
+                .nav-wrap .navbar-menu .user-info .login-info a {
+                    color: #008374
+                }
+
+        .nav-wrap .navbar-menu ul {
+            background: #fff;
+            padding: 0px;
+            margin-bottom: 10px
+        }
+
+            .nav-wrap .navbar-menu ul li {
+                list-style: none;
+                padding: 17px 15px;
+                border-bottom: 1px solid #f7f8f9
+            }
+
+                .nav-wrap .navbar-menu ul li a {
+                    font-size: 14px;
+                    color: #999;
+                    text-transform: uppercase;
+                    text-decoration: none
+                }
+
+    .nav-wrap .navbar-site-header {
+        opacity: 1
+    }
+
+        .nav-wrap .navbar-site-header.close {
+            opacity: 1
+        }
+
+    .nav-wrap .shopping-cart {
+        float: right;
+        padding-top: 18px;
+        padding-right: 5px
+    }
+
+        .nav-wrap .shopping-cart #btn-shopping-cart {
+            display: inline-block;
+            height: 19px;
+            width: 22px;
+            background: url(//asset1.djicdn.com/assets/mobile/cart@2x-55b68b8c543e1ae5a30a91d51163f973.png) center no-repeat;
+            position: relative;
+            background-size: 22px 19px
+        }
+
+    .nav-wrap #product-help {
+        overflow: hidden;
+        background: #fff
+    }
+
+        .nav-wrap #product-help h2 {
+            overflow: hidden;
+            padding-bottom: 7px;
+            padding-left: 15px;
+            margin-top: 8px
+        }
+
+            .nav-wrap #product-help h2 span {
+                font-size: 16px;
+                color: #4a4a4a;
+                text-transform: uppercase;
+                font-weight: 400
+            }
+
+        .nav-wrap #product-help ul {
+            padding-top: 10px;
+            padding-bottom: 0px;
+            overflow: hidden
+        }
+
+            .nav-wrap #product-help ul li {
+                width: 33.33%;
+                float: left;
+                text-align: center;
+                border-bottom: none;
+                padding: 17px 15px
+            }
+
+                .nav-wrap #product-help ul li a .icon {
+                    height: 30px
+                }
+
+                .nav-wrap #product-help ul li a img {
+                    height: 30px
+                }
+
+                .nav-wrap #product-help ul li a p {
+                    font-size: 12px;
+                    color: #707473;
+                    padding-top: 10px;
+                    text-transform: uppercase
+                }
+
+                .nav-wrap #product-help ul li a:hover {
+                    text-decoration: none
+                }
+
+.btn-gray {
+    background: white !important;
+    border: 1px solid #4a4a4a !important;
+    border-radius: 30px !important;
+    padding: 13px 14px;
+    color: #4a4a4a !important;
+    font-size: 14px !important;
+    width: 100%;
+    text-transform: uppercase
+}
+
+.btn-fixed {
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px
+}
+
+    .btn-fixed .btn {
+        text-transform: uppercase !important;
+        height: 55px !important;
+        background: #008374 !important;
+        margin-bottom: 0px !important;
+        border-radius: 0px;
+        font-weight: lighter
+    }
+
+#custom-info h2 {
+    margin-top: 0px;
+    margin-bottom: 0px
+}
+
+    #custom-info h2 span {
+        color: #707473;
+        font-size: 15px;
+        padding: 20px 0;
+        text-transform: uppercase;
+        display: block;
+        font-weight: 400
+    }
+
+.cart-num {
+    padding-top: 4px;
+    position: absolute;
+    background-color: #fc495f;
+    top: -15px;
+    right: -12px;
+    font-size: 10px;
+    border-radius: 50%;
+    color: #fff;
+    height: 24px;
+    width: 24px;
+    text-align: center
+}
+
+.menu-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    width: 54px;
+    height: 54px;
+    margin: 0px;
+    outline: none
+}
+
+.menu-icon-rect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: transform ease-in .2s;
+    -webkit-transition: -webkit-transform ease-in .2s;
+    transition: -webkit-transform ease-in .2s;
+    transition: transform ease-in .2s;
+    transition: transform ease-in .2s, -webkit-transform ease-in .2s
+}
+
+.rect-top {
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px)
+}
+
+.rect-bottom {
+    -webkit-transform: translateY(5px);
+    transform: translateY(5px)
+}
+
+.nav-close .rect-top {
+    -webkit-transform: translateY(0);
+    transform: translateY(0)
+}
+
+.nav-close .rect-bottom {
+    -webkit-transform: translateY(0);
+    transform: translateY(0)
+}
+
+.rect-top > i, .rect-middle > i, .rect-bottom > i {
+    position: absolute;
+    top: 27px;
+    left: 17px;
+    width: 20px;
+    height: 2px;
+    background: #6A6D69;
+    -webkit-transition: transform ease-in .25s .2s;
+    -webkit-transition: -webkit-transform ease-in .25s .2s;
+    transition: -webkit-transform ease-in .25s .2s;
+    transition: transform ease-in .25s .2s;
+    transition: transform ease-in .25s .2s, -webkit-transform ease-in .25s .2s
+}
+
+.rect-middle > i {
+    -webkit-transition: opacity ease-in .7s .02s;
+    transition: opacity ease-in .7s .02s
+}
+
+.nav-close .rect-top > i {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg)
+}
+
+.nav-close .rect-middle > i {
+    -webkit-transition: opacity ease-in .2s;
+    transition: opacity ease-in .2s;
+    opacity: 0
+}
+
+.nav-close .rect-bottom > i {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg)
+}
+
+.msg-dot {
+    display: block;
+    position: absolute;
+    z-index: 10;
+    top: 18px;
+    right: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FC495F
+}
+
+.unpaid-link {
+    display: block;
+    padding-left: 42px;
+    width: 100%;
+    height: 54px;
+    line-height: 54px;
+    color: #FC495F !important;
+    background: url(//asset1.djicdn.com/assets/mobile/unpaid_icon-2b23cd7d020aded7ac4d3f0db670c725.png) 15px center no-repeat #fff;
+    background-size: 18px;
+    padding-right: 15px
+}
+
+    .unpaid-link:after {
+        content: ' ';
+        display: inline-block;
+        float: right;
+        width: 8px;
+        height: 100%;
+        background: url(//asset1.djicdn.com/assets/mobile/icon-right-5d0d220653fcbd76536e9cbb12b08033.png) left center no-repeat;
+        background-size: 8px
+    }
+
+.terms_of_sale_title {
+    padding-top: 20px
+}
+
+.term-nav {
+    width: 100%;
+    z-index: 999;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: #fff
+}
+
+    .term-nav li {
+        float: left;
+        height: 50px;
+        list-style: none
+    }
+
+.dji-menu-title {
+    display: block;
+    margin: 0 0px;
+    height: 50px
+}
+
+.dji-menu-close-1 {
+    float: left;
+    width: 42px;
+    height: 50px
+}
+
+.dji-menu-close-1-icon {
+    margin-top: 16px;
+    height: 18px;
+    width: 18px;
+    background: url(//asset1.djicdn.com/assets/mobile/topbar_close_normal-05cc119016837f8ef9f2fe2ee5fa55d6.png) no-repeat;
+    background-size: 18px 18px;
+    display: inline-block
+}
+
+.dji-menu-title-body {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-family: "Gotham";
+    color: #707372;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 16px
+}
+
+.terms_of_sale_content {
+    padding: 15px 5px
+}
+
+    .terms_of_sale_content p {
+        word-break: break-all
+    }
+
+    .terms_of_sale_content ul {
+        padding-left: 10px
+    }
+
+.redirect-wrap .btn.form-control {
+    background: #008374 !important
+}
+
+#product-help .help-detail {
+    height: auto;
+    opacity: 1;
+    overflow: hidden;
+    line-height: 1.6;
+    text-align: center;
+    background-color: #f7f8f9;
+    color: #707473;
+    -webkit-transition: all ease 0.2s;
+    transition: all ease 0.2s
+}
+
+    #product-help .help-detail .detail-ctn {
+        padding: 15px 0
+    }
+
+    #product-help .help-detail.hidepanel {
+        height: 0;
+        opacity: 0
+    }
+
+    #product-help .help-detail p {
+        margin-bottom: 0px
+    }
+
+    #product-help .help-detail a {
+        color: #707473
+    }
+
+    #product-help .help-detail .region-name {
+        padding: 5px 0;
+        text-transform: uppercase;
+        color: #008374;
+        font-size: 14px;
+        font-weight: normal
+    }
+
+.nav-change-country {
+    line-height: 36px;
+    background: #fff;
+    text-align: center;
+    margin-top: 10px;
+    padding: 9px 0
+}
+
+    .nav-change-country span {
+        color: #707473;
+        vertical-align: middle
+    }
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+    opacity: 1 !important;
+    background: #95cef8 !important
+}
+
+.fixfixed-ios .btn-fixed {
+    position: absolute
+}
+
+.flag-icon {
+    display: inline-block;
+    width: 32px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat
+}
+
+    .flag-icon.small {
+        width: 24px;
+        height: 18px
+    }
+
+.flag-icon-bg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bg-6150f6e8b8e1721650626a4a4a0f24a3.svg)
+}
+
+.flag-icon-ad {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ad-1ae54ea64c7178af05c2ee3354a2f4ab.svg)
+}
+
+.flag-icon-ae {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ae-6ac53724e4a14c214360fa4afa2e209a.svg)
+}
+
+.flag-icon-af {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/af-290408ba2650fba53f24664f1854e410.svg)
+}
+
+.flag-icon-ag {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ag-f98b87d1d3dc725ee93adfa38c326630.svg)
+}
+
+.flag-icon-ai {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ai-92c0f852fd0c72b6fbb15d1b0da17226.svg)
+}
+
+.flag-icon-al {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/al-b83712e2fb1902557012caf562e0d5f1.svg)
+}
+
+.flag-icon-am {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/am-e836a5c926924655ff93f7e43a3763b4.svg)
+}
+
+.flag-icon-ao {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ao-52c33b2ca00613b9dcae330f46e53596.svg)
+}
+
+.flag-icon-aq {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/aq-f6b7540455ee9a80f7d1f871c9c76b4d.svg)
+}
+
+.flag-icon-ar {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ar-f8e36b01dbf47966850d973c686eca07.svg)
+}
+
+.flag-icon-as {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/as-6c0d182536b89b42714c2339f0ed6a1b.svg)
+}
+
+.flag-icon-at {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/at-945b6ff06aae52d17f3cedc053f4d06c.svg)
+}
+
+.flag-icon-au {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/au-c1e0ec35bc1ab1eb6a947a847f9b7be7.svg)
+}
+
+.flag-icon-aw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/aw-dbb88ab1bb975ca0f980a331bb3265de.svg)
+}
+
+.flag-icon-ax {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ax-73d49555649d136533326bfc21239055.svg)
+}
+
+.flag-icon-az {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/az-75976de7b256286e07030f3a64ecc486.svg)
+}
+
+.flag-icon-ba {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ba-a3ff102ad3242420a8289b057b28d37e.svg)
+}
+
+.flag-icon-bb {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bb-1cd1ec51d119887199a8cbf9181bafc5.svg)
+}
+
+.flag-icon-bd {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bd-82b102350fea220517690af23821e140.svg)
+}
+
+.flag-icon-be {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/be-b24d59dc810e343629d4e0494f0b7906.svg)
+}
+
+.flag-icon-bf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bf-adf579ba86ea0973d937a63e263385e9.svg)
+}
+
+.flag-icon-bg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bg-6150f6e8b8e1721650626a4a4a0f24a3.svg)
+}
+
+.flag-icon-bh {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bh-9d84773c0c75de6c0c282c2324531f28.svg)
+}
+
+.flag-icon-bi {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bi-8d485f383a7115b605f9f3e6549069f1.svg)
+}
+
+.flag-icon-bj {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bj-af8fa8b21c5446822bef5cb50fc66fd2.svg)
+}
+
+.flag-icon-bl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bl-24a6841d443bc3954edee62bacd0a6a0.svg)
+}
+
+.flag-icon-bm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bm-5eec2fe9f437b48040845f97ba2119f7.svg)
+}
+
+.flag-icon-bn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bn-4e7a165f7c20c80fbc4844d304dc0195.svg)
+}
+
+.flag-icon-bo {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bo-6008e44d2eb89988d8eae20d2b8c5b29.svg)
+}
+
+.flag-icon-bq {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bq-56943d7ff43ed9149d7b029f22449d1a.svg)
+}
+
+.flag-icon-br {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/br-5aef0fb70b983e9fab28f14582a4f0eb.svg)
+}
+
+.flag-icon-bs {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bs-a70fce32af303a0b9620304f227012fa.svg)
+}
+
+.flag-icon-bt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bt-5c3eb923f1b44e642cddf3d911624e89.svg)
+}
+
+.flag-icon-bv {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bv-750ae3cf1a2550819c1fabb605fd36c2.svg)
+}
+
+.flag-icon-bw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bw-6cddebc9e932a9f0e1a79dbdf1bccda2.svg)
+}
+
+.flag-icon-by {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/by-cda615fb85a3e1488bc8e19d31b9f528.svg)
+}
+
+.flag-icon-bz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/bz-7e9ae404661800a2d3d09942be67e429.svg)
+}
+
+.flag-icon-ca {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ca-39a4b817ce967e0b8c80ec177ed04c19.svg)
+}
+
+.flag-icon-cc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cc-d2e3f900d03ee2636422b4ebb98d6ec9.svg)
+}
+
+.flag-icon-cd {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cd-7c98c1fe06b42676d1dbe134b4b095b1.svg)
+}
+
+.flag-icon-cf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cf-a24655d801b09f5a1d38da53aac33dac.svg)
+}
+
+.flag-icon-cg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cg-4c5544fbe74a28d72ffbf18bec705c6c.svg)
+}
+
+.flag-icon-ch {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ch-d13372615b74ad22d0cb75dbaf4d2825.svg)
+}
+
+.flag-icon-ci {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ci-1889c7daaacadaeef71af82cffe612ee.svg)
+}
+
+.flag-icon-ck {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ck-6b89df57ef3c65e07469fed81a09a980.svg)
+}
+
+.flag-icon-cl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cl-a5411d318437f2f0c3d12df5735225de.svg)
+}
+
+.flag-icon-cm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cm-ffa29e2cb2c6ef4ad5823a8fa5159ccc.svg)
+}
+
+.flag-icon-cn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cn-3e14edf76b4e86794e188a39c884d3a1.svg)
+}
+
+.flag-icon-co {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/co-f686f46ba26774b8922025d16766f901.svg)
+}
+
+.flag-icon-cr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cr-25d500bada4cbad2ec2d3d71186b11cb.svg)
+}
+
+.flag-icon-cu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cu-52172dda2d7adf320fc79b72aac5b7af.svg)
+}
+
+.flag-icon-cv {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cv-28a01cf67dca56706bb3322bc394dc95.svg)
+}
+
+.flag-icon-cw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cw-4c256e6cc13822cae610e1224ac9510e.svg)
+}
+
+.flag-icon-cx {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cx-c168d1257cb2dffaf3bd169ee2ae8525.svg)
+}
+
+.flag-icon-cy {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cy-1f88ac4ca9f5df5a0b31e6c0af0b7edd.svg)
+}
+
+.flag-icon-cz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/cz-041a71d2c8b27c438f74ae7d1833802e.svg)
+}
+
+.flag-icon-de {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/de-85faa0a9f4d3528c38d0dc895bd48ee7.svg)
+}
+
+.flag-icon-dj {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/dj-1a213de07db89215a3085c16c4d302c2.svg)
+}
+
+.flag-icon-dk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/dk-ede7bd4f952588fc710cd33895b1c6e1.svg)
+}
+
+.flag-icon-dm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/dm-1a9281d13592a0efd1d5adbe3c540e69.svg)
+}
+
+.flag-icon-do {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/do-9c9ef44863ce81a012338452348e8c3b.svg)
+}
+
+.flag-icon-dz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/dz-fd50977bf941b787665d2f6a95b1dbcd.svg)
+}
+
+.flag-icon-ec {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ec-e8dff579959044d3ad4685832b994b91.svg)
+}
+
+.flag-icon-ee {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ee-474f11ba8ef285c899666bd55ce8b76e.svg)
+}
+
+.flag-icon-eg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/eg-6b7716cf1592ac081ebc12673bf7a019.svg)
+}
+
+.flag-icon-eh {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/eh-310eaec07c855b1bec5e3023f7aef80f.svg)
+}
+
+.flag-icon-er {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/er-a3ac389e45df83308c2ea9b3a715f66f.svg)
+}
+
+.flag-icon-es {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/es-3aaa87cfa7124c41da44d1d8d0adc88d.svg)
+}
+
+.flag-icon-et {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/et-def1a83a30abba35c32cee2b202230a7.svg)
+}
+
+.flag-icon-fi {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/fi-f53cc9bfd0010cabf420a20b09ca1265.svg)
+}
+
+.flag-icon-fj {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/fj-ee66b4e5a74139cfd5e041ba72b652aa.svg)
+}
+
+.flag-icon-fk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/fk-eae709632692d9c502a8234dce47aea7.svg)
+}
+
+.flag-icon-fm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/fm-80518d00bcb54cea7878e3dae3b70b93.svg)
+}
+
+.flag-icon-fo {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/fo-f3804ed0281a4278bcffcb9ca731f9c0.svg)
+}
+
+.flag-icon-fr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/fr-0f21359015bae9b107ed57aeb4dc7c01.svg)
+}
+
+.flag-icon-ga {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ga-90b3349c63a5514a7a9ec35a205710d6.svg)
+}
+
+.flag-icon-gb {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gb-65d3817a26178e24405f79bb0953264c.svg)
+}
+
+.flag-icon-gd {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gd-1b797462954f4b0ee9f3f1a7a2812977.svg)
+}
+
+.flag-icon-ge {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ge-9dbfc913e1bdd749350638c52d5eb815.svg)
+}
+
+.flag-icon-gf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gf-b0b6988e19d4d1a8f258574c9e403bfa.svg)
+}
+
+.flag-icon-gg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gg-ed91073c82e8c7297e24982585478ba8.svg)
+}
+
+.flag-icon-gh {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gh-c34d48828153ac2597895739864fe27a.svg)
+}
+
+.flag-icon-gi {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gi-39d78f092f19dbda45a85b9f26a4e99f.svg)
+}
+
+.flag-icon-gl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gl-f0e797c83cee76ad36348afc3253979d.svg)
+}
+
+.flag-icon-gm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gm-ceb5a65937a8160293f3a20a9c640874.svg)
+}
+
+.flag-icon-gn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gn-6acae8f9f233bed083ba33ae1295968d.svg)
+}
+
+.flag-icon-gp {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gp-0f21359015bae9b107ed57aeb4dc7c01.svg)
+}
+
+.flag-icon-gq {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gq-8e7f6cfa98c97278039d6232e99c8368.svg)
+}
+
+.flag-icon-gr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gr-a13574c8430ac575a5175ade768217db.svg)
+}
+
+.flag-icon-gs {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gs-46ec148eecc03a0e8b5f1c175a894478.svg)
+}
+
+.flag-icon-gt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gt-34e0fa14210f171cfd1159cf8522f247.svg)
+}
+
+.flag-icon-gu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gu-272215d11cb811e8467c70f8eac2fb77.svg)
+}
+
+.flag-icon-gw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gw-e371385e0c56d36c58727b51caa308d8.svg)
+}
+
+.flag-icon-gy {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gy-76270da9578c5c2d171f9fcba725a5ae.svg)
+}
+
+.flag-icon-hk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/hk-cb8124647f221e2f28226f6aba953413.svg)
+}
+
+.flag-icon-hm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/hm-aa5fa1347fc73a20c33429d0516a0783.svg)
+}
+
+.flag-icon-hn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/hn-c3ba12a58628c9de5e8cc9c4a51eac37.svg)
+}
+
+.flag-icon-hr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/hr-6d3090728cd18ef25ee4bfb81acb564c.svg)
+}
+
+.flag-icon-ht {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ht-3e0e15ff5cdc6d50f5c6825db568cd07.svg)
+}
+
+.flag-icon-hu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/hu-907e1cc6081aa9aad81707177d0324fa.svg)
+}
+
+.flag-icon-id {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/id-0e7ee5b8a7b8438cfd35098408a522f0.svg)
+}
+
+.flag-icon-ie {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ie-bc40fe95c2cdfb83a5ffac9c08824e07.svg)
+}
+
+.flag-icon-il {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/il-caf9ca9d893ee5f9550835de121f0eb7.svg)
+}
+
+.flag-icon-im {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/im-3bf52dda6c721230861c61a63e3a318e.svg)
+}
+
+.flag-icon-in {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/in-d2e9430c0462bbe621299b85a5ab3874.svg)
+}
+
+.flag-icon-io {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/io-225f54fe5e0d05238aa71008bcd758be.svg)
+}
+
+.flag-icon-iq {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/iq-2ce79d538007bdaca719c0af825e2780.svg)
+}
+
+.flag-icon-ir {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ir-164ef3d280c2a85d1ab996caf22fbec5.svg)
+}
+
+.flag-icon-is {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/is-5727820c52c893be9df7e2bb1c8bcdbf.svg)
+}
+
+.flag-icon-it {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/it-11ce01af738e522b7894f29f42437a04.svg)
+}
+
+.flag-icon-je {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/je-3bc8fb384f75856511e351c115aa4d86.svg)
+}
+
+.flag-icon-jm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/jm-8079f563dfdf3842da748ddb3ed553d3.svg)
+}
+
+.flag-icon-jo {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/jo-163b45bd980d32e1ddd33400babeb3c0.svg)
+}
+
+.flag-icon-jp {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/jp-7dc57c48f2ec0027c0f94ba5881284a7.svg)
+}
+
+.flag-icon-ke {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ke-61439d881ef75e7c4b1752883ef5c697.svg)
+}
+
+.flag-icon-kg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kg-438f61905ed86fb197047b777ddd631e.svg)
+}
+
+.flag-icon-kh {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kh-1974c3f9511ad27f2765f1ae0e7c4ad5.svg)
+}
+
+.flag-icon-ki {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ki-b33c382a78ed1b10541703efb2bb3e25.svg)
+}
+
+.flag-icon-km {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/km-7b264b4020f85a94173eea481256d3d6.svg)
+}
+
+.flag-icon-kn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kn-e540f2d9d3c2f655fa688a56e87b59cb.svg)
+}
+
+.flag-icon-kp {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kp-4dd6bab526ea3b6955b7257a7dc1de46.svg)
+}
+
+.flag-icon-kr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kr-cc2bbf0b862f34ce5c9716643fc5db26.svg)
+}
+
+.flag-icon-kw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kw-3bccd1d2a7e23152c7d0be174250d5aa.svg)
+}
+
+.flag-icon-ky {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ky-566338a1eeeadc55a42b6d5a6d23db18.svg)
+}
+
+.flag-icon-kz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/kz-7c1f605132e92220aa97839c4131730c.svg)
+}
+
+.flag-icon-la {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/la-a3af72f0aeb681198989b092f5b520d3.svg)
+}
+
+.flag-icon-lb {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lb-3c9f1712f9bf892f09a7ccbffde5dd91.svg)
+}
+
+.flag-icon-lc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lc-a6e78d6630ee1317be30592070f34b46.svg)
+}
+
+.flag-icon-li {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/li-98e9a86fcab7f3a7da247a0c9423df59.svg)
+}
+
+.flag-icon-lk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lk-471e34f2be019b26c4b57278594862de.svg)
+}
+
+.flag-icon-lr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lr-14791e90ad8e0949cbe70920b10c63e8.svg)
+}
+
+.flag-icon-ls {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ls-6207f225e65ccfd942a858a2e8e8dd12.svg)
+}
+
+.flag-icon-lt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lt-3dd84aa5180257ae6e3c11a122350b0a.svg)
+}
+
+.flag-icon-lu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lu-2a2707268fc22903c5764961947ddc11.svg)
+}
+
+.flag-icon-lv {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/lv-c790495fe2abb838892fc8c9db6dcfd7.svg)
+}
+
+.flag-icon-ly {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ly-61b0f002141961be61e8bade54c8454c.svg)
+}
+
+.flag-icon-ma {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ma-9b29a7cf490ad64af92f515c195c550b.svg)
+}
+
+.flag-icon-mc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mc-2a5633e192f4b2f933645a693be5ec38.svg)
+}
+
+.flag-icon-md {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/md-2b699a375be25d7f894543501e0f7406.svg)
+}
+
+.flag-icon-me {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/me-18fa812b1c798ce2ef93037e489c7616.svg)
+}
+
+.flag-icon-mf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mf-b0e9241d227d9ddd91e2e6657fce841f.svg)
+}
+
+.flag-icon-mg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mg-5535f3dd610370b102f638aaa44f24a3.svg)
+}
+
+.flag-icon-mh {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mh-f1b5d7fe91d91afcbc5ae52359915e86.svg)
+}
+
+.flag-icon-mk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mk-783e9caba012dc1aad050d402afaccf8.svg)
+}
+
+.flag-icon-ml {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ml-97c1285e7e054c99007d2ec5c5179c39.svg)
+}
+
+.flag-icon-mm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mm-614ff177c6646e5c38dc5af319ce0704.svg)
+}
+
+.flag-icon-mn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mn-6f8815923a3de5d890933e33ad700ea8.svg)
+}
+
+.flag-icon-mo {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mo-6b6c4a6af01260a1eaa7514c689956b0.svg)
+}
+
+.flag-icon-mp {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mp-2f01314e07bcfdf24b15300128c06db5.svg)
+}
+
+.flag-icon-mq {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mq-caa91f96b87fa0a2411f20c725c47686.svg)
+}
+
+.flag-icon-mr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mr-b6354e9375450c7caac5b25af141a3d9.svg)
+}
+
+.flag-icon-ms {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ms-c31c1b3a60692926abf8add4e1fbe995.svg)
+}
+
+.flag-icon-mt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mt-4364e6de5519f75d5535bce20f79b43f.svg)
+}
+
+.flag-icon-mu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mu-85e0082797751bdf54a57e699e4e8478.svg)
+}
+
+.flag-icon-mv {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mv-33bff755ebc604ff73e5fcce60c647b0.svg)
+}
+
+.flag-icon-mw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mw-6e990f99f29e53537acb000b43cdabfb.svg)
+}
+
+.flag-icon-mx {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mx-f01822a2dc1f2a3ad236d0965ad8a88a.svg)
+}
+
+.flag-icon-my {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/my-b027fcd85fda8fc916f880900a0e97e8.svg)
+}
+
+.flag-icon-mz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/mz-e981a89aa667d6814573212ab1734164.svg)
+}
+
+.flag-icon-na {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/na-dcd42c0d33d0ed63d4a48e5e8d54df18.svg)
+}
+
+.flag-icon-nc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/nc-6965dcf8fb9325195d3ce0fe79cc1f35.svg)
+}
+
+.flag-icon-ne {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ne-920d7cacc2042766345ac7cfd16d23fb.svg)
+}
+
+.flag-icon-nf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/nf-d067377451f8a2e069842d0735cf2dec.svg)
+}
+
+.flag-icon-ng {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ng-7406bf78795cb827f4aff0c6a70eaccf.svg)
+}
+
+.flag-icon-ni {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ni-d1a20c02e2c46732eb20a50a7ea8c8ec.svg)
+}
+
+.flag-icon-nl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/nl-c004f96847a71db49418fbfef4906892.svg)
+}
+
+.flag-icon-no {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/no-15e400ff7a9156492367374e920d9740.svg)
+}
+
+.flag-icon-np {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/np-6f2af9cb1ac9a042b5eda7c2214cb1cf.svg)
+}
+
+.flag-icon-nr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/nr-1183ee0d981a88a6adf03333bdfde002.svg)
+}
+
+.flag-icon-nu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/nu-047829f65123751176d851c5ba14072e.svg)
+}
+
+.flag-icon-nz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/nz-aafe147957873d44cfe2a9add85632cb.svg)
+}
+
+.flag-icon-om {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/om-bc1fe8ead301c8894e57b8d1029a4f11.svg)
+}
+
+.flag-icon-pa {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pa-6a8612a9876aa18a99beac5339baad76.svg)
+}
+
+.flag-icon-pe {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pe-678e1e9dcc1bf434392150e8b5e3af6d.svg)
+}
+
+.flag-icon-pf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pf-80b71a6c69afaa2034354773a0b4acd2.svg)
+}
+
+.flag-icon-pg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pg-99afd001e2cb124d415cd5f5759e7549.svg)
+}
+
+.flag-icon-ph {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ph-59998e386bfbc9602bb4a511482d9d67.svg)
+}
+
+.flag-icon-pk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pk-80494aba1cb3bc7c43446eb2e625f41a.svg)
+}
+
+.flag-icon-pl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pl-36519dfe86b61737b3dff1f83eb010a1.svg)
+}
+
+.flag-icon-pm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pm-b28e5df15b58c0848269b34d74dba398.svg)
+}
+
+.flag-icon-pn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pn-68394b9772b864fcf66886d1fe02c26a.svg)
+}
+
+.flag-icon-pr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pr-4a55d20408868eee4e587b9d1f704740.svg)
+}
+
+.flag-icon-ps {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ps-6c518043af00847cad4c937db29282eb.svg)
+}
+
+.flag-icon-pt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pt-38826cd7194c31132ab52c54ea644bda.svg)
+}
+
+.flag-icon-pw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/pw-115ac83c2b9396bd7530372f8fbf6f89.svg)
+}
+
+.flag-icon-py {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/py-c64ba1e628f0539b17be4dab1fbadbd0.svg)
+}
+
+.flag-icon-qa {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/qa-b26da5a247b253b077ebe066b415166b.svg)
+}
+
+.flag-icon-re {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/re-1fd8f762d556921a926f15bb074ea5f3.svg)
+}
+
+.flag-icon-ro {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ro-e83e39ef95897da5481e0fbbebce6ce5.svg)
+}
+
+.flag-icon-rs {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/rs-a7e080536ff67e8979ab6399dd4d1e8a.svg)
+}
+
+.flag-icon-ru {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ru-99e48c428c52b6ed4767027223e2e858.svg)
+}
+
+.flag-icon-rw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/rw-de9209b101df8318e8e4a1396d15c96b.svg)
+}
+
+.flag-icon-sa {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sa-793cfa847a12cc72d84d3fee7978ebcb.svg)
+}
+
+.flag-icon-sb {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sb-5901de311eb261b9dfaf1ad04bcf31cf.svg)
+}
+
+.flag-icon-sc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sc-3ff8e1d21c7d73879597a330997a239a.svg)
+}
+
+.flag-icon-sd {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sd-5165a088daa0c732720dbedb27fc2d9a.svg)
+}
+
+.flag-icon-se {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/se-ff8e35ce919b487719e53745c868799e.svg)
+}
+
+.flag-icon-sg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sg-3de4e5bcccbccb510b71291535e7d2e7.svg)
+}
+
+.flag-icon-sh {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sh-9546139a436f42cec4eb41c81701a6ee.svg)
+}
+
+.flag-icon-si {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/si-57d3363fc2f61e62bad699c409414cf4.svg)
+}
+
+.flag-icon-sj {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sj-65265faebdcd73b23cec6119b5b21068.svg)
+}
+
+.flag-icon-sk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sk-350267c59b1b67554badd2883c541dee.svg)
+}
+
+.flag-icon-sl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sl-fa3c72f0ba9b1bc5a86cbbc00af2151f.svg)
+}
+
+.flag-icon-sm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sm-e284f55df1e91992538a54da872e477c.svg)
+}
+
+.flag-icon-sn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sn-4f1944c6a30eae99b9f5b477da9e3ad3.svg)
+}
+
+.flag-icon-so {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/so-f009c17ef8f866ee115bc1fdfacbda02.svg)
+}
+
+.flag-icon-sr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sr-b556802150cf1912b7f28d0abbd6eb8c.svg)
+}
+
+.flag-icon-ss {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ss-dcec3870ed556cfbd37d903df94bd1c3.svg)
+}
+
+.flag-icon-st {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/st-1e83d6eb850ee8d2f3e031f16d3ac449.svg)
+}
+
+.flag-icon-sv {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sv-2280a516cd9bd11b6a7484f47dbc9989.svg)
+}
+
+.flag-icon-sx {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sx-6fbbb2a8a3e05bcf05a93911a728e93e.svg)
+}
+
+.flag-icon-sy {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sy-c2f63bbbb37d70c6f1042120de9d1b8e.svg)
+}
+
+.flag-icon-sz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/sz-5b56331d7ba84ae7be6b6634721e3f76.svg)
+}
+
+.flag-icon-tc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tc-55ac77eef34529748f52aeb865fc4233.svg)
+}
+
+.flag-icon-td {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/td-fcc3802cf06d76a88fbc972b70bd2f42.svg)
+}
+
+.flag-icon-tf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tf-d7d8be8d8cbc455d3b414c749cee212d.svg)
+}
+
+.flag-icon-tg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tg-b31e3023fe7f59d4998fce5b88ca4731.svg)
+}
+
+.flag-icon-th {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/th-31e86293e0c468f90af57eac4be7f9e3.svg)
+}
+
+.flag-icon-tj {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tj-0e9bd2342eb46e115afc1ae06b5efc37.svg)
+}
+
+.flag-icon-tk {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tk-d395070ae4fa6c49d3fcf055548f8dac.svg)
+}
+
+.flag-icon-tl {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tl-13b592406da8764510f34d9f85caa443.svg)
+}
+
+.flag-icon-tm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tm-a398520a01803966136b44bb9417f7a7.svg)
+}
+
+.flag-icon-tn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tn-942e21d076f72e475ac5c4cb8b8e6f80.svg)
+}
+
+.flag-icon-to {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/to-ecdb638dc56e72346afd62656bd8e096.svg)
+}
+
+.flag-icon-tr {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tr-e3a98b42f0009e92d21b5199ce692b3b.svg)
+}
+
+.flag-icon-tt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tt-da48ff3b547e8aa9f6d7815cb93b4193.svg)
+}
+
+.flag-icon-tv {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tv-78bf01336e0e4b625899a664f05d379e.svg)
+}
+
+.flag-icon-tw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tw-6510e7ddfde4303f992aab8b7791bd72.svg)
+}
+
+.flag-icon-tz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/tz-264f65e00dd110e0bdbcfbdd10e7572f.svg)
+}
+
+.flag-icon-ua {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ua-120888486751c6eb9ad51b19ec7cc547.svg)
+}
+
+.flag-icon-ug {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ug-95eb1e7ea06aee29c549dcc914f991a1.svg)
+}
+
+.flag-icon-um {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/um-9ca0bca815db59f62d5e32d5f939a37b.svg)
+}
+
+.flag-icon-us {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/us-4fecccc045086bd12e90836e68d69273.svg)
+}
+
+.flag-icon-uy {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/uy-c757c8fd8ade7bb2dd7eae8fc14ec84c.svg)
+}
+
+.flag-icon-uz {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/uz-d4b08faccc472af4be75a70256abfb33.svg)
+}
+
+.flag-icon-va {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/va-40ef6aa3fa8c84ddfd4689187badadbf.svg)
+}
+
+.flag-icon-vc {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/vc-73b7ea363103f6230c490c27a832ec7d.svg)
+}
+
+.flag-icon-ve {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ve-7cc572f4d2b65570f9d9258d38ec6f68.svg)
+}
+
+.flag-icon-vg {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/vg-572597a199bd1ffaec510a99360b62b7.svg)
+}
+
+.flag-icon-vi {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/vi-7bb9fde5c08d93ad487a1600d2b72370.svg)
+}
+
+.flag-icon-vn {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/vn-994c94ec64ad02ece4f7c3c700538f1b.svg)
+}
+
+.flag-icon-vu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/vu-c4a202a92c3badee6b6b4b6a11033917.svg)
+}
+
+.flag-icon-wf {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/wf-25df4c2e4a9ae0da3d7ff68aad64bc25.svg)
+}
+
+.flag-icon-ws {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ws-897c5b5ee82a7752a6813ab7d6e7efc1.svg)
+}
+
+.flag-icon-ye {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/ye-e372e510ee475e8d6ac29b0793027936.svg)
+}
+
+.flag-icon-yt {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/yt-4244f05ddcfeca39cfaae8bce305044a.svg)
+}
+
+.flag-icon-za {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/za-586b59eabf9ecd97c734d4e918d992ab.svg)
+}
+
+.flag-icon-zm {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/zm-10ef565f7176173ac14169fadc2d6caf.svg)
+}
+
+.flag-icon-zw {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/zw-6ca41f7ab49699759707c4181f9a3a70.svg)
+}
+
+.flag-icon-eu {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/eu-35a17be9acb44abaa6f03b525f96cf37.svg)
+}
+
+.flag-icon-gb-eng {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gb-eng-3579c6d02f4a7469f9853a96f8f362be.svg)
+}
+
+.flag-icon-gb-sct {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gb-sct-4289a9408cccc263fb0e59cf577898ad.svg)
+}
+
+.flag-icon-gb-wls {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/gb-wls-65eaded0f387819f16fb06228fc54d24.svg)
+}
+
+.flag-icon-un {
+    background-image: url(//asset1.djicdn.com/assets/mobile/svgflags/un-bffc3130102b6d79ed973ebdcc1f8007.svg)
+}

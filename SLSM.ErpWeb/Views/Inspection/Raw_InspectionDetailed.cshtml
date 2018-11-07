@@ -1,0 +1,810 @@
+﻿
+@{
+    Layout = null;
+    var buyers = (DbOpertion.Models.Buyer_Producer_View)ViewBag.BuyersInfo;
+    var List_buyers = (List<DbOpertion.Models.Deliver_Buyer_View>)ViewBag.BuyersFullInfo;
+    var PrintText = ViewBag.PrintText;
+    var count = 1;
+}
+
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+<script src="~/plugins/layui/layui.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+<script src="~/plugins/layui/lay/modules/laydate.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=20181017001"></script>
+<style>
+    .layui-form-item.titlepart .layui-inline .layui-input-block {
+        margin-top: 7px;
+        min-height: initial;
+        margin-left: 80px;
+    }
+
+        .layui-form-item.titlepart .layui-inline .layui-input-block label {
+            border: none;
+            border-bottom: black solid 1px;
+            display: block;
+            width: 100%;
+            padding-right: 0px;
+        }
+
+    .layui-form-item.titlepart .layui-inline {
+        margin-bottom: 0px;
+    }
+
+    .layui-form-item.buttonGroup .layui-btn {
+        border-radius: 4px;
+        height: 45px;
+        font-weight: 100;
+        padding: 0px 35px;
+    }
+
+    #TableDiv .layui-table tr td {
+        height: 50px;
+    }
+
+    .layui-form-item.bottom_part .layui-inline .layui-input-block label {
+        border: none;
+        border-bottom: black solid 1px;
+        display: block;
+        width: 100%;
+        padding-right: 0px;
+        margin-top: 5px;
+        padding-bottom: 2px;
+        margin-left: -10px;
+    }
+</style>
+<script>
+    var layer;
+    layui.use(['layer', 'form'], function () {
+        layer = layui.layer, form = layui.form;
+    });
+    var BoxIndex = -1;
+    function qualified() {
+        if (BoxIndex !== -1) {
+            layer.msg("已有一个弹出窗口！");
+            return;
+        }
+        obj = SetObj();
+        if (obj == false) {
+            return;
+        }
+        obj.IsQualified = "qualified";
+        //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+        SuccessFunc(obj);
+    }
+
+    function NoQualified() {
+        if (BoxIndex !== -1) {
+            layer.msg("已有一个弹出窗口！");
+            return;
+        }
+        obj = SetObj();
+        if (obj == false) {
+            return;
+        }
+        obj.IsQualified = "NoQualified";
+        //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+        SuccessFunc(obj);
+    }
+
+    function ExchangeGoods() {
+        if (BoxIndex !== -1) {
+            layer.msg("已有一个弹出窗口！");
+            return;
+        }
+        obj = SetObj();
+        if (obj == false) {
+            return;
+        }
+        obj.IsQualified = "ExchangeGoods";
+        //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+        SuccessFunc(obj);
+    }
+
+    // #region name
+    function SetObj() {
+        var obj = new Object();
+        obj.Id = @buyers.Id;
+        obj.QCINSPECTOR = "@(ViewBag.UserName == null? "": ViewBag.UserName)";
+        obj.INSPECTIONDATE = $("input[name='DeveTime']").val();
+        if (obj.INSPECTIONDATE == null) {
+            layer.msg("验货日期不能为空！");
+            return false;
+        }
+        var BadInfo = "";
+        for (var i = 1; i < 10; i++) {
+            if (i <= 6){
+                var BadDesc = $("input[name='BadDesc_" + i + "']").val();
+                var BadCRI = $("input[name='BadCRI_" + i + "']").val();
+                var BadMAJ = $("input[name='BadMAJ_" + i + "']").val();
+                var BadMIN = $("input[name='BadMIN_" + i + "']").val();
+                BadInfo = BadInfo + i + ":" + BadDesc + "," + BadCRI + "," + BadMAJ + "," + BadMIN + "|";
+            }
+            else if (i == 7){
+                var BadCRI = $("input[name='BadCRI_DefectsFound']").val();
+                var BadMAJ = $("input[name='BadMAJ_DefectsFound']").val();
+                var BadMIN = $("input[name='BadMIN_DefectsFound']").val();
+                BadInfo = BadInfo + "defectsfound:" + BadCRI + "," + BadMAJ + "," + BadMIN + "|";
+            }
+            else if (i == 8){
+                var BadCRI = $("input[name='BadCRI_DefectsAllowed']").val();
+                var BadMAJ = $("input[name='BadMAJ_DefectsAllowed']").val();
+                var BadMIN = $("input[name='BadMIN_DefectsAllowed']").val();
+                BadInfo = BadInfo + "defectsallowed:" + BadCRI + "," + BadMAJ + "," + BadMIN + "|";
+            }
+            else if (i == 9){
+                var BadCRI = $("input[name='BadCRI_UnitsInspected']").val();
+                BadInfo = BadInfo + "unitsinspected:" + BadCRI;
+            }
+        }
+        obj.BadInfo = BadInfo;
+        var ProductImageInfo = "";
+        $(".basebrodertd td img").each(function () {
+            var picInfo = $(this).attr("picInfo");
+            var ImgValue = $(this).attr("src").replace("@ViewBag.AdminUrl","");
+            ProductImageInfo = ProductImageInfo + picInfo + ":" + ImgValue + "|";
+        })
+        obj.ProductImageInfo = ProductImageInfo;
+        return obj;
+    }
+
+    function SuccessFunc(obj) {
+        //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+        jQuery.axpost("../../Api/Inspection/InspectionReportInfo", JSON.stringify(obj), function () {
+            location.reload();
+        });
+    }
+    var ImgItem;
+    $(function () {
+         $(".basebrodertd td img").click(function () {
+            $("#upImg").val("");
+            $("#upImg").trigger("click");
+            ImgItem = $(this);
+        })
+    })
+
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(ImgItem).attr('src', res);
+            $(ImgItem).parent().find('input').val(res);
+        });
+    }
+    // #endregion
+
+    //#region 关闭
+    function CloseBtn() {
+        var tab = parent.tab;
+        tab.deleteTab(tab.getCurrentTabId());
+    }
+    //#endregion
+
+    function PrintBtnInfo() {
+        
+        var countstr = $("body.bodyInfo").html();
+        var newstr = $("div.来料检验报告").html();
+        $("body.bodyInfo").html(newstr);
+        var tata = document.execCommand("print");/* window.print(); 调用打印的功能*/
+        if (tata) {  //点击取消后执行的操作
+            $("body.bodyInfo").html(newstr);
+            window.location.reload();
+        }
+    }
+</script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>采购入库详情信息</title>
+</head>
+<body class="bodyInfo">
+    <form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+        <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+    </form>
+    <div id="Div1">
+        <div style="margin:0px; background-color: white; margin:0 10px;min-width:1400px">
+
+            <input type="hidden" id="IsDeliverCompany" value="@buyers.DeliverCompany" />
+            <div class="来料检验报告" style="padding-top: 20px;">
+                <style>
+                    .IncomingInspectionReportSheet {
+                        font-family: Microsoft YaHei;
+                        font-size: 13px;
+                        border-collapse: collapse;
+                        margin-left: 18px;
+                        width: 765px;
+                    }
+
+                        .IncomingInspectionReportSheet .titletd td {
+                            height: 70px;
+                            background-color: #008375;
+                            color: white;
+                            padding-left: 5px;
+                            font-size: 25px;
+                            font-weight: bold;
+                            font-weight: bold;
+                            text-align: center;
+                        }
+
+                        .IncomingInspectionReportSheet .blanktd {
+                            height: 3px;
+                        }
+
+                        .IncomingInspectionReportSheet .titlebasetd {
+                            height: 26px;
+                            border: 1px solid black;
+                        }
+
+                            .IncomingInspectionReportSheet .titlebasetd td {
+                                background-color: #ffff00;
+                                text-align: center;
+                            }
+
+                        .IncomingInspectionReportSheet .baseEmptybrodertd {
+                            height: 26px;
+                        }
+
+                            .IncomingInspectionReportSheet .baseEmptybrodertd td {
+                                border: 1px solid black;
+                                text-align: center;
+                                height: 26px;
+                            }
+
+                        .IncomingInspectionReportSheet .basebrodertd td {
+                            border: 1px solid black;
+                            text-align: center;
+                            height: 31px;
+                        }
+
+                            .IncomingInspectionReportSheet .basebrodertd td.gray {
+                                background-color: #D9D9D9;
+                                text-align: left;
+                                padding-left: 3px;
+                            }
+
+                            .IncomingInspectionReportSheet .basebrodertd td.grayinfo {
+                                background-color: #D9D9D9;
+                                text-align: center;
+                                line-height: 22px;
+                            }
+
+                            .IncomingInspectionReportSheet .basebrodertd td.graydoubleinfo {
+                                background-color: #D9D9D9;
+                                text-align: center;
+                                height: 26px;
+                            }
+
+                        .IncomingInspectionReportSheet td .layerInput {
+                            width: 95%;
+                            height: 90%;
+                            border: 0px;
+                            padding-left: 5px;
+                            text-align: center;
+                        }
+                </style>
+                <table class="IncomingInspectionReportSheet" cellpadding="0" cellspacing="0">
+                    <colgroup>
+                        <col style="width: 84px" />
+                        <col style="width: 84px" />
+                        <col style="width: 93px" />
+                        <col style="width: 92px" />
+                        <col style="width: 93px" />
+                        <col style="width: 94px" />
+                        <col style="width: 122px" />
+                        <col style="width: 102px" />
+                    </colgroup>
+                    <tbody>
+                        <tr class="titletd">
+                            <td colspan="8">
+                                宁波赛龙礼品有限公司 来料检验报告
+                            </td>
+                        </tr>
+                        <tr class="blanktd">
+                            <td colspan="8"></td>
+                        </tr>
+                        <!--工单头部信息开始-->
+                        <tr class="basebrodertd">
+                            <td class="gray" colspan="2">
+                                验货报告号/REPORT NO:
+                            </td>
+                            <td colspan="2">
+                                @buyers.BuyerNo
+                            </td>
+                            <td class="gray" colspan="2">
+                                采购合同号/PO NO:
+                            </td>
+                            <td colspan="2">
+                                @buyers.BuyerNo.Split('-')[0]
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td class="gray" colspan="2">
+                                供应商名称/VENDOR:
+                            </td>
+                            <td colspan="2">
+                                @buyers.Name
+                            </td>
+                            <td class="gray" colspan="2">
+                                采购员/MERCHANDISER:
+                            </td>
+                            <td colspan="2">
+                                @buyers.SinglePerson
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td class="gray" colspan="2">
+                                验货员/QC INSPECTOR:
+                            </td>
+                            <td colspan="2">
+                                @if (PrintText != 1 && buyers.buyerStatus == "待送货品检")
+                                {
+                                    @(ViewBag.UserName)
+                                }
+                                else
+                                {
+                                    @buyers.QCINSPECTOR
+                                }
+
+                            </td>
+                            <td class="gray" colspan="2">
+                                验货日期/INSPECTION DATE:
+                            </td>
+                            <td colspan="2">
+                                <input type="text" name="DeveTime" id="date" lay-verify="date" class="layui-input" onclick="laydate({elem: this})" value="@(buyers.INSPECTIONDATE==null?DateTime.Now.ToShortDateString():buyers.INSPECTIONDATE.Value.ToShortDateString())" style="text-align: center;">
+                            </td>
+                        </tr>
+                        <tr class="blanktd">
+                            <td colspan="8"></td>
+                        </tr>
+                        <!--工单头部信息结束-->
+                        <!--SKU#开始-->
+                        <tr class="basebrodertd" style="height: 49px;">
+                            <td colspan="2" class="grayinfo">
+                                SKU#
+                            </td>
+                            <td colspan="2" class="grayinfo">
+                                中文品名<br />
+                                (DESCRIPTION)
+                            </td>
+                            <td class="grayinfo">
+                                颜色<br />
+                                (COLOUR)
+                            </td>
+                            <td class="grayinfo">
+                                订单数量<br />
+                                (QTY)
+                            </td>
+                            <td class="grayinfo">
+                                验货数量<br />
+                                INSPECTION QTY
+                            </td>
+                            <td class="grayinfo">
+                                单位<br />
+                                (UNIT)
+                            </td>
+                        </tr>
+                        @foreach (var item in List_buyers)
+                        {
+                            <tr class="basebrodertd">
+                                <td colspan="2">
+                                    @item.Color
+                                </td>
+                                <td colspan="2">
+                                    @item.ChinaProductName
+                                </td>
+                                <td>
+                                    @item.ChinaDescribe
+                                </td>
+                                <td>
+                                    @item.ParentCount
+                                </td>
+                                <td>
+                                    @item.buyerCount
+                                </td>
+                                <td>
+                                    @item.ChinaUnit
+                                </td>
+                            </tr>
+                        }
+                        <!--SKU#结束-->
+                        <!--检验明细开始-->
+                        <tr class="titlebasetd">
+                            <td colspan="8" style="text-align: left;padding-left: 5px;">
+                                INSPECTION DETAILS/检验明细:
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td rowspan="2" class="graydoubleinfo" style="text-align: center;">
+                                NO.
+                            </td>
+                            <td rowspan="2" colspan="4" class="graydoubleinfo" style="text-align: left;padding-left: 3px;">
+                                不良描述/DEFECTS DESCRIPTION
+                            </td>
+                            <td colspan="3" class="graydoubleinfo">
+                                不良品数量/DEFECTS QTY
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td class="graydoubleinfo">
+                                CRI
+                            </td>
+                            <td class="graydoubleinfo">
+                                MAJ
+                            </td>
+                            <td class="graydoubleinfo">
+                                MIN
+                            </td>
+                        </tr>
+                        @{
+                            var BadInfoList = new List<string>();
+                            if (buyers.BadInfo != null)
+                            {
+                                BadInfoList = buyers.BadInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            }
+                            string badInfo = "";
+                        }
+                        @for (int i = 1; i <= 6; i++)
+                        {
+                            badInfo = BadInfoList.Where(p => p.Contains($"{i}:")).FirstOrDefault();
+                            if (badInfo != null)
+                            {
+                                var badColonArray = badInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                if (badColonArray.Count > 1)
+                                {
+                                    var badDetailInfo = badColonArray[1].Split(',').ToList();
+                                    <tr class="baseEmptybrodertd">
+                                        <td>@i</td>
+                                        <td colspan="4">
+                                            <input name="BadDesc_@(i)" value="@badDetailInfo[0]" class="layerInput" style="text-align:left;" />
+                                        </td>
+                                        <td>
+                                            <input name="BadCRI_@(i)" value="@badDetailInfo[1]" class="layerInput" />
+                                        </td>
+                                        <td>
+                                            <input name="BadMAJ_@(i)" value="@badDetailInfo[2]" class="layerInput" />
+                                        </td>
+                                        <td>
+                                            <input name="BadMIN_@(i)" value="@badDetailInfo[3]" class="layerInput" />
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr class="baseEmptybrodertd">
+                                        <td>@i</td>
+                                        <td colspan="4">
+                                            <input name="BadDesc_@(i)" value="" class="layerInput" style="text-align:left;" />
+                                        </td>
+                                        <td>
+                                            <input name="BadCRI_@(i)" value="" class="layerInput" />
+                                        </td>
+                                        <td>
+                                            <input name="BadMAJ_@(i)" value="" class="layerInput" />
+                                        </td>
+                                        <td>
+                                            <input name="BadMIN_@(i)" value="" class="layerInput" />
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+                            else
+                            {
+                                <tr class="baseEmptybrodertd">
+                                    <td>@i</td>
+                                    <td colspan="4">
+                                        <input name="BadDesc_@(i)" class="layerInput" style="text-align:left;" />
+                                    </td>
+                                    <td>
+                                        <input name="BadCRI_@(i)" class="layerInput" />
+                                    </td>
+                                    <td>
+                                        <input name="BadMAJ_@(i)" class="layerInput" />
+                                    </td>
+                                    <td>
+                                        <input name="BadMIN_@(i)" class="layerInput" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <tr class="basebrodertd">
+                            <td colspan="5" class="gray" style="text-align:right;padding-right:5px;border-bottom: none; ">
+                                总不良数量（Defects Found）
+                            </td>
+                            @{
+                                badInfo = BadInfoList.Where(p => p.ToLower().Contains($"defectsfound:")).FirstOrDefault();
+                            }
+                            @if (badInfo != null)
+                            {
+                                var badColonArray = badInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                if (badColonArray.Count > 1)
+                                {
+                                    var badDetailInfo = badColonArray[1].Split(',').ToList();
+                                    <td><input name="BadCRI_DefectsFound" value="@badDetailInfo[0]" class="layerInput" /></td>
+                                    <td><input name="BadMAJ_DefectsFound" value="@badDetailInfo[1]" class="layerInput" /></td>
+                                    <td><input name="BadMIN_DefectsFound" value="@badDetailInfo[2]" class="layerInput" /></td>
+                                }
+                                else
+                                {
+                                    <td><input name="BadCRI_DefectsFound" class="layerInput" /></td>
+                                    <td><input name="BadMAJ_DefectsFound" class="layerInput" /></td>
+                                    <td><input name="BadMIN_DefectsFound" class="layerInput" /></td>
+                                }
+
+                            }
+                            else
+                            {
+                                <td><input name="BadCRI_DefectsFound" class="layerInput" /></td>
+                                <td><input name="BadMAJ_DefectsFound" class="layerInput" /></td>
+                                <td><input name="BadMIN_DefectsFound" class="layerInput" /></td>
+                            }
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td colspan="5" class="gray" style="text-align:right;padding-right:5px;border-bottom: none; border-top: none; ">
+                                最大允许接受不良数量（Defects Allowed）
+                            </td>
+                            @{
+                                badInfo = BadInfoList.Where(p => p.ToLower().Contains($"defectsallowed:")).FirstOrDefault();
+                            }
+                            @if (badInfo != null)
+                            {
+                                var badColonArray = badInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                if (badColonArray.Count > 1)
+                                {
+                                    var badDetailInfo = badColonArray[1].Split(',').ToList();
+                                    <td><input name="BadCRI_DefectsAllowed" value="@badDetailInfo[0]" class="layerInput" /></td>
+                                    <td><input name="BadMAJ_DefectsAllowed" value="@badDetailInfo[1]" class="layerInput" /></td>
+                                    <td><input name="BadMIN_DefectsAllowed" value="@badDetailInfo[2]" class="layerInput" /></td>
+                                }
+                                else
+                                {
+                                    <td><input name="BadCRI_DefectsAllowed" class="layerInput" /></td>
+                                    <td><input name="BadMAJ_DefectsAllowed" class="layerInput" /></td>
+                                    <td><input name="BadMIN_DefectsAllowed" class="layerInput" /></td>
+                                }
+                            }
+                            else
+                            {
+                                <td><input name="BadCRI_DefectsAllowed" class="layerInput" /></td>
+                                <td><input name="BadMAJ_DefectsAllowed" class="layerInput" /></td>
+                                <td><input name="BadMIN_DefectsAllowed" class="layerInput" /></td>
+                            }
+
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td colspan="5" class="gray" style="text-align:right;padding-right:5px;border-top: none; ">
+                                抽样数量 （Units Inspected）
+                            </td>
+                            @{
+                                badInfo = BadInfoList.Where(p => p.ToLower().Contains($"unitsinspected:")).FirstOrDefault();
+                            }
+                            @if (badInfo != null)
+                            {
+                                var badColonArray = badInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                if (badColonArray.Count > 1)
+                                {
+                                    <td colspan="2"><input name="BadCRI_UnitsInspected" value="@badColonArray[1]" class="layerInput" /></td>
+                                }
+                                else
+                                {
+                                    <td colspan="2"><input name="BadCRI_UnitsInspected" value="" class="layerInput" /></td>
+                                }
+                            }
+                            else
+                            {
+                                <td colspan="2"><input name="BadCRI_UnitsInspected" value="" class="layerInput" /></td>
+                            }
+
+                            <td class="gray" style="text-align: center;">PCS/SETS</td>
+                        </tr>
+                        <tr class="blanktd">
+                            <td colspan="8"></td>
+                        </tr>
+                        <!--检验明细结束-->
+                        <!--检验结果开始-->
+                        <tr class="titlebasetd">
+                            <td colspan="8" style="text-align: left;padding-left: 5px;">
+                                INSPECTION RESULT/检验结果：
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td colspan="2" class="grayinfo" style="text-align: left;padding-left: 5px;">
+                                1, ACCEPTABLE/合格
+                            </td>
+                            <td colspan="2">
+                                @if (buyers.checkStatus == "品检合格")
+                                {
+                                    <label>合格</label>
+                                }
+                            </td>
+                            <td colspan="4" rowspan="2" style="text-align: left;vertical-align: top;">
+                                备注(Remarks)：
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd">
+                            <td colspan="2" class="grayinfo" style="text-align: left;padding-left: 5px;">
+                                2, REJECT//不合格
+                            </td>
+                            <td colspan="2">
+                                @if (buyers.checkStatus != "品检合格" && buyers.checkStatus != null)
+                                {
+                                    <label>不合格</label>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="blanktd">
+                            <td colspan="8"></td>
+                        </tr>
+                        <!--检验结果结束-->
+                        <!--检验结果开始-->
+                        @{
+                            List<string> productImageList = new List<string>();
+                            var ImageInfo = "";
+                            if (buyers.ProductImageInfo != null)
+                            {
+                                productImageList = buyers.ProductImageInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            }
+                        }
+                        <tr class="titlebasetd">
+                            <td colspan="4">
+                                产品整体图片
+                            </td>
+                            <td colspan="4">
+                                产品印刷细节照片
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd" style="height: 200px;">
+                            <td colspan="4">
+                                @{
+                                    ImageInfo = productImageList.Where(p => p.Contains("OverallPicture:")).FirstOrDefault();
+                                }
+                                @if (ImageInfo != null)
+                                {
+                                    var ImageArray = ImageInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    if (ImageArray.Count > 1)
+                                    {
+                                        <img src="@ViewBag.AdminUrl@ImageArray[1]" picInfo="OverallPicture" style="height: 180px;max-width:340px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="OverallPicture" style="height: 180px;max-width:340px;" />
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="OverallPicture" style="height: 180px;max-width:340px;" />
+                                }
+                            </td>
+                            <td colspan="4">
+                                @{
+                                    ImageInfo = productImageList.Where(p => p.Contains("PrintingDetailsPicture:")).FirstOrDefault();
+                                }
+                                @if (ImageInfo != null)
+                                {
+                                    var ImageArray = ImageInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    if (ImageArray.Count > 1)
+                                    {
+                                        <img src="@ViewBag.AdminUrl@ImageArray[1]" picInfo="PrintingDetailsPicture" style="height: 180px;max-width:340px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="PrintingDetailsPicture" style="height: 180px;max-width:340px;" />
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="PrintingDetailsPicture" style="height: 180px;max-width:340px;" />
+                                }
+                            </td>
+                        </tr>
+                        <tr class="titlebasetd">
+                            <td colspan="4">
+                                产品问题点图片
+                            </td>
+                            <td colspan="4">
+                                产品问题点图片
+                            </td>
+                        </tr>
+                        <tr class="basebrodertd" style="height: 200px;">
+                            <td colspan="4">
+                                @{
+                                    ImageInfo = productImageList.Where(p => p.Contains("ProblemPicture1:")).FirstOrDefault();
+                                }
+                                @if (ImageInfo != null)
+                                {
+                                    var ImageArray = ImageInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    if (ImageArray.Count > 1)
+                                    {
+                                        <img src="@ViewBag.AdminUrl@ImageArray[1]" picInfo="ProblemPicture1" style="height: 180px;max-width:340px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="ProblemPicture1" style="height: 180px;max-width:340px;" />
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="ProblemPicture1" style="height: 180px;max-width:340px;" />
+                                }
+                            </td>
+                            <td colspan="4">
+                                @{
+                                    ImageInfo = productImageList.Where(p => p.Contains("ProblemPicture2:")).FirstOrDefault();
+                                }
+                                @if (ImageInfo != null)
+                                {
+                                    var ImageArray = ImageInfo.Split(':').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    if (ImageArray.Count > 1)
+                                    {
+                                        <img src="@ViewBag.AdminUrl@ImageArray[1]" picInfo="ProblemPicture2" style="height: 180px;max-width:340px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="ProblemPicture2" style="height: 180px;max-width:340px;" />
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="@ViewBag.AdminUrl/Base/images/NoImage.png" picInfo="ProblemPicture2" style="height: 180px;max-width:340px;" />
+                                }
+                            </td>
+                        </tr>
+                        <!--检验结果结束-->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="layui-form-item buttonGroup" style="margin:0px; background-color: white; margin:0px 10px;width:780px">
+                <div style="margin:20px 0px 10px 0px;text-align:center;">
+                    @if (PrintText != 1 && buyers.buyerStatus == "待送货品检")
+                    {
+                        <div class="layui-inline">
+                            <button id="qualified" onclick="qualified(@buyers.Id)" class=" layui-btn layui-btn-big layui-btn-normal">合格</button>
+                        </div>
+                        @*<div class="layui-inline">
+                                <button id="NoQualified" onclick="NoQualified(@buyers.Id)" class="layui-btn layui-btn-big layui-btn-danger">不合格</button>
+                            </div>*@
+                        <div class="layui-inline">
+                            <button id="NoQualified" onclick="ExchangeGoods(@buyers.Id)" class="layui-btn layui-btn-big layui-btn-danger">换货</button>
+                        </div>
+                    }
+                    else if (PrintText == 1)
+                    {
+                        <div class="layui-inline">
+                            <button id="qualified" onclick="PrintDeliver(@buyers.Id)" class=" layui-btn layui-btn-big layui-btn-normal" style="background-color:#1AA095;">打印</button>
+                        </div>
+                    }
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-normal" onclick="PrintBtnInfo()" id="CloseBtn" style="width:90px;">打印</button>
+                        <button id="CloseBtn" onclick="CloseBtn()" class="layui-btn layui-btn-big layui-btn-warm">关闭</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

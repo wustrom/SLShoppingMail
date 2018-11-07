@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Message";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var List_Message = (List<DbOpertion.Models.Message_Grant_View>)ViewBag.Message;
+}
+
+@*<div class="hiddenDiv">
+    <input type="hidden" id="hiddPageCount" value="@ViewBag.MessageCount" />
+</div>*@
+<div class="public-content-box" style="background: #f4f4f4;">
+    <!--面包屑-->
+    <div class="public-crumbs bgfff news-crumbs">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="../../Userinfo/Index"> 个人中心</a></li>
+            <li><a href="../../userInfo/Message">消息</a></li>
+        </ul>
+    </div>
+    <div class="my-news-list">
+        <ul>
+            @foreach (var item in List_Message)
+            {
+                if (item.IsWatch == false)
+                {
+                    <li class="on" onclick="LookMess(@item.Id)">
+                        <a>系统消息：@item.MainTitle</a>
+                        <button type="button" class="btn clear-btn">删除</button>
+                    </li>
+                }
+                else if (item.IsWatch == true)
+                {
+                    <li onclick="LookMess(@item.Id)">
+                        <a>系统消息：@item.MainTitle</a>
+                        <button type="button" class="btn clear-btn" onclick="DeMess(@item.Id)">删除</button>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+    <!--详细信息-->
+    <div id="MessageInfo">
+    </div>
+    <!--详细信息-->
+</div>
+@section js
+{
+    <script src="~/Current/js/UserInfo/Message.js"></script>
+}

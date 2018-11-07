@@ -1,0 +1,136 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var producer = (List<Producer>)ViewBag.Producer;
+    var ListOrders = (List<Buyer_Producer_View>)ViewBag.ListOrders;
+    var Produces = (Producer)ViewBag.Produces;
+    Producer producerInfo = new Producer();
+    var buyerMoney = ListOrders.Sum(p => p.buyerMoney);
+}
+<style>
+    .layui-form-item .layui-input-inline {
+        width: 126px;
+    }
+</style>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <input type="hidden" name="ListOrderId" value="@ViewBag.OrderId" />
+                <label class="layui-form-label">发票号码</label>
+                <div class="layui-input-block" style="width:395px;">
+                    <input type="text" name="InvoiceNumber" value="" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">开票日期</label>
+                <div class="layui-input-inline" style="width: 180px;" id="Time1">
+                    <input type="text" name="InvoiceTime" id="InvoiceTime" lay-verify="required" placeholder="请选择日期" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">选择供应商</label>
+                <div class="layui-input-block" style="width:395px">
+                    <select name="ProducerId" disabled>
+                        @foreach (var item in producer)
+                        {
+                            var selected = "";
+                            if (Produces.Id == item.Id)
+                            {
+                                selected = "selected=\"selected\"";
+                                producerInfo = item;
+                            }
+                            <option @selected value="@item.Id">@item.Abbreviation.Trim()</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="margin:0px -10px;width:85px">纳税人识别号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoiceIdentify" value="@Produces.identify" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">单位名称</label>
+                <div class="layui-input-block" style="width:395px;">
+                    <input type="text" name="CompanyName" value="@producerInfo.Name" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoicePhone" value="" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <!--地址-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="AddressInfo" value="@Produces.AddressRegion" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline" style="width:290px;">
+                <input type="text" name="AddressDetail" value="@Produces.Address" lay-verify="required" autocomplete="off" class="layui-input">
+                <input type="hidden" name="InvoiceAddress" id="InvoiceAddress" value="" />
+            </div>
+        </div>
+        <!---->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">开户行</label>
+                <div class="layui-input-block" style="width:395px;">
+                    <input type="text" name="InvoiceBank" value="@Produces.Bank" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">金额</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoiceMoney" value="@buyerMoney" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="InvoiceContext" style="width:700px;height:80px; resize:none; overflow: hidden;"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <script src="~/Current/Scripts/area.js?version=20181017001"></script>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+        <script>
+            @*layui.use(['picker'], function () {
+                var picker = layui.picker;
+                //demo1
+                var p1 = new picker();
+                p1.set({
+                    elem: '#p1',
+                    data: Areas,
+                     codeConfig: {
+                        "pathChina": "@Produces.Address",
+                        "type": 3,
+                    },
+                }).render();
+            });*@
+
+            layui.use(['form', 'layedit', 'laydate'], function () {
+                var form = layui.form(),
+                    layer = layui.layer,
+                    layedit = layui.layedit,
+                    laydate = layui.laydate;
+            });
+        </script>
+        <script src="~/Current/Scripts/Finance/Finance.js?version=20181017001"></script>
+    </form>
+</div>

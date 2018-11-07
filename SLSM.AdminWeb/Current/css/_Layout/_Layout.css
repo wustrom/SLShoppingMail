@@ -1,0 +1,14 @@
+﻿body {
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.fc {
+    clear: both;
+}

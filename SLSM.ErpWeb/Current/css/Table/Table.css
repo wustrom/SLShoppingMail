@@ -1,0 +1,21 @@
+﻿.layui-elem-quote {
+    padding: 10px;
+    border-left: none;
+    background-color:white;
+}
+
+.layui-table thead tr {
+    background-color: white;
+}
+
+.layui-form.title-part .layui-input {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form.title-part .layui-btn {
+    height: 30px;
+    padding-top: 0px;
+    line-height: 30px;
+    padding: 0 10px;
+}

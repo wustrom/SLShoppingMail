@@ -1,0 +1,164 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Images = (List<Carousel_Image>)ViewBag.Images;
+    var List_Show = (List<Commshow>)ViewBag.List_Show;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.List_Comm;
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>轮播图设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Current/css/MainShow/Carousel.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+    <script src="~/Current/Scripts/Grade/GradeShow.js?version=2.00"></script>
+    <style>
+        .layui-elem-field.carousel-content {
+            height: 190px;
+        }
+
+        .layui-elem-field.carousel-content {
+            padding-bottom: 5px;
+        }
+
+        .layui-field-box {
+            padding-bottom: 0px;
+        }
+
+        .layui-elem-field.carousel-content .layui-field-box .left-part .Left_Img {
+            width: 50%;
+            float: left;
+            height: 100%;
+        }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part .Left_Img img {
+                width: auto;
+                height: 100px;
+                max-width: 100%;
+            }
+
+        .layui-elem-field.carousel-content .layui-field-box .left-part.Nothing {
+            text-align: center;
+            padding-top: 50px;
+        }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part.Nothing label {
+                font-size: 30px;
+            }
+
+        .layui-elem-field.carousel-content .layui-field-box .left-part .Left_label {
+            width: 50%;
+            float: right;
+        }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part .Left_label .Comm_Name {
+                margin-top: 50px;
+                font-size: 18px;
+                padding-left: 10px;
+                white-space: nowrap;
+                -o-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .layui-elem-field.carousel-content .layui-field-box .left-part .Left_label .Comm_price {
+                margin-top: 20px;
+                font-size: 18px;
+                padding-left: 10px;
+            }
+    </style>
+</head>
+<body>
+    
+    <input type="hidden" id="GradeId" value="@ViewBag.GradeId" />
+    <div style="margin: 15px;">
+        <blockquote class="layui-elem-quote">
+            <form class="layui-form title-part" style="">
+                @if ((bool)ViewBag.Type)
+                {
+                    <a href="../../grade/Index" class="layui-btn layui-btn-small" id="add">
+                        分类管理
+                    </a>
+                }
+                else
+                {
+                    <a href="../../grade/scene" class="layui-btn layui-btn-small" id="add">
+                        场景管理
+                    </a>
+                }
+
+            </form>
+            <div style="clear:both;"></div>
+        </blockquote>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>展示商品设置</legend>
+        </fieldset>
+        @for (int i = 1; i <= 9; i++)
+        {
+            var commshow = List_Show.Where(p => p.OrderId == i).FirstOrDefault();
+            Commodity_Stageprice_View comm = null;
+            if (commshow != null)
+            {
+                comm = List_Comm.Where(p => p.Id == commshow.CommId).FirstOrDefault();
+            }
+            <fieldset class="layui-elem-field carousel-content">
+                <legend>展示商品第<label>@i</label>个</legend>
+                <div class="layui-field-box">
+                    @if (comm != null)
+                    {
+                        <div class="left-part">
+                            <div class="Left_Img">
+                                <center>
+                                    <img src="@comm.Image" />
+                                </center>
+                            </div>
+
+                            <div class="Left_label">
+                                <div class="Comm_Name">
+                                    @comm.Name
+                                </div>
+                                <div class="Comm_price">
+                                    @comm.minPrice
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="left-part Nothing">
+                            <label>暂无商品</label>
+                        </div>
+                    }
+                    <div class="right-part">
+                        @if (comm == null)
+                        {
+                            <button class="layui-btn" onclick="AddImage(@i)">添加</button>
+                        }
+                        else
+                        {
+                            <button class="layui-btn layui-btn-normal" onclick="EditImage(@i,@commshow.Id)">修改</button>
+                            <br />
+                            <button class="layui-btn layui-btn-danger" onclick="DeleteImage(@commshow.Id)">删除</button>
+                        }
+                    </div>
+                    <div style="clear:both;" />
+                </div>
+            </fieldset>
+        }
+
+        <div style="clear:both;" />
+    </div>
+    <script>
+        $(function () {
+        })
+    </script>
+</body>
+</html>

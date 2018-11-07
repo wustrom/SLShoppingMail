@@ -1,0 +1,105 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Invoice = ViewBag.InvoiceInfo == null ? new Producer_Invoice_View() : (Producer_Invoice_View)ViewBag.InvoiceInfo;
+    var producer = (List<Producer>)ViewBag.Producer;
+}
+<style>
+    .layui-form-item .layui-input-inline {
+        width: 126px;
+    }
+</style>
+<div style="margin: 15px;height:440px">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <input type="hidden" name="Id" value="@Invoice.Id" />
+                <label class="layui-form-label">发票号码</label>
+                <div class="layui-input-block" style="width:395px;">
+                    <input type="text" name="InvoiceNumber" value="@Invoice.InvoiceNumber" lay-verify="required" autocomplete="off" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">开票日期</label>
+                <label class="layui-form-label">@Invoice.InvoiceTime.Value.ToString("yyyy-MM-dd")</label>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">选择供应商</label>
+                <div class="layui-input-block" style="width:395px">
+                    <select name="ProducerId">
+                        @foreach (var item in producer)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="margin:0px -10px;width:85px">纳税人识别号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoiceIdentify" value="@Invoice.InvoiceIdentify" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">单位名称</label>
+                <div class="layui-input-block" style="width:395px;">
+                    <input type="text" name="CompanyName" value="@Invoice.CompanyName" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoicePhone" value="@Invoice.InvoicePhone" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <!--地址-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="AddressDetail" value="@Invoice.InvoiceAddress" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <!---->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">开户行</label>
+                <div class="layui-input-block" style="width:395px;">
+                    <input type="text" name="InvoiceBank" value="@Invoice.InvoiceBank" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">金额</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoiceMoney" value="@Invoice.InvoiceMoney" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="InvoiceContext" style="width:700px;height:80px; resize:none; overflow: hidden;">@Invoice.InvoiceContext</textarea>
+                </div>
+            </div>
+        </div>
+
+        <script src="~/Current/Scripts/area.js?version=20181017001"></script>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+        <script>
+            
+        </script>
+        <script src="~/Current/Scripts/Finance/Invoice.js?version=20181017001"></script>
+    </form>
+</div>
+

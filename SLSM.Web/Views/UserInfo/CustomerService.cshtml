@@ -1,0 +1,130 @@
+﻿
+@{
+    Layout = null;
+
+    var user = ViewBag.userinfo == null ? new DbOpertion.Models.User() : (DbOpertion.Models.User)ViewBag.userinfo;
+    string name;
+    string ServiceName;
+    int Id = 0;
+    int serviceId = 0;
+    if (user == null)
+    {
+        name = "注册";
+        Id = 0;
+    }
+    else
+    {
+        name = user.Name;
+        Id = user.Id;
+    }
+    var service = ViewBag.Service == null ? new DbOpertion.Models.Customerservice() : (DbOpertion.Models.Customerservice)ViewBag.Service;
+    if(service==null)
+    {
+        ServiceName = "";
+        serviceId =0;
+    }else
+    {
+        ServiceName = service.ServiceName;
+        serviceId = service.Id;
+    }
+}
+<div class="HideDiv">
+    <input type="hidden" id="GuiId" value="@ViewBag.userGuid" />
+    <input type="hidden" id="UserName" value="@name" />
+    <input type="hidden" id="UserId" value="@Id" />
+    <input type="hidden" id="serviceName" value="@ServiceName" />
+    <input type="hidden" id="serviceId" value="@serviceId" />
+</div>
+<script src="~/Current/js/Customer/webim.config.js"></script>
+<script src="~/Current/js/Customer/strophe-1.2.8.min.js"></script>
+<script>
+    Window.WebIM = {};
+</script>
+<script src="~/Current/js/Customer/websdk-1.4.13.js"></script>
+<script src="~/Current/js/Customer/websdk.shim.js"></script>
+<script src='http://downloads.easemob.com/downloads/cdn/websdk-1.4.11.js'></script>
+<script src="~/Current/js/Customer/Domo.js"></script>
+<script src="~/Base/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var LoginIn = true;
+
+       var AddOther = true;
+
+           var ServiceClick = true;
+
+        setInterval(function () {
+            if ($('.webim-sign .webim-button:first').length != 0 && LoginIn) {
+                $('.webim-sign .webim-button:first').trigger('click');//登录
+                LoginIn = false;
+            }
+        }, 500);
+
+        setInterval(function () {
+            var serviceName = $('#serviceName').val();
+            if (AddOther && !LoginIn) {
+                if ($('.webim-chat').length != 0) {
+                    
+                    if (serviceName != undefined) {
+                        if ($('#@service.ServiceName').length == 0) {
+                            $('.webim-leftbar div:last ul li:first').trigger('click');//添加
+                            $('.webim-dialog .webim-input').val('@service.ServiceName');//点击添加
+                            $('.webim-dialog .webim-button').trigger('click');//点击添加
+                            AddOther = false;
+                        }
+                        else {
+                            $('#@service.ServiceName').trigger('click').trigger('click');
+                            ServiceClick = false;
+                        }
+                    } else {
+                        if ($('#@service.ServiceName').length == 0) {
+                            $('.webim-chat').append('<div style = "font-size: 24px; color: #808080; padding-top: 50px; padding-left: 35 %; ;margin:20% 40%;width:300px; ">当前客服繁忙,请稍等！</div > ');
+                            AddOther = false;
+                        }
+                    }
+                }
+            }
+        }, 500);
+
+         setInterval(function () {
+            if ($('#@service.ServiceName').length != 0 && ServiceClick)
+            {
+                $('#@service.ServiceName').trigger('click').trigger('click');
+                ServiceClick = false;
+            }
+        }, 500);
+    })
+    var serviceName=$('.serviceName').val();
+    if (serviceName == null) {
+
+    }
+</script>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=Edge" />
+    @*<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />*@
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+    <!--HTML5element-->
+    <script src="~/Current/js/Customer/browser-polyfill.min.js"></script>
+</head>
+
+<section id='main' class='w100'>
+    <article id='demo'></article>
+    <article id='components'></article>
+</section>
+<!--config-->
+<script src="~/Current/js/Customer/webim.config.js"></script>
+<script>document.write("<script src='Current/js/Customer/strophe-1.2.8.min.js'><\/script>")</script>
+<!--sdk-->
+<script src="~/Current/js/Customer/websdk-1.4.13.js"></script>
+<!--webrtc-->
+<script>
+    if (WebIM.config.isWebRTC) {
+        document.write("<script src='~/Current/js/Customer/adapter.js'><\/script>");
+        document.write("<script src='~/Current/js/Customer/websdk-1.4.13.js'><\/script>");
+    }</script>
+<!--[if lte IE 9]>
+<script src="./demo/javascript/dist/swfupload/swfupload.min.js"></script>
+<![endif]-->
+<!--demo javascript-->
+<script src="~/Current/js/Customer/demo-1.4.13.js"></script>

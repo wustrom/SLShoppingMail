@@ -1,0 +1,723 @@
+﻿@using DbOpertion.Models;
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    Layout = null;
+    var ListColor = (List<Tuple<string, string, string>>)ViewBag.colorList;
+    var gradeList = (List<GradeRes>)ViewBag.Grade;
+    var ScenceList = (List<Grade>)ViewBag.Scence;
+    var commdity = ViewBag.Commdity == null ? new Commodity() : (Commodity)ViewBag.Commdity;
+    commdity.Image = commdity.Image == null ? "/Image/Grade/noImg.svg" : commdity.Image;
+    commdity.FrontView = commdity.FrontView == null ? "/Image/Grade/noImg.svg" : commdity.FrontView;
+    commdity.BackView = commdity.BackView == null ? "/Image/Grade/noImg.svg" : commdity.BackView;
+    List<string> colorList = new List<string>();
+    if (commdity.Color != null)
+    {
+        colorList = commdity.Color.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+    }
+    var priceList = ViewBag.PriceList == null ? new List<Commodity_Stage_Price>() : (List<Commodity_Stage_Price>)ViewBag.PriceList;
+    var price = priceList.Where(p => p.StageAmount == 0).FirstOrDefault();
+    var price1 = price == null ? 0 : price.StagePrice;
+    List<Tuple<string, string>> colorImg = new List<Tuple<string, string>>();
+    if (commdity.ImageList != null)
+    {
+        var commList = commdity.ImageList.Split('|').Where(p => !string.IsNullOrEmpty(p) && p.Contains(';')).ToList();
+        foreach (var item in commList)
+        {
+            colorImg.Add(new Tuple<string, string>(item1: item.Split(';')[0], item2: item.Split(';')[1]));
+        }
+    }
+    List<string> scenceList = new List<string>();
+    if (commdity.ScenceIds != null)
+    {
+        scenceList = commdity.ScenceIds.Split('|').Where(p => !string.IsNullOrEmpty(p) && p.Contains(',')).Distinct().ToList();
+    }
+    List<Raw_Materials> ListMaterials = ViewBag.Materials == null ? new List<Raw_Materials>() : (List<Raw_Materials>)ViewBag.Materials;
+    List<Commodity_Stageprice_View> CommdityList = ViewBag.CommdityList == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.CommdityList;
+    List<string> CommdityInfoList = new List<string>();
+    if (commdity.CommodityInfo != null)
+    {
+        CommdityInfoList = commdity.CommodityInfo.Split('|').Where(p => !string.IsNullOrEmpty(p) && p.Contains(',')).Distinct().ToList();
+    }
+}
+<div>
+    <input type="hidden" id="HiddenItem" />
+    <form id="formColorChange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+        <input name="upImg" type="file" id="upImg" onchange="fileColorchange(this)" accept=".png,.jpg,.jpeg">
+    </form>
+</div>
+<div style="margin: 15px;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">展示图片1</label>
+            <div class="layui-input-block">
+                <img id="btn-img" src="@commdity.Image" alt="暂无图片" onclick="btnimgClick(this)" />
+            </div>
+            <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+                <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+                <input type="hidden" id="hiddenImage" value="ShowImage" />
+                <input id="testSubmit" type="submit" value="上传" onclick="ColorList()">
+            </form> 
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">展示图片2</label>
+            <div class="layui-input-block">
+                <img id="btn-img" src="@commdity.BackView" alt="暂无图片" onclick="btnimgClick(this)" />
+            </div>
+            <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+                <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+                <input type="hidden" id="hiddenImage" value="BackView" />
+                <input id="testSubmit" type="submit" value="上传">
+            </form>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">展示图标</label>
+        <div class="layui-input-block">
+            @{
+                if (commdity.FrontView != null)
+                {
+                    var arry = commdity.FrontView.Split('|').Where(p => !string.IsNullOrEmpty(p) && !p.Contains(';')).Distinct().ToList();
+                    foreach (var item in arry)
+                    {
+                        <div style="width:80px;height:80px;float: left;">
+                            <img src="@item" style="width:80px;height:80px;cursor:pointer;">
+                            <i class="layui-icon btn-delAttr" style="top: -80px;right: -65px;position: relative;" onclick="IconDelClick(this)">ဆ</i>
+                            <input class="hiddenIconUrl" type="hidden" value="@item" />
+                        </div>
+                    }
+                }
+            }
+            <img src="~/Base/images/add.jpg" onclick="btnIconClick(this)" style="border: none;margin-left: 5px;cursor: pointer;" />
+            <div style="clear:both;"></div>
+        </div>
+        <div>
+        </div>
+        <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+            <input name="upImg" type="file" id="upImg" onchange="fileIconchange(this)" accept=".png,.jpg,.jpeg">
+            <input id="testSubmit" type="submit" value="上传">
+        </form>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片列表</label>
+        <div class="layui-input-block">
+            @{
+                if (commdity.ImageList != null)
+                {
+                    var arry = commdity.ImageList.Split('|').Where(p => !string.IsNullOrEmpty(p) && !p.Contains(';')).ToList();
+                    foreach (var item in arry)
+                    {
+                        <div style="width:80px;height:80px;float: left;">
+                            <img src="@item" style="width:80px;height:80px;cursor:pointer;">
+                            <i class="layui-icon btn-delAttr" style="top: -80px;right: -65px;position: relative;" onclick="ImgDelClick(this)">ဆ</i>
+                            <input class="hiddenImgUrl" type="hidden" value="@item" />
+                        </div>
+                    }
+                }
+            }
+            <img src="~/Base/images/add.jpg" onclick="btnimgClick(this)" style="border: none;margin-left: 5px;cursor: pointer;" />
+            <div style="clear:both;"></div>
+        </div>
+        <div>
+        </div>
+        <form id="formid" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+            <input name="upImg" type="file" id="upImg" onchange="fileListchange(this)" accept=".png,.jpg,.jpeg">
+            <input id="testSubmit" type="submit" value="上传">
+        </form>
+    </div>
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="ShowImage" id="ShowImage" value="@commdity.Image" />
+            <input type="hidden" name="FrontView" id="FrontView" value="@commdity.FrontView" />
+            <input type="hidden" name="BackView" id="BackView" value="@commdity.BackView" />
+            <input type="hidden" name="ImgList" id="hiddImgList" value="" />
+            <input type="hidden" name="PriceList" id="hiddPriceList" value="" />
+            <input type="hidden" name="CommId" id="CommId" value="@commdity.Id" />
+            <input type="hidden" name="ColorIds" id="ColorIds" value="" />
+            <input type="hidden" name="SceneIds" id="SceneIds" value="" />
+            <input type="hidden" name="Collocations" id="Collocations" value="" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommName" placeholder="请输入商品名称" lay-verify="required" autocomplete="off" class="layui-input" value="@commdity.Name">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品简介</label>
+            <div class="layui-input-block">
+                <input type="text" name="Introduce" placeholder="请输入商品简介" lay-verify="required" class="layui-input" value="@commdity.Introduce">
+            </div>
+        </div>
+
+
+        @if (false)
+        {
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品分类</label>
+                <div class="layui-input-block">
+                    <select name="GradeId" lay-verify="required">
+                        <option value=""></option>
+                        @foreach (var itemLevel1 in gradeList)
+                        {
+                            if (itemLevel1.listGrade.Count != 0)
+                            {
+                                <optgroup label="@itemLevel1.name">
+                                    @foreach (var itemLevel2 in itemLevel1.listGrade)
+                                    {
+                                        var select = "";
+                                        if (itemLevel2.id == commdity.GradeId)
+                                        {
+                                            select = "selected=\"selected\"";
+                                        }
+                                        <option value="@itemLevel2.id" @select>@itemLevel2.name</option>
+                                    }
+                                </optgroup>
+                            }
+
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品颜色</label>
+                <div class="layui-input-block">
+                    @foreach (var item in ListColor)
+                    {
+                        var color = colorList.Where(p => p == item.Item1).FirstOrDefault();
+                        var check = "";
+                        if (color != null)
+                        {
+                            check = "checked=\"checked\"";
+                        }
+                        var ColorImgItem = colorImg.Where(p => p.Item1 == item.Item1).FirstOrDefault();
+                        <div class="layui-inline">
+                            <input type="checkbox" class="color" name="color[@item.Item1]" title="@item.Item2" value="@item.Item1" @check>
+                            <div style="width:80px;height:80px; padding-top:10px;">
+                                @if (ColorImgItem != null)
+                                {
+                                    <img src="@ColorImgItem.Item2" onclick="btnColorimgClick(this)" style="width:80px;height:80px;">
+                                    <input class="hiddenImgUrl" type="hidden" value="@ColorImgItem.Item1;@ColorImgItem.Item2" />
+                                }
+                                else
+                                {
+                                    <img src="~/Image/Grade/noImg.svg" onclick="btnColorimgClick(this)" style="width:80px;height:80px;">
+                                    <input class="hiddenImgUrl" type="hidden" value="" />
+                                }
+
+                                <input class="ColorId" type="hidden" value="@item.Item1" />
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">阶梯价</label>
+                <div class="layui-input-block priceList">
+                    <div class="layui-form-selected layui-form-checkbox layui-form-checked checkbox-add" lay-skin="">
+                        <span>
+                            价格
+                            <input id="priceInput" style="width:30px;">
+                            数目
+                            <input id="numInput" style="width:30px;">
+                        </span>
+                        <i class="layui-icon btn-addAttr" onclick="AddPrice(this)"></i>
+                    </div>
+                    @foreach (var item in priceList)
+                    {
+                        if (item.StageAmount != 0)
+                        {
+                            <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                                <span> 价格：@item.StagePrice 数目：@item.StageAmount</span>
+                                <i class="layui-icon btn-delAttr" onclick="delPrice(this)">ဆ</i>
+                                <input type="hidden" class="hiddenPrice" value="@item.StagePrice,@item.StageAmount" />
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">对应原材料</label>
+                <div class="layui-input-inline">
+                    <select name="MaterialId" lay-verify="required">
+                        <option value=""></option>
+                        @foreach (var item in gradeList)
+                        {
+                            var thisMaterial = ListMaterials.Where(p => p.Genera == item.id.ToString()).ToList();
+                            if (thisMaterial.Count != 0)
+                            {
+                                <optgroup label="@item.name">
+                                    @foreach (var MaterialInfo in thisMaterial)
+                                    {
+                                        var selected = "";
+                                        if (commdity.MaterialId == MaterialInfo.Id)
+                                        {
+                                            selected = "selected=\"selected\"";
+                                        }
+                                        <option value="@MaterialInfo.Id" @selected>@MaterialInfo.ChinaProductName</option>
+                                    }
+                                </optgroup>
+                            }
+                            foreach (var ListLevel2 in item.listGrade)
+                            {
+                                thisMaterial = ListMaterials.Where(p => p.Genera == ListLevel2.id.ToString()).ToList();
+                                if (thisMaterial.Count != 0)
+                                {
+                                    <optgroup label="@item.name-@ListLevel2.name">
+                                        @foreach (var MaterialInfo in thisMaterial)
+                                        {
+                                            var selected = "";
+                                            if (commdity.MaterialId == MaterialInfo.Id)
+                                            {
+                                                selected = "selected=\"selected\"";
+                                            }
+                                            <option value="@MaterialInfo.Id" @selected>@MaterialInfo.ChinaProductName</option>
+                                        }
+                                    </optgroup>
+                                }
+
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        }
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">添加场景</label>
+                <div class="layui-input-block AddScences">
+                    <select name="SceneId">
+                        <option value=""></option>
+                        @foreach (var item in ScenceList)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal" onclick="AddScence()">添加</a>
+            </div>
+        </div>
+        <div class="layui-form-item CommScence">
+            <div class="layui-inline">
+                <label class="layui-form-label">商品场景</label>
+                <div class="layui-input-block Scences">
+                    @foreach (var item in scenceList)
+                    {
+                        <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                            <span>@item.Split(',')[0]</span>
+                            <i class="layui-icon btn-delAttr" onclick="delScence(this)">ဆ</i>
+                            <input type="hidden" class="hiddenScence" value="@item.Split(',')[0],@item.Split(',')[1]" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 90px;padding-left: 5px;">添加推荐搭配</label>
+                <div class="layui-input-block AddCollocation">
+                    <select name="SceneId">
+                        <option value=""></option>
+                        @foreach (var item in CommdityList)
+                        {
+                            if (item.Id != commdity.Id)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal" onclick="AddCollocation()">添加</a>
+            </div>
+        </div>
+        <div class="layui-form-item CommdityInfo">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 90px;padding-left: 5px;">推荐搭配列表</label>
+                <div class="layui-input-block Collocationlist">
+                    @foreach (var item in CommdityInfoList)
+                    {
+                        <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                            <span>@item.Split(',')[0]</span>
+                            <i class="layui-icon btn-delAttr" onclick="delCollocation(this)">ဆ</i>
+                            <input type="hidden" class="hiddenCollocation" value="@item.Split(',')[0],@item.Split(',')[1]" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否上架</label>
+            <div class="layui-input-block">
+                @if (commdity.IsRelease == true)
+                {
+                    <input type="checkbox" name="Release" lay-skin="switch" checked="checked">
+                }
+                else
+                {
+                    <input type="checkbox" name="Release" lay-skin="switch">
+                }
+
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">商品内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor">@Html.Raw(commdity.Content)</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">样品单价</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CommPrice" placeholder="请输入样品单价" lay-verify="requied" autocomplete="off" class="layui-input" value="@price1">
+            </div>
+            <div class="layui-form-mid layui-word-aux">元</div>
+        </div>
+
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+
+</div>
+
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<script>
+    var HiddenItem = null;
+    // #region 图片操作
+    function btnColorimgClick(that) {
+        $('#formColorChange #upImg').val('');
+        $('#formColorChange #upImg').click();
+        $('#HiddenItem').val(that);
+        HiddenItem = that;
+    }
+
+    function btnimgClick(that) {
+        $(that).parent().parent().find('#upImg').val('');
+        $(that).parent().parent().find('#upImg').click();
+        $('#HiddenItem').val(that);
+    }
+
+    function btnIconClick(that) {
+        $(that).parent().parent().find('#upImg').val('');
+        $(that).parent().parent().find('#upImg').click();
+        $('#HiddenItem').val(that);
+    }
+
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+
+        $(that).parent().ajaxSubmit(function (res) {
+            $(that).parent().parent().find('#btn-img').attr('src', res);
+            $('#' + $(that).parent().find('#hiddenImage').val()).val(res);
+        });
+    }
+
+    function fileListchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(that).parent().parent().find('.layui-input-block').prepend('<div style="width:80px;height:80px;float: left;">\
+                                <img src="' + res + '" style="width:80px;height:80px;">\
+                                <i class="layui-icon btn-delAttr" style="top: -80px;right: -65px;position: relative;" onclick="ImgDelClick(this)">ဆ</i>\
+                                <input class="hiddenImgUrl" type="hidden" value="'+ res + '"/>\
+                                </div>');
+            ImgList();
+        });
+    }
+
+    function fileIconchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(that).parent().parent().find('.layui-input-block').prepend('<div style="width:80px;height:80px;float: left;">\
+                                <img src="' + res + '" style="width:80px;height:80px;cursor: pointer;">\
+                                <i class="layui-icon btn-delAttr" style="top: -80px;right: -65px;position: relative;" onclick="IconDelClick(this)">ဆ</i>\
+                                <input class="hiddenIconUrl" type="hidden" value="'+ res + '"/>\
+                                </div>');
+            IconList();
+        });
+    }
+
+    function fileColorchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(HiddenItem).attr('src', res);
+            var ColorID = $(HiddenItem).parent().find('.ColorId').val();
+            $(HiddenItem).parent().find('.hiddenImgUrl').val(ColorID + ";" + res);
+            ImgList();
+        });
+    }
+
+    function ImgDelClick(that) {
+        $(that).parent().remove();
+        ImgList();
+    }
+
+    function IconDelClick(that) {
+        $(that).parent().remove();
+        IconList();
+    }
+
+    function ImgList() {
+        var img = "";
+        $('.hiddenImgUrl').each(function () {
+            img = img + $(this).val() + "|";
+        })
+        $('#hiddImgList').val(img);
+    }
+    ImgList();
+
+    function IconList() {
+        var img = "";
+        debugger;
+        $('.hiddenIconUrl').each(function () {
+            img = img + $(this).val() + "|";
+        })
+        $('#FrontView').val(img);
+    }
+    IconList()
+    // #endregion
+
+    // #region 价格操作
+    function delPrice(that) {
+        $(that).parent().remove();
+        PriceList();
+    }
+
+    function PriceList() {
+        var price = "";
+        $('.hiddenPrice').each(function () {
+            price = price + $(this).val() + "|";
+        })
+        $('#hiddPriceList').val(price);
+    }
+    PriceList();
+    // #endregion
+
+    function ColorList() {
+        var color = '';
+        $('.color').each(function () {
+            if ($(this)[0].checked) {
+                color = color + $(this).val() + ','
+            }
+        });
+        $('#ColorIds').val(color.substring(0, color.length - 1));
+    }
+    ColorList();
+
+    // #region 场景操作
+    function ScenceList() {
+        var Scence = "";
+        $('.hiddenScence').each(function () {
+            Scence = Scence + $(this).val() + "|";
+        })
+        $('#SceneIds').val(Scence);
+    }
+    ScenceList();
+    function delScence(that) {
+        $(that).parent().remove();
+        ScenceList();
+    }
+
+    function AddScence() {
+        var option = $('.AddScences .layui-form-select .layui-anim .layui-this');
+        if (option.length == 0) {
+            return;
+        }
+        $('.Scences').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                    <span>'+ option.html() + '</span>\
+                                    <i class="layui-icon btn-delAttr" onclick="delScence(this)">ဆ</i>\
+                                    <input type="hidden" class="hiddenScence" value="'+ option.html() + ',' + option.attr('lay-value') + '" />\
+                                </div >');
+        ScenceList();
+        $('.CommScence').show();
+    }
+    // #endregion
+
+    // #region 推荐列表
+    function CollocationList() {
+        var Scence = "";
+        $('.hiddenCollocation').each(function () {
+            Scence = Scence + $(this).val() + "|";
+        })
+        $('#Collocations').val(Scence);
+    }
+    ScenceList();
+    function delCollocation(that) {
+        $(that).parent().remove();
+        CollocationList();
+    }
+
+    function AddCollocation() {
+        var option = $('.AddCollocation .layui-form-select .layui-anim .layui-this');
+        if (option.length == 0) {
+            return;
+        }
+        $('.Collocationlist').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                    <span>'+ option.html() + '</span>\
+                                    <i class="layui-icon btn-delAttr" onclick="delCollocation(this)">ဆ</i>\
+                                    <input type="hidden" class="hiddenCollocation" value="'+ option.html() + ',' + option.attr('lay-value') + '" />\
+                                </div >');
+        CollocationList();
+        $('.CommdityInfo').show();
+    }
+    // #endregion
+
+
+    $(function () {
+        $('.layui-form-checkbox').click(function () {
+            ColorList();
+        })
+        CollocationList();
+
+    })
+
+    function AddPrice(that) {
+        var price = $('#priceInput').val();
+        if (isNaN(price) || price == "" || parseFloat(price) <= 0) {
+            layer.msg("请输入正确价格！");
+            return;
+        }
+        var num = $('#numInput').val();
+        if (isNaN(num) || num == "" || parseInt(num) <= 0) {
+            layer.msg("请输入整数！");
+            return;
+        }
+        else {
+            var num1 = parseInt(num);
+            var num2 = parseFloat(num);
+            if (num1 != num2) {
+                layer.msg("请输入整数！");
+                return;
+            }
+        }
+        $('#priceInput').val("");
+        $('#numInput').val("");
+        $('.priceList').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                    <span> 价格：'+ price + ' 数目：' + num + '</span>\
+                                    <i class="layui-icon btn-delAttr" onclick="delPrice(this)">ဆ</i>\
+                                    <input type="hidden" class="hiddenPrice" value="' + price + ',' + num + '" />\
+                                </div>');
+        PriceList();
+    }
+
+    layui.use('layedit', function () {
+        var layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: '../../../Api/UpImg/LayerEdit' //接口url
+                , type: 'post' //默认post
+            }
+        });
+        var demoId = layedit.build('LAY_demo_editor'); //建立编辑器
+
+        var a = setInterval(function () {
+            if (layedit.getContent(demoId) != undefined) {
+                $('#LAY_demo_editor').val(layedit.getContent(demoId));
+                $('#LAY_demo_editor').html(layedit.getContent(demoId))
+            }
+        }, 1000);
+    });
+
+
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+        border: 1px solid DarkGray;
+    }
+</style>

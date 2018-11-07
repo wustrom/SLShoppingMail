@@ -1,0 +1,1096 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userInfo = (User)ViewBag.UserInfo;
+    var addressList = ViewBag.addressList == null ? new List<Address>() : (List<Address>)ViewBag.addressList;
+    addressList = addressList != null ? addressList.OrderByDescending(p => p.DefaultTime).ToList() : null;
+    decimal? price = 0;
+    decimal? decountprice = 0;
+    decimal? payprice = 0;
+}
+
+@section overflow{
+    overflow:hidden
+}
+
+@section css{
+    <style>
+        .default-address-btn {
+            background: #1E9FFF !important;
+        }
+
+        .edit-address-btn {
+            background: #F7B824 !important;
+            right: 2.3rem !important;
+        }
+
+        .receipt-text.active {
+            border: 1px solid;
+        }
+
+        .receipt-text {
+            padding-right: 4.2rem !important;
+        }
+    </style>
+}
+
+@section js{
+    <script src="~/Base/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Current/js/Commodity/index.js"></script>
+    <link href="~/Current/css/ShopCart/ShopCart.css" rel="stylesheet" />
+    <link href="~/Current/css/DaJiangBase.css" rel="stylesheet" />
+    <link href="~/Current/css/PayPage/PayPage2.css?version=201810251646" rel="stylesheet" />
+    <script>
+        $(function () {
+
+            // #region 提交订单
+            $('.pay-btn').click(function () {
+                debugger;
+                var data = new Object();
+                // #region 已登入地址
+                var item = $('.receipt-text.active');
+                if (item.length == 0) {
+                    layer.msg('请选择收货人！');
+                    return;
+                }
+                data.Name = $(".page .address-list__name___xNNfW").html().trim();
+                data.Phone = $(".page .address-list__tel___2JIKH").html().trim();
+                data.Address = $(".page .address-list__address___3fC4U").children('p').html().trim();
+                // #endregion
+                data.payType = '线下支付';
+                data.ShopCartIds = $('#ShopCartId').val();
+                //加载层-风格3
+                layer.load(2);
+                //此处演示关闭
+                setTimeout(function () {
+                    layer.closeAll('loading');
+                }, 5000);
+                jQuery.axpost("../../api/order/AddOrder", JSON.stringify(data), function (datas) {
+                    if (data.payType == '支付宝') {
+                        $('body').html(datas.Message);
+                    }
+                    else if (data.payType == "微信") {
+                        fCharge(datas.Model1);
+                    }
+                    else {
+                        window.location.href = '../../../PayPage/OrderPayPage?OrderId=' + datas.Model1.Id;
+                    }
+                });
+            });
+
+            // #region 是否为空
+            function IsNullOrEmpty(value) {
+                if (value == null || value == undefined || value == "") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            function IsNullOrEmpty2(value) {
+                if (value == null || value == undefined || value == "" || value == -1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            // #endregion
+            // #endregion
+
+            // #region 绑定默认地址
+            function bindDefaultAddr() {
+                // #region 设置为默认地址
+                $('.default-address-btn').unbind('click');
+                $('.default-address-btn').click(function () {
+                    var data = new Object();
+                    var that = this;
+                    data.Id = $(that).parent().find('.AddressId').val();
+                    jQuery.axpost("../../api/user/UpAddrTime", JSON.stringify(data), function (datas) {
+                        $('.address-btn.default').each(function () {
+                            $(this).css('display', 'none');
+                        })
+                        $('.default-address-btn').each(function () {
+                            $(this).css('display', 'block');
+                        })
+                        //
+                        $(that).parent().find('.address-btn').css('display', 'block');
+                        $(that).css('display', 'none');
+                    });
+                });
+                // #endregion
+
+                // #region 收货人选中
+                $('.receipt-text p').click(function () {
+                    $('.receipt-text').each(function () {
+                        $(this).removeClass('active');
+                    })
+                    $(this).parent().addClass('active');
+                });
+                // #endregion
+
+                // #region 修改收货地址
+                $('.edit-address-btn').unbind('click');
+                $('.edit-address-btn').click(function () {
+                    $(".EditPayThing").hide();
+                    $(".payAddress").show();
+                    $(".payInfo").hide();
+                    $('#editIndex').html('修改');
+                    var item = $(this).parent();
+                    $('.add-people-info .cennter-box .input#name').val(item.find('p:first span:first').html().trim());
+                    $('.add-people-info .cennter-box .input#number').val(item.find('p:first span:last').html().trim());
+                    $('textarea').val(item.find('p').eq(2).find('span').eq(1).html().trim());
+                    $("#province").find("option[value='" + item.find('p').eq(1).find('span').eq(0).html().trim() + "']").attr("selected", true);
+                    $("#province").find("option[value='" + item.find('p').eq(1).find('span').eq(0).html().trim() + "']")[0].selected = true;
+                    $("#province").trigger("change");
+                    $("#city").find("option[value='" + item.find('p').eq(1).find('span').eq(1).html().trim() + "']").attr("selected", true);
+                    $("#city").find("option[value='" + item.find('p').eq(1).find('span').eq(1).html().trim() + "']")[0].selected = true;
+                    $("#city").trigger("change");
+                    $("#area").find("option[value='" + item.find('p').eq(2).find('span').eq(0).html().trim() + "']").attr("selected", true);
+                    $("#area").find("option[value='" + item.find('p').eq(2).find('span').eq(0).html().trim() + "']")[0].selected = true;
+                    $('#hiddenAddressId').val(item.find('.AddressId').val());
+                });
+                // #endregion
+
+                // #region 删除收货地址
+                $('.shopmain .inforlist ul li .rightitem a.del').unbind('click');
+                $('.shopmain .inforlist ul li .rightitem a.del').click(function () {
+                    var item = $(this).parent().parent();
+                    var data = new Object();
+                    data.Id = $(item).find('.AddressId').val();
+                    jQuery.axpost("../../api/user/DeleteAddr", JSON.stringify(data), function (datas) {
+                        layer.msg('删除成功！');
+                        $(item).remove();
+                    });
+                });
+                // #endregion
+            }
+            bindDefaultAddr();
+
+            // #region 保存按钮
+            $('.add-people-info .action-btn').click(function () {
+                var data = new Object();
+                data.ContactName = $('.add-people-info .cennter-box .input#name').val();
+                data.ContactPhone = $('.add-people-info .cennter-box .input#number').val();
+                if ($('#province').find("option:selected").val() == undefined || $('#province').find("option:selected").val() == "-1" ||
+                    $('#city').find("option:selected").val() == undefined || $('#city').find("option:selected").val() == "-1" ||
+                    $('#area').find("option:selected").val() == undefined || $('#area').find("option:selected").val() == "-1") {
+                    layer.msg('请填写完整的收货地址！');
+                    return;
+                }
+                data.AddrArea = $('#province').find("option:selected").text() + ',' + $('#city').find("option:selected").text() + ',' + $('#area').find("option:selected").text();
+                data.AddrDetail = $('textarea').val();
+                if ($('#editIndex').html().trim() == '新增') {
+                    jQuery.axpost("../../api/user/AddressAdd", JSON.stringify(data), function (datas) {
+                        var item = datas.Model1;
+                        var AddrAreaArry = item.AddrArea.split(',');
+                        var AddrArea = AddrAreaArry[0] + " " + AddrAreaArry[1] + " " + AddrAreaArry[2] + " " + item.AddrDetail;
+                        var str = '<div class="receipt-text">\
+                                                                                                                                                                                                                                                                                                                        <p><span>'+ item.ContactName + '</span><span>' + item.ContactPhone + '</span></p>\
+                                                                                                                                                                                                                                                                                                                        <p><span>'+ AddrAreaArry[0] + '</span><span>' + AddrAreaArry[1] + '</span></p>\
+                                                                                                                                                                                                                                                                                                                        <p><span>'+ AddrAreaArry[2] + '</span><span>' + item.AddrDetail + '</span></p>\
+                                                                                                                                                                                                                                                                                                                        <input type="hidden" class="AddressId" value="'+ item.Id + '" />\
+                                                                                                                                                                                                                                                                                                                        <button type="button" class="address-btn default" style="display:none;">默认地址</button>\
+                                                                                                                                                                                                                                                                                                                        <button type="button" class="address-btn default-address-btn">设为默认</button>\
+                                                                                                                                                                                                                                                                                                                        <button type="button" class="address-btn edit-address-btn">修改地址</button>\
+                                                                                                                                                                                                                                                                                                                    </div>'
+                        $('.receipt-info').append(str);
+                        bindDefaultAddr();
+                    });
+                }
+                else {
+                    data.Id = $('#hiddenAddressId').val();
+                    var that = this;
+                    jQuery.axpost("../../api/user/UpdateAddrr", JSON.stringify(data), function (datas) {
+                        var model = datas.Model1;
+                        $('.AddressId').each(function () {
+                            if ($(this).val() == $('#hiddenAddressId').val()) {
+                                var AddrAreaArry = model.AddrArea.split(',');
+                                var item = $(this).parent();
+                                item.find('p').eq(0).find('span').eq(0).html(model.ContactName);
+                                item.find('p').eq(0).find('span').eq(1).html(model.ContactPhone);
+                                item.find('p').eq(1).find('span').eq(0).html(AddrAreaArry[0]);
+                                item.find('p').eq(1).find('span').eq(1).html(AddrAreaArry[2]);
+                                item.find('p').eq(2).find('span').eq(0).html(AddrAreaArry[3]);
+                                item.find('p').eq(2).find('span').eq(1).html(model.AddrDetail);
+                                PayInfo();
+                            }
+                        });
+                    });
+                }
+
+
+            })
+            // #endregion
+
+            // #endregion
+        })
+
+        // #region 页面切换
+        function PayInfo() {
+            $(".EditPayThing").hide();
+            $(".payAddress").hide();
+            $(".payInfo").show();
+        }
+
+        function EditPayThing() {
+            $(".EditPayThing").show();
+            $(".payAddress").hide();
+            $(".payInfo").hide();
+        }
+
+        //新增地址
+        function payAddress() {
+            $(".EditPayThing").hide();
+            $(".payAddress").show();
+            $(".payInfo").hide();
+            $('.add-people-info .cennter-box .input#name').val('');
+            $('.add-people-info .cennter-box .input#number').val('');
+            $('textarea').val('');
+            $('#editIndex').html('新增');
+            $('#province').each(function () {
+                $(this).removeAttr("selected");
+                $(this)[0].selected = false;
+            })
+            $('#area').find("option:gt(0)").remove();
+            $('#city').find("option:gt(0)").remove();
+        }
+
+        //修改地址
+        function payAddress() {
+            $(".EditPayThing").hide();
+            $(".payAddress").show();
+            $(".payInfo").hide();
+            $('.add-people-info .cennter-box .input#name').val('');
+            $('.add-people-info .cennter-box .input#number').val('');
+            $('textarea').val('');
+            $('#editIndex').html('新增');
+            $('#province').each(function () {
+                $(this).removeAttr("selected");
+                $(this)[0].selected = false;
+            })
+            $('#area').find("option:gt(0)").remove();
+            $('#city').find("option:gt(0)").remove();
+        }
+        // #endregion
+
+        // #region 微信支付模块
+        //初始化微信支付环境
+        function fCharge(Model) {
+            if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                }
+            } else {
+                fPostCharge(Model);
+            }
+        }
+        //提交订单数据
+        function fPostCharge(Model) {
+            var index = layer.load(1);
+            $.ajax({
+                type: "post",
+                data: "totalfee=" + Model.TotalPrice + "&out_trade_no=" + Model.OrderNo,
+                url: "/Home/MeterRecharge",
+                success: function (json) {
+                    layer.close(index);
+                    onBridgeReady(json);
+                },
+                error: function () {
+                    layer.close(index);
+                    layer.msg('调用微信支付模块失败，请稍后再试。');
+                }
+            })
+        }
+        //调用微信支付模块
+        function onBridgeReady(json) {
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest', {
+                    "appId": json.appId,     //公众号名称，由商户传入
+                    "timeStamp": json.timeStamp,         //时间戳，自1970年以来的秒数
+                    "nonceStr": json.nonceStr, //随机串
+                    "package": json.packageValue,
+                    "signType": "MD5",         //微信签名方式:
+                    "paySign": json.paySign //微信签名
+                },
+                function (res) {
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        //alert("支付成功,请稍后查询余额,如有疑问,请联系管理员.");
+                        location.href = "../../UserInfo/MyOrderList";
+                    }
+                    else {
+                        location.href = "../../UserInfo/MyOrderList";
+                    }
+                }
+            );
+        }
+        // #endregion
+
+        $(function () {
+            // #region 输入框效果
+            $(".VaildInputDiv input").focus(function () {
+                if ($(this).parent().hasClass("Area")) {
+                    return;
+                }
+                $(this).parent().addClass('SmallLabel').addClass('Active').removeClass('Erroy');
+            })
+
+            $(".VaildInputDiv input").blur(function () {
+                if ($(this).parent().hasClass("Area")) {
+                    return;
+                }
+                if ($(this).val() != "") {
+                    $(this).parent().removeClass('Active').addClass('SmallLabel');
+                }
+                else {
+                    $(this).parent().removeClass('SmallLabel').addClass('Erroy');
+                }
+
+            })
+            // #endregion
+
+            // #region 地区选择
+            $(".address-form__select-label___IueXk").click(function () {
+                $(".__modal-portal__ .world-city__modal___1YGZG").show();
+            })
+
+            $(".world-city__close-city-wrap___1DJs-").click(function () {
+                $(".__modal-portal__ .world-city__modal___1YGZG").hide();
+            })
+
+            $(".world-city__tab-city___SwlP5 button").click(function () {
+                var tabIndex = $(this).attr("tabIndex");
+                var InnerHtml = $(this).children("span").html().trim();
+                if (tabIndex == "0" && InnerHtml != "省份") {
+                    $(".world-city__tab-city___SwlP5 .undline").addClass("leftpart").removeClass("rightpart").removeClass("centerpart");
+                    $(".world-city__tab-container___1PKSN").children("div").css("height", "0px");
+                    $("ul.province").parent().parent().css("height", "auto");
+                }
+                else if (tabIndex == "1" && InnerHtml != "城市") {
+                    $(".world-city__tab-city___SwlP5 .undline").removeClass("leftpart").removeClass("rightpart").addClass("centerpart");
+                    $(".world-city__tab-container___1PKSN").children("div").css("height", "0px");
+                    $("ul.city").parent().parent().css("height", "auto");
+                }
+                else if (tabIndex == "2" && InnerHtml != "区县") {
+                    $(".world-city__tab-city___SwlP5 .undline").removeClass("leftpart").addClass("rightpart").removeClass("centerpart");
+                    $(".world-city__tab-container___1PKSN").children("div").css("height", "0px");
+                    $("ul.area").parent().parent().css("height", "auto");
+                }
+            })
+
+            function ReBind() {
+                $("ul.province li").click(function () {
+                    $(".world-city__tab-container___1PKSN").children("div").css("height", "0px");
+                    $("ul.city").parent().parent().css("height", "auto");
+                    $("ul.province li").removeClass("world-city__selected___mSMOf");
+                    GetData($("ul.city"), 'city', $(this).html());
+                    $(this).addClass("world-city__selected___mSMOf");
+                    $(".world-city__tab-city___SwlP5 .undline").removeClass("leftpart").removeClass("rightpart").addClass("centerpart");
+                    $(".world-city__tab-city___SwlP5 button").eq(0).children("span").html($(this).html());
+                })
+
+                $("ul.city li").click(function () {
+                    $(".world-city__tab-container___1PKSN").children("div").css("height", "0px");
+                    $("ul.area").parent().parent().css("height", "auto");
+                    $("ul.city li").removeClass("world-city__selected___mSMOf");
+                    GetData($("ul.area"), 'area', $(this).html());
+                    $(this).addClass("world-city__selected___mSMOf");
+                    $(".world-city__tab-city___SwlP5 .undline").removeClass("leftpart").addClass("rightpart").removeClass("centerpart");
+                    $(".world-city__tab-city___SwlP5 button").eq(1).children("span").html($(this).html());
+                })
+
+                $("ul.area li").click(function () {
+                    $(".world-city__tab-container___1PKSN").children("div").css("height", "0px");
+                    $("ul.area").parent().parent().css("height", "auto");
+                    $("ul.area li").removeClass("world-city__selected___mSMOf");
+                    $(this).addClass("world-city__selected___mSMOf");
+                    $(".world-city__tab-city___SwlP5 button").eq(2).children("span").html($(this).html());
+                    $(".__modal-portal__ .world-city__modal___1YGZG").hide();
+                    $("#mui-id-13").val($(".world-city__tab-city___SwlP5 button").eq(0).children("span").html() + " " + $(".world-city__tab-city___SwlP5 button").eq(1).children("span").html() + " " + $(".world-city__tab-city___SwlP5 button").eq(2).children("span").html());
+                    $("#mui-id-13").parent().addClass("SmallLabel");
+                })
+            }
+
+            GetData($("ul.province"), 'province', '');
+            function GetData(sel, Level, Name) {
+                sel.find("li:gt(0)").remove();
+                var index = layer.load("1");
+                $.ajax({
+                    type: "post",
+                    url: "../../Api/Home/GetProvinceInfo",
+                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                    data: "Level=" + Level + "&AreaName=" + Name,
+                    datatype: "json",
+                    async: false,
+                    success: function (data) {
+                        layer.close(index);
+                        var json = eval(data);
+                        if (!json) return;
+                        $.each(json, function (i, n) {
+                            sel.append($("<li value='" + n.name + "'>" + n.name + "</li>"));
+                        });
+                        ReBind();
+
+                    },
+                    error: function (e, x) {
+                        alert(e.responseText);
+                    }
+                });
+                setTimeout(function () { layer.close(index); }, 3000)
+            }
+            // #endregion
+
+            // #region 发票信息
+            $(".invoice__store-modal-content___3RoM2 .invoice-list").click(function () {
+                $(this).find('.radio__radio___1pZ0W')[0].checked = true;
+                var checkedVal = $("input[name='radio_radio']:checked").val();
+                if (checkedVal != "3") {
+                    $(".Invioce").hide();
+                }
+                else {
+                    $(".Invioce").show();
+                }
+            });
+
+            $("input[name='radio_radio']").change(function () {
+                var checkedVal = $("input[name='radio_radio']:checked").val();
+                if (checkedVal != "3") {
+                    $(".Invioce").hide();
+                }
+                else {
+                    $(".Invioce").show();
+                }
+            })
+
+            $(".invoice__invoice-submit___1jIuz .button__btn___Uhwzq").click(function () {
+                var checkedVal = $("input[name='radio_radio']:checked").val();
+                if (checkedVal == "1") {
+                    $(".invoice__info-option-light___3UwPZ .invoice__info-title___1qT1I").html("不需要发票");
+                }
+                else if (checkedVal == "2") {
+                    $(".invoice__info-option-light___3UwPZ .invoice__info-title___1qT1I").html("个人电子发票");
+                }
+                else if (checkedVal == "3") {
+                    var invoiceTitle = $("#mui-id-5").val();
+                    var invoiceTax = $("#mui-id-6").val();
+                    if (invoiceTitle == null || invoiceTitle == "" || invoiceTax == null || invoiceTax == "") {
+                        layer.msg("请输入完整发票抬头和企业税号");
+                        return;
+                    }
+                }
+                $(".__modal-portal__ .invoice__invoice-modal___1KInP").hide();
+            })
+
+            $(".invoice__option-block___okfU1").children("div").click(function () {
+                $(".__modal-portal__ .invoice__invoice-modal___1KInP").show();
+            })
+            // #endregion
+
+            // #region 地址确定按钮
+            $(".edit__address-footer___VIKew .s-btn.s-primary-btn").click(function () {
+                var UserName = $("#mui-id-11").val();
+                if (UserName == undefined || UserName == "") {
+                    layer.msg("用户姓名不能为空！");
+                    return;
+                }
+                var UserPhone = $("#mui-id-12").val();
+                if (UserPhone == undefined || UserPhone == "") {
+                    layer.msg("手机号不能为空！");
+                    return;
+                }
+                var UserAddress = $("#mui-id-13").val();
+                if (UserAddress == undefined || UserAddress == "" || UserAddress == "省份 ｜ 城市 ｜区县") {
+                    layer.msg("省份不能为空！");
+                    return;
+                }
+                var UserAddressDetail = $("#mui-id-14").val();
+                if (UserName == undefined || UserName == "") {
+                    layer.msg("详细地址不能为空！");
+                    return;
+                }
+                if ($(".__modal-portal__ .edit__address-form___CCf7u .page-sub-title").html() == "首次支付") {
+                    $(".address-list__name___xNNfW").html(UserName);
+                    $(".address-list__tel___2JIKH").html(UserPhone);
+                    $(".address-list__name___xNNfW").parent().parent().children("p").html(UserAddress + " " + UserAddressDetail);
+                    $(".edit__add-address___2tXLQ").show();
+                    $(".__modal-portal__ .index__address-modal___2BsFa").hide();
+                    $("#dji-store-page").show();
+                }
+                else if ($(".__modal-portal__ .edit__address-form___CCf7u .page-sub-title").html() == "编辑地址") {
+                    var datas = { Id: EditId, ContactName: UserName, ContactPhone: UserPhone, AddrArea: UserAddress, AddrDetail: UserAddressDetail }
+                    jQuery.axpost('../../Api/User/UpdateAddrr', JSON.stringify(datas), function (data) {
+                        layer.msg(data.Message);
+                        var addressArry = data.Model1.AddrArea.split(' ');
+                        var addressInfo = addressArry[0] + " " + addressArry[1] + " " + addressArry[2] + " " + data.Model1.AddrDetail;
+                        $(EditAddress).parent().find('.address-list__name___xNNfW').html(data.Model1.ContactName);
+                        $(EditAddress).parent().find('.address-list__tel___2JIKH').html(data.Model1.ContactPhone);
+                        $(EditAddress).parent().find('.addressdetail p').html(addressInfo);
+                        $('.index__address-modal___2BsFa').hide();
+                        $('#addressWrap').show();
+                    })
+
+
+                }
+                else if ($(".__modal-portal__ .edit__address-form___CCf7u .page-sub-title").html() == "新增地址") {
+                    var datas = { ContactName: UserName, ContactPhone: UserPhone, AddrArea: UserAddress, AddrDetail: UserAddressDetail }
+                    jQuery.axpost('../../Api/User/AddressAdd', JSON.stringify(datas), function (data) {
+                        layer.msg(data.Message);
+                        var addressArry = data.Model1.AddrArea.split(' ');
+                        var addressInfo = addressArry[0] + " " + addressArry[1] + " " + addressArry[2] + " " + data.Model1.AddrDetail;
+                        $(".index__address-list___1E73k ul").append('<li onclick="selectAddr(this)">\
+                                    <div class="index__address-info___32cXa">\
+                                        <div class="index__select___lDgpS">\
+                                            <input class="radio__radio___1pZ0W" type="radio" name="selectAddress">\
+                                        </div>\
+                                        <div class="address-list__address___3fC4U">\
+                                            <div class="address-list__all___8_kZj">\
+                                                <div>\
+                                                    <p class="address-list__name___xNNfW">' + data.Model1.ContactName + '</p>\
+                                                    <p class="address-list__tel___2JIKH">' + data.Model1.ContactPhone + '</p>\
+                                                    <input type="hidden" class="address-list__id" value="' + data.Model1.Id + '"/>\
+                                                </div>\
+                                            </div>\
+                                            <div class="addressdetail">\
+                                                <p>' + addressInfo + '</p>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                    <div class="index__address-edit___28m9L disabled" >\
+                                        <span onclick="editAddress(this)">编辑</span>\
+                                    </div>\
+                                </li>');
+                        $('.index__address-modal___2BsFa').hide();
+                        $('#addressWrap').show();
+                    })
+                }
+
+            })
+
+            $(".address__option-block___2IYXH.container .option-detail").click(function () {
+                if (@(userInfo==null?"true":"false")=="true") {
+                    $(".__modal-portal__ .index__address-modal___2BsFa").show();
+                    $(".__modal-portal__ .index__address-modal___2BsFa .page-sub-title").html("修改地址");
+                }
+                else {
+                    $(".__modal-portal__ #addressWrap").show();
+                    $("#dji-store-page").hide();
+                }
+            })
+
+            $(".edit__add-address___2tXLQ span").click(function () {
+                $(".__modal-portal__ .index__address-modal___2BsFa").hide();
+            })
+            // #endregion
+
+            // #region 支付方式改变
+            $(".options__info-option-light___36PUw .PayType").click(function () {
+                $(".options__info-option-light___36PUw .PayType").removeClass("active");
+                $(this).addClass("active");
+            })
+
+            // #endregion
+
+            // #region 提交订单
+            $('.place-order .s-btn.s-primary-btn').click(function () {
+                var data = new Object();
+                 var data = new Object();
+                // #region 已登入地址
+                data.Name = $(".page .address-list__name___xNNfW").html().trim();
+                data.Phone = $(".page .address-list__tel___2JIKH").html().trim();
+                data.Address = $(".page .address-list__address___3fC4U").children('p').html().trim();
+                // #endregion
+                data.payType = '线下支付';
+                data.ShopCartIds = $('#ShopCartId').val();
+                //加载层-风格3
+                layer.load(2);
+                //此处演示关闭
+                setTimeout(function () {
+                    layer.closeAll('loading');
+                }, 5000);
+                jQuery.axpost("../../api/order/AddOrder", JSON.stringify(data), function (datas) {
+                    if (data.payType == '支付宝') {
+                        $('body').html(datas.Message);
+                    }
+                    else if (data.payType == "微信") {
+                        fCharge(datas.Model1);
+                    }
+                    else {
+                      window.location.href = '../../../PayPage/OrderPayPage?OrderId=' + datas.Model1.Id;
+                    }
+                });
+            });
+
+            // #region 是否为空
+            function IsNullOrEmpty(value) {
+                if (value == null || value == undefined || value == "") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            function IsNullOrEmpty2(value) {
+                if (value == null || value == undefined || value == "" || value == -1 || value == "省份 ｜ 城市 ｜区县") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            // #endregion
+            // #endregion
+
+            // #region 地址
+            $('.index__add-address___eKO6K').click(function () {
+                $("#addressWrap").hide();
+                $(".VaildInputDiv").removeClass("Active").removeClass("Erroy").removeClass("SmallLabel");
+                $(".VaildInputDiv input").val("");
+                $(".__modal-portal__ .edit__address-form___CCf7u .page-sub-title").html("新增地址");
+                $(".index__address-modal___2BsFa").show();
+                $(".edit__close-model___1ecI2").show();
+            })
+
+
+            // #endregion
+
+            $("#addressWrap .index__address-footer___HzWXG .s-primary-btn").click(function () {
+                var selectAddress = $("input[name='selectAddress']:checked").parent().parent().parent();
+                $(".page .address-list__name___xNNfW").html($(selectAddress).find('.address-list__name___xNNfW').html());
+                $(".page .address-list__tel___2JIKH").html($(selectAddress).find('.address-list__tel___2JIKH').html());
+                $(".page .address-list__name___xNNfW").parent().parent().children("p").html($(selectAddress).find('.addressdetail p').html());
+                $("#dji-store-page").show();
+                $(".__modal-portal__  #addressWrap").hide();
+            })
+
+
+        })
+        var EditAddress;
+        var EditId;
+
+        function editAddress(that) {
+            that=$(that).parent();
+            $("#addressWrap").hide();
+            $(".VaildInputDiv").removeClass("Active").removeClass("Erroy").addClass("SmallLabel");
+            $(".VaildInputDiv input").val("");
+            $(".__modal-portal__ .edit__address-form___CCf7u .page-sub-title").html("编辑地址");
+            $("#mui-id-11").val($(that).parent().find('.address-list__name___xNNfW').html());
+            $("#mui-id-12").val($(that).parent().find('.address-list__tel___2JIKH').html());
+            var addressdetailList = $(that).parent().find('.addressdetail p').html().split(' ');
+            $("#mui-id-13").val(addressdetailList[0] + " " + addressdetailList[1] + " " + addressdetailList[2]);
+            $("#mui-id-14").val(addressdetailList[3]);
+            EditAddress = that;
+            EditId = $(that).parent().find('.address-list__id').val();
+            $(".index__address-modal___2BsFa").show();
+            $(".edit__close-model___1ecI2").show();
+            stopBubbling(that);
+        }
+        function stopBubbling(e) {
+            e = window.event || e;
+            if (e.stopPropagation) {
+                e.stopPropagation();      //阻止事件 冒泡传播
+            } else {
+                e.cancelBubble = true;   //ie兼容
+            }
+        }
+
+        function selectAddr(that) {
+            $(that).find('.radio__radio___1pZ0W')[0].checked = true;
+        }
+
+    </script>
+    <style>
+        #panel .page-content {
+            margin-top: 0rem;
+        }
+    </style>
+}
+<div>
+    <input type="hidden" id="ShopCartId" value="@ViewBag.ShopCartId" />
+</div>
+<link href="~/Current/css/PayPage/PayPage.css" rel="stylesheet" />
+<div id="dji-store-page" style="@(userInfo != null ? "display:none;" : "")">
+    <div class="page checkout-page">
+        <div class="page-sub-title">提交订单</div>
+        <div id="checkoutIndex">
+            <div class="checkout-wrap">
+                <div class="address__option-block___2IYXH container">
+                    <h2 class="address__option-title___1QSUG">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span class="address__title-text___3vNlX" style="font-weight:600;">配送地址</span>
+                    </h2>
+                    <div class="option-detail">
+                        <div class="address__info-option-light___1oUsj address__info-option___1SQbm clearfix" style="padding-right:.4rem;">
+                            <div class="address__info-detail___i-CDL">
+                                <div class="address-list__address___3fC4U">
+                                    <div class="address-list__all___8_kZj">
+                                        <p class="address-list__name___xNNfW"></p>
+                                        <p class="address-list__tel___2JIKH"></p>
+                                    </div>
+                                    <p>天津市 和平区 劝业场街道 222222楼</p>
+                                </div>
+                            </div>
+                            <i class="address__arrow-right___JK7u4"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="options__option-block___3BjWa container">
+                    <h2 class="options__option-title___23_Wr">
+                        <i class="fa fa-truck" aria-hidden="true"></i>
+                        <span class="options__title-text___32ZYU" style="font-weight:600;">配送选项</span>
+                    </h2>
+                    <div class="options__info-option-light___36PUw options__info-option___2_nnU clearfix" style="padding-right:.4rem;">
+                        <h3 class="options__info-title___qNcVL">
+                            <span>顺丰速运</span>
+                            <span class="options__shipping-cost___372Ic pull-right">包邮</span>
+                        </h3>
+                        <p class="options__info-detail___2Ji0d"></p>
+                        <i class=""></i>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <div class="invoice__option-block___okfU1 container">
+                            <h2 class="invoice__option-title___1fhU-">
+                                <i class="fa fa-file-text"></i>
+                                <span class="invoice__title-text___1T0RS" style="font-weight:600;">发票信息</span>
+                            </h2>
+                            <div>
+                                <div class="invoice__info-option-light___3UwPZ invoice__info-option___uBtn7 clearfix">
+                                    <h3 class="invoice__info-title___1qT1I">不需要发票</h3>
+                                    <p class="invoice__info-detail____AVYC"></p>
+                                    <i class="invoice__arrow-right___34S6n"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <noscript></noscript>
+                    </div>
+                </div>
+                <div>
+                    <div class="index__option-block___N3j1U container">
+                        <h2 class="index__option-title___2mRXJ">
+                            <i class="fa fa-list-alt"></i>
+                            <span class="index__title-text___2iBpI"  style="font-weight:600;">订单信息</span>
+                            <a href="../../ShopCart/Index" class="index__back-cart___1HEUa pull-right">编辑购物车</a>
+                        </h2>
+                        <div>
+                            @{
+                                if (ViewBag.ShopCartId != null)
+                                {
+                                    var array = ((string)ViewBag.ShopCartId).Split(',').Where(p => p != null && p != "").ToList();
+                                    var ListHisdesign = (List<SLSM.MoblieWeb.Models.Response.ShopCart.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+                                    foreach (var item in array)
+                                    {
+                                        var hisdesign = ListHisdesign.Where(p => p.ShopCartId.ToString() == item).FirstOrDefault();
+                                        if (hisdesign != null)
+                                        {
+                                            price = price + hisdesign.Price;
+                                            if (hisdesign.DiscountRate < ((decimal)ViewBag.Discount))
+                                            {
+                                                payprice = payprice + hisdesign.Price * (decimal)ViewBag.Discount;
+                                                decountprice = decountprice + hisdesign.Price * (1 - (decimal)ViewBag.Discount);
+                                            }
+                                            else
+                                            {
+                                                payprice = payprice + hisdesign.Price * hisdesign.DiscountRate;
+                                                decountprice = decountprice + hisdesign.Price * (1 - (decimal)hisdesign.DiscountRate);
+                                            }
+                                            var PrintingMethod = "暂无";
+                                            if (hisdesign.PrintingMethod != null && hisdesign.PrintFuncInfo != null)
+                                            {
+                                                var printInfo = hisdesign.PrintFuncInfo.Split('|').Where(p => p.ToLower().Contains(hisdesign.PrintingMethod.ToLower())).FirstOrDefault();
+                                                var printArray = printInfo.Split(':');
+                                                PrintingMethod = printArray[1];
+                                            }
+                                            <div class="index__info-option-light___YXDP0 index__info-option___S2Xuz info-product clearfix" style="padding-right:0rem;">
+                                                <img data-src="@ViewBag.AdminUrl@hisdesign.CommodityImg" class="index__info-product-img___32p-X pull-left lazyloaded" style="height: 3rem;margin-left: -1rem;width:inherit;" src="@ViewBag.AdminUrl@hisdesign.CommodityImg">
+                                                <h3 class="index__info-title___2krHu pull-left" style="width:4rem;">@(hisdesign.ProduceNo)</h3>
+                                                <h3 class="index__info-title___2krHu pull-left" style="width:4rem;">@(hisdesign.CommodityName)</h3>
+                                                <h3 class="index__info-title___2krHu pull-left" style="width:4rem;">@(hisdesign.Color)</h3>
+                                                <h3 class="index__info-title___2krHu pull-left" style="width:4rem;">@(PrintingMethod)</h3>
+                                                <p class="index__info-detail___2MTqT pull-right" style="margin-top:-1.3rem;">
+                                                    <span class="index__info-product-price___gWpdP">
+                                                        <span>¥</span>
+                                                        <span></span>
+                                                        <span>@hisdesign.OnePrice</span>
+                                                    </span>
+                                                    <span class="index__info-product-qty___3q2Kw">
+                                                        <span>数量</span>
+                                                        <span>:</span>
+                                                        <span>@hisdesign.Amount</span>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        }
+                                    }
+
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="total-box total__total-wrap___1xCob">
+                    <div class="container" style="background-color:#fff;">
+                        @if (decountprice.Value != 0)
+                        {
+                            <ul class="box-wrap">
+                                <li>
+                                    <span class="pull-left">
+                                        <span>折扣</span>
+                                        <span>:</span>
+                                    </span>
+                                    <span class="pull-right">¥ @System.Decimal.Round(decountprice.Value, 2)</span>
+                                </li>
+                            </ul>
+                        }
+                        <ul class="box-wrap">
+                            <li>
+                                <span class="pull-left">
+                                    <span>运费</span>
+                                    <span>:</span>
+                                </span>
+                                <span class="pull-right">¥ @(payprice.Value >= 100 ? "0.00" : "10.00")</span>
+                            </li>
+                        </ul>
+                        <div class="box-wrap total__total-price___3VLgH total__item___2CdOk">
+                            <span class="pull-left desc">
+                                <span>应付总额</span>
+                                <span>:</span>
+                            </span>
+                            <span class="pull-right dji-price">¥ @System.Decimal.Round((payprice >= 100 ? payprice.Value : payprice >= 10 ? (payprice.Value + 10) : 10), 2).ToString("#0.00")</span>
+                        </div>
+                    </div>
+                    <div class="order-tips container">
+                        <span style="color:#008374;font-size:.12rem;line-height:.16rem;padding-bottom:.05rem;display:block;">&nbsp;</span>
+                    </div>
+                    <span></span>
+                    <div class="place-order" style="height: 2rem;margin-top: .72rem;">
+                        <a href="javascript:void(0)" class="s-btn s-primary-btn">提交订单，去支付</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="__modal-portal__">
+    <div class="invoice__invoice-modal___1KInP" style="display:none;">
+        <div style="position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; opacity: 1; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); will-change: opacity; transform: translateZ(0px); transition: left 0ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 400ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; z-index: 1001; background: rgba(0, 0, 0, 0.298039);" data-reactid=".2.0"></div>
+        <div style="background-color: rgb(255, 255, 255); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; box-sizing: border-box; font-family: inherit; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-shadow: none; border-radius: 0px; height: auto; width: 100%; position: fixed; left: 0px; bottom: 0px; z-index: 1002; transform: translate3d(0px, 0px, 0px); opacity: 1;">
+            <div class="invoice__invoice-content___3msL_">
+                <h1 class="page-sub-title">发票信息</h1>
+                <div class="invoice__store-modal-content___3RoM2">
+                    <div class="invoice-list">
+                        <div class="invoice__radio___Kk4Cr">
+                            <input class="radio__radio___1pZ0W" type="radio" readonly="" checked="" name="radio_radio" id="notNeed" value="1">
+                        </div>
+                        <label for="notNeed">不需要发票</label>
+                    </div>
+                    <div class="invoice-list">
+                        <div class="invoice__radio___Kk4Cr">
+                            <input class="radio__radio___1pZ0W" type="radio" readonly="" name="radio_radio" id="personNeed" value="2">
+                        </div>
+                        <label for="personNeed">个人电子发票</label>
+                    </div>
+                    <div class="invoice-list">
+                        <div class="invoice__radio___Kk4Cr">
+                            <input class="radio__radio___1pZ0W" type="radio" readonly="" name="radio_radio" id="companyNeed" value="3">
+                        </div>
+                        <label for="companyNeed">单位电子发票</label>
+                        <div style="padding-left: 0.864rem;display:none;" class="Invioce">
+                            <div class="VaildInputDiv">
+                                <label for="mui-id-5">发票抬头</label>
+                                <input id="mui-id-5">
+                                <div>
+                                    <hr>
+                                </div>
+                                <div class="ErroyInfo">发票抬头不能为空</div>
+                            </div>
+                            <div class="VaildInputDiv">
+                                <label for="mui-id-6">企业税号</label>
+                                <input id="mui-id-6">
+                                <div>
+                                    <hr>
+                                </div>
+                                <div class="ErroyInfo">企业税号不能为空</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoice__invoice-desc___YCpaj container">
+                    <p>如需“增值税专用发票”，请勾选“不需要发票”，然后在订单成功之后，联系客服索取。</p>
+                </div>
+            </div>
+            <div class="invoice__invoice-submit___1jIuz">
+                <button class="button__btn___Uhwzq">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="__modal-portal__">
+    <div class="index__address-modal___2BsFa" style="@(userInfo != null ? "display:none;" : "")">
+        <div style="background-color: rgb(255, 255, 255); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; box-sizing: border-box; font-family: inherit; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-shadow: none; border-radius: 0px;height: calc(93%); width: 100%; position: fixed; left: 0px; bottom: 0px; z-index: 1002; transform: translate3d(0px, 0px, 0px); opacity: 1;">
+            <div class="edit__address-footer___VIKew">
+                <button class="s-btn s-primary-btn">确认</button>
+            </div>
+            <section class="edit__address-form___CCf7u">
+                <h1 class="page-sub-title">首次支付</h1>
+                <span class="edit__close-model___1ecI2" style="display:none;" onclick="$('.index__address-modal___2BsFa').hide(); $('#addressWrap').show();">×</span>
+                <div class="edit__page-body___5TZXf">
+                    <div class="address-form__form-list___1v_Mr">
+                        <div>
+                            <div class="VaildInputDiv">
+                                <label for="mui-id-11">姓名</label>
+                                <input id="mui-id-11">
+                                <div>
+                                    <hr>
+                                </div>
+                                <div class="ErroyInfo">姓名不能为空</div>
+                            </div>
+                            <div class="VaildInputDiv">
+                                <label for="mui-id-12">手机号</label>
+                                <input id="mui-id-12">
+                                <div>
+                                    <hr>
+                                </div>
+                                <div class="ErroyInfo">手机号不能为空</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="address-form__select-label___IueXk">
+                                <div class="VaildInputDiv Area">
+                                    <label for="mui-id-13">省份 ｜ 城市 ｜区县</label>
+                                    <input id="mui-id-13">
+                                    <div>
+                                        <hr>
+                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="VaildInputDiv">
+                                <label for="mui-id-14">详细地址</label>
+                                <input id="mui-id-14">
+                                <div>
+                                    <hr>
+                                </div>
+                                <div class="ErroyInfo">详细地址不能为空</div>
+                            </div>
+                        </div>
+                        <div class="world-city-wrap">
+                            <noscript></noscript>
+                        </div>
+                    </div>
+                    <span></span>
+                </div>
+                <a class="edit__add-address___2tXLQ" style="display:none;">
+                    <span>取消</span>
+                </a>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="__modal-portal__">
+    <div class="world-city__modal___1YGZG" style="display:none;">
+        <div style="position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; opacity: 1; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); will-change: opacity; transform: translateZ(0px); transition: left 0ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 400ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; z-index: 1005; background: rgba(0, 0, 0, 0.298039);" data-reactid=".1.0"></div>
+        <div style="background-color: rgb(255, 255, 255); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; box-sizing: border-box; font-family: inherit; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-shadow: none; border-radius: 0px; height: auto; width: 100%; position: fixed; left: 0px; bottom: 0px; z-index: 1006; transform: translate3d(0px, 0px, 0px); opacity: 1;">
+            <div class="tab-city-wrap">
+                <div class="world-city__title___2yvya row">
+                    <div class="col-xs-10" style="float:left;">
+                        <h3>请选择</h3>
+                    </div>
+                    <div class="col-xs-2" style="float:right;">
+                        <span class="world-city__close-city-wrap___1DJs-">×</span>
+                    </div>
+                </div>
+                <div class="world-city__tab-city___SwlP5" value="province">
+                    <div style="margin:0;padding:0;width:100%;background-color:#fff;white-space:nowrap;border-top:1px solid #F7F8F9;border-bottom:1px solid #F7F8F9;">
+                        <button tabindex="0" type="button">
+                            <span>省份</span>
+                        </button>
+                        <button tabindex="1" type="button">
+                            <span>城市</span>
+                        </button>
+                        <button class="Active" tabindex="2" type="button">
+                            <span>区县</span>
+                        </button>
+                    </div>
+                    <div>
+                        <div class="undline">&nbsp;</div>
+                    </div>
+                    <div class="world-city__tab-container___1PKSN">
+                        <div style="width: 100%; position: relative; text-align: initial;overflow: scroll;">
+                            <div class="world-city__city-list___31vEe">
+                                <ul class="province" style="height:10.5rem;"></ul>
+                            </div>
+                        </div>
+                        <div style="width: 100%; position: relative; text-align: initial; height: 0px; overflow: scroll;">
+                            <div class="world-city__city-list___31vEe" data-reactid=".1.1.0.1.2.$1.0">
+                                <ul class="city" style="height:10.5rem;"></ul>
+                            </div>
+                        </div>
+                        <div style="width: 100%; position: relative; text-align: initial;overflow: scroll;height: 0px;">
+                            <div class="world-city__city-list___31vEe">
+                                <ul class="area" style="height:10.5rem;"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="__modal-portal__">
+    <div id="addressWrap" style="@(userInfo == null ? "display:none;" : "")">
+        <div class="page-sub-title">选择地址</div>
+        <section class="index__address-list___1E73k">
+            <ul>
+                @foreach (var item in addressList)
+                {
+                    var addressArry = item.AddrArea.Split(',');
+                    if (addressArry.Count() == 1)
+                    {
+                        addressArry = item.AddrArea.Split(' ');
+                    }
+                    var addressInfo = addressArry[0] + " " + addressArry[1] + " " + addressArry[2] + " " + item.AddrDetail;
+                    <li onclick="selectAddr(this)">
+                        <div class="index__address-info___32cXa">
+                            <div class="index__select___lDgpS">
+                                <input class="radio__radio___1pZ0W" type="radio" name="selectAddress" @(item == addressList[0] ? "checked" : "")>
+                            </div>
+                            <div class="address-list__address___3fC4U">
+                                <div class="address-list__all___8_kZj">
+                                    <div>
+                                        <p class="address-list__name___xNNfW">@item.ContactName</p>
+                                        <p class="address-list__tel___2JIKH">@item.ContactPhone</p>
+                                        <input type="hidden" class="address-list__id" value="@item.Id" />
+                                    </div>
+                                </div>
+                                <div class="addressdetail">
+                                    <p>@addressInfo</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="index__address-edit___28m9L disabled">
+                            <span onclick="editAddress(this)">编辑</span>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <a class="index__add-address___eKO6K disabled">
+                <span class="index__icon-addround___sn3EO">+</span>
+                <span>新增地址</span>
+            </a>
+        </section>
+        <div class="index__address-footer___HzWXG">
+            <a class="s-btn s-primary-btn ">使用已选地址</a>
+        </div>
+    </div>
+</div>

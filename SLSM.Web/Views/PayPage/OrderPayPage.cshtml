@@ -1,0 +1,525 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "OrderPayPage";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var OrderInfo = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
+    var OrderDetailInfo = ViewBag.OrderDetailInfo == null ? new List<Order_Detail_View>() : (List<Order_Detail_View>)ViewBag.OrderDetailInfo;
+
+    OrderInfo.Freight = string.IsNullOrEmpty(OrderInfo.Freight) ? "0" : OrderInfo.Freight;
+    OrderInfo.UserDesign = OrderInfo.UserDesign == null ? "" : OrderInfo.UserDesign;
+    var DesignerZipList = OrderInfo.UserDesign.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+}
+<link href="~/Current/css/PayPage/OrderPayPage.css" rel="stylesheet" />
+<script src="~/Current/js/clipboard.js"></script>
+<script>
+    $(function () {
+        $("#js-show-order-details").click(function () {
+            $("#order-details").toggle();
+        })
+
+        $(".payment-group .payments .AliPay").click(function () {
+            $("#alipaysubmit").submit();
+            $(".modal-backdrop.fade.in").show();
+            $(".modal.dji-modal.fade").eq(0).show();
+        })
+
+        $(".payment-group .payments .Wechat").click(function () {
+            $('#page-root .BankPayPage').hide();
+            $('#page-root .PayMainInfo').hide();
+            $('#page-root .WechatPayPage').show();
+        })
+
+        setInterval(function () {
+            jQuery.axget("../../api/order/WeiChatOrder?OrderNo=@ViewBag.OrderNo", function (dataInfo) {
+                if (dataInfo.Message == "该订单支付成功！") {
+                    layer.load(1);
+                    window.location.href = "../../../userinfo/MyOrderList";
+                }
+            });
+        }, 5000);
+
+        $(".modal-backdrop.fade.in").hide();
+
+    })
+
+    var HiddenColorItem;
+    var HiddenFileItem;
+    // #region 文件改变
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(HiddenColorItem).attr('src', res);
+            $(HiddenColorItem).parent().find('input').val(res.replace('@ViewBag.AdminUrl',''));
+            $('#upImg').val('');
+        });
+    }
+    // #endregion
+
+    // #region 文件改变
+    function fileZiperchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            var size = obj.files[i].size / 1024;
+            if (parseInt(size) > 1024 * 50) {
+                layer.msg("上传文件不能大于50MB");
+                isPic = false;
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            var fileName = res.split('/')[res.split('/').length - 1];
+            $('.UpFileAddr').attr('download', fileName);
+            $('.UpFileAddr').attr('href', res);
+            $('.UpFileAddr').html(fileName);
+            $('.UpFileAddr').parent().find('input').val(res.replace('@ViewBag.AdminUrl',''));
+            $('.layui-form-item.uploadItem').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                                        <span onclick="DownUpFileAddr(this)"><a href="'+ res + '" download="' + fileName + '">' + fileName + '</a></span>\
+                                                        <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>\
+                                                        \
+                                                        <input type="hidden" class="hiddenUpFileAddr" value="'+ res + '" />\
+                                                    </div >');
+            $('#upZiper').val('');
+            resetUpFileAddr();
+        });
+    }
+    // #endregion
+
+
+    function delUpFileAddr(that) {
+        $(that).parent().remove();
+
+        resetUpFileAddr();
+    }
+
+    function resetUpFileAddr() {
+        var UpFileAddr = "";
+        $(".hiddenUpFileAddr").each(function () {
+            UpFileAddr = UpFileAddr+$(this).val().replace('@ViewBag.AdminUrl','') + "|";
+        })
+        $("#UpFileAddr").val(UpFileAddr);
+    }
+    $(function () {
+        $('.layui-form img').click(function () {
+            HiddenColorItem = this;
+            $('#upImg').trigger('click');
+        })
+        $('#SureUpload').click(function () {
+            $('#upZiper').trigger('click');
+        })
+
+        $('#OKUpload').click(function () {
+            var obj = new Object();
+            obj.OrderId = @(OrderInfo.Id);
+            obj.DesignImage = $("#UpFileAddr").val();
+            jQuery.axpost('../../Api/Order/SureUploadOrder', JSON.stringify(obj), function (data) {
+                $('.dealert.upload').hide();
+            });
+        })
+    })
+</script>
+<style>
+    .top-part .first-line .right-part .dropdown_cart {
+        margin-top: 26px;
+    }
+
+    .top-part .first-line .right-part .LoginInfo {
+        margin-top: 26px;
+    }
+
+    .top-part .first-line .right-part ul.first_ul li:first-child {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .layui-form-checkbox span a {
+        color: white;
+    }
+</style>
+
+<link href="~/Current/css/layui.css" rel="stylesheet" />
+@Html.Raw(ViewBag.aliOrder);
+<div class="page-container bg-white" style="min-height: 700px;">
+    <div class="container">
+        <div class="order-detail-wrapper">
+            <div class="order-summary row">
+                <div class="col-md-1">
+                    <img alt="status" class="img-order-payment" src="https://pay.djicdn.com/assets/order/created-b351a4df893518accf89c573b24ca39bb13f691f31f81bcb37f0559387693821.png">
+                </div>
+                <div class="col-md-8">
+                    <h6>订单提交成功，请尽快完成付款</h6>
+                    <p class="internation-mr">
+                        <span>订单号：</span>
+                        <span>@OrderInfo.OrderNo</span>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p class="right-text-align order-amount-wrapper internation-mr">
+                        <span>应付金额：</span>
+                        <span class="color-blue order-amount">¥ @System.Decimal.Round(OrderInfo.TotalPrice.Value, 2)</span>
+                    </p>
+                    <p class="right-text-align">
+                        <a id="js-show-order-details">
+                            订单详情 &nbsp;
+                            <i aria-hidden="true" class="fa fa-angle-down"></i>
+                            <i aria-hidden="true" class="fa fa-angle-up"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <ul class="order-details" id="order-details">
+                <li class="row">
+                    <label class="col-md-4">订单号：</label>
+                    <p class="col-md-7">@OrderInfo.OrderNo</p>
+                </li>
+                <li class="row">
+                    <label class="col-md-4">订单金额：</label>
+                    <p class="col-md-7">¥ @System.Decimal.Round((OrderInfo.TotalPrice.Value - decimal.Parse(OrderInfo.Freight)), 2)</p>
+                </li>
+                <li class="row">
+                    <label class="col-md-4">运费：</label>
+                    <p class="col-md-7">¥ @System.Decimal.Round(decimal.Parse(OrderInfo.Freight), 2)</p>
+                </li>
+                <li class="row">
+                    <label class="col-md-4">订单商品：</label>
+                    <ul class="col-md-7">
+
+                        @foreach (var item in OrderDetailInfo)
+                        {
+                            <li>
+                                @item.Name  X @item.Amount
+                            </li>
+                        }
+                    </ul>
+                </li>
+                <li class="row">
+                    <label class="col-md-4">收货信息：</label>
+                    <ul class="col-md-7">
+                        <li>
+                            @OrderInfo.BuyName @OrderInfo.Phone @OrderInfo.Address
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="page-root" class="payment-category">
+            <div class="PayMainInfo">
+                <div class="payment-group">
+                    <h6 class="payment-group-title">在线支付平台</h6>
+                    <div class="payment-group-tips"></div>
+                    <ul class="payments">
+                        <li class="payment AliPay">
+                            <span class="payment-icon-with-text">
+                                <img src="~/Current/images/Image/alipay.svg" />
+                                <span>支付宝</span>
+                            </span>
+                        </li>
+                        <li class="payment Wechat">
+                            <span class="payment-icon-with-text">
+                                <img src="~/Current/images/Image/wxpay.svg" />
+                                <span>微信支付</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="payment-group" style="border-bottom: 1px solid #EEEEEE;">
+                    <h6 class="payment-group-title">银行转账</h6>
+                    <div class="payment-group-tips">
+                        <p>
+                            转账至 SYLOON 商城 宁波银行账户。转账后，到账周期一般为1-3个工作日。
+                        </p>
+                    </div>
+                    <ul class="payments">
+                        <li class="payment" onclick="$('#page-root .BankPayPage').show(); $('#page-root .PayMainInfo').hide(); $('#page-root .WechatPayPage').hide();">
+                            <span class="payment-icon-with-text transfer">
+                                <img src="https://pay.djicdn.com/assets/payments/transfer-fde5924e5df3d238c5023f033d06333cd289af30044706249433efd003d4257a.png">
+                                <span>银行转账</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="PayMainInfo">
+                    <div class="payment-group">
+                        <h6 class="payment-group-title">查看效果</h6>
+                        <div class="payment-group-tips">
+                            如果您希望在付款前看到印刷之后的效果图请直接按右下角图标联系我们的设计师。
+                            也可以点击<button class="layui-btn layui-btn-normal" onclick="$('.dealert.upload').show()">上传Logo</button>上传Logo给设计师。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="BankPayPage" style="display:none;">
+                <div class="rule-description">
+                    <h3>
+                        <span>已选择银行转账支付</span>
+                        <a href="javascript:;" onclick="$('#page-root .BankPayPage').hide(); $('#page-root .PayMainInfo').show(); $('#page-root .WechatPayPage').hide();">修改支付方式</a>
+                    </h3>
+                    <p>请尽快转账，到账周期一般为 1-3 个工作日。转账金额请与订单应付金额保持一致。</p>
+                </div>
+                <div class="transfer-payment-container row">
+                    <div class="cn-step-section col-md-6">
+                        <h3>第一步：转账汇款</h3>
+                        <h5>请将您的订单款项转入以下帐号：</h5>
+                        <ul>
+                            <li>
+                                <label>户名：</label>
+                                <p>宁波赛龙礼品有限公司</p>
+                            </li>
+                            <li>
+                                <label>账号：</label>
+                                <p>
+                                    5005 0122 0000 60194
+                                </p>
+                            </li>
+                            <li>
+                                <label>开户行：</label>
+                                <p>宁波银行股份有限公司小港支行</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cn-step-section step2 col-md-6">
+                        <h3>第二步：发送邮件</h3>
+                        <h5>
+                            汇款完成后请将您的汇款信息发送电子邮件至&nbsp;
+                            <a href="mailto:lp@syloon.com" class="color-blue">lp@syloon.com</a>，邮件格式如下例子：
+                        </h5>
+                        <section class="example-mail-title">
+                            <h6>邮件标题：</h6>
+                            <p>@OrderInfo.OrderNo</p>
+                        </section>
+                        <section class="example-mail-content">
+                            <h6>邮件内容：</h6>
+                            <ul class="example">
+                                <li>
+                                    <label>订单号：</label>
+                                    <p>@OrderInfo.OrderNo</p>
+                                </li>
+                                <li>
+                                    <label>汇款人姓名：</label>
+                                    <p>张三</p>
+                                </li>
+                                <li>
+                                    <label>汇款卡号：</label>
+                                    <p>622202154889036523</p>
+                                </li>
+                                <li>
+                                    <label>汇款金额：</label>
+                                    <p>RMB: ¥35.00</p>
+                                </li>
+                                <li>
+                                    <label>汇款银行支行：</label>
+                                    <p>中国建设银行深圳科技园支行</p>
+                                </li>
+                            </ul>
+                        </section>
+                        <section class="example-copy">
+                            <a class="color-blue" data-clipboard-action="copy" data-clipboard-text="订单号：@OrderInfo.OrderNo
+                                                                                                    汇款人姓名：张三
+                                                                                                    汇款卡号：622202154889036523
+                                                                                                    汇款金额：RMB: ¥35.00
+                                                                                                    汇款银行支行：中国建设银行深圳科技园支行" id=" btn-copy-example">复制邮件格式</a>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <div class="WechatPayPage" style="display:none;">
+                <div class="rule-description">
+                    <h3>
+                        <span>已选择微信支付</span>
+                        <a href="javascript:;" onclick="$('#page-root .BankPayPage').hide(); $('#page-root .PayMainInfo').show(); $('#page-root .WechatPayPage').hide();">修改支付方式</a>
+                    </h3>
+                    <img src="~/Current/images/Image/wxpay.svg" alt="Wxpay" style="float:left;width: 48px;height: 48px;margin-top: 4px;">
+                    <div class="cmblife-guide-inner" style="margin-left: 60px;">
+                        <section>
+                            <p>通过微信首页右上角扫一扫，或者在“发现-扫一扫”扫描二维码支付。</p>
+                            <p>
+                                本页面将在支付完成后自动刷新，若没有刷新，请
+                                <a href="../../PayPage/OrderPayPage?OrderInfoId=@(ViewBag.OrderInfoId)">点击此处</a>刷新页面。
+                            </p>
+                        </section>
+                    </div>
+                </div>
+                <div class="wxpay-js-scan-container">
+                    <div class="qrcode-image-container" id="qrcode-image-container">
+                        <div class="qrcode-image-wrapper" style="float:left;">
+                            <img alt="qrcode" class="qrcode-image" id="qrcodeimage" src="../../../Api/Home/GetQrCode?data=@(ViewBag.WechatOrder)&OrderNo=@(ViewBag.OrderNo)" style="height: 200px;">
+                            <div class="qrcode-image-error" id="qrcode-image-error"></div>
+                        </div>
+                        <img alt="qrcode-guide" class="qrcode-guide-image" src="~/Current/images/Image/wxPhone.svg" style="margin-left: 20px;" />
+                    </div>
+                </div>
+            </div>
+            <div role="dialog" tabindex="-1" class="modal dji-modal fade">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button onclick="$('.modal-backdrop.fade.in').hide(); $('.modal.dji-modal.fade').eq(0).hide();" type="button" class="close">
+                                <img alt="x" src="https://pay.djicdn.com/assets/btn-close-icon-5a3a0e84a3d75839253ea0a2e56809709a1a3485d083e2023dbbd25e2297dc8f.svg" class="btn-icon-dji-modal-close">
+                            </button>
+                            <h4 class="modal-title">正在支付...</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <p class="fs-14 center-text-align">请您在新打开的页面进行支付。支付完毕前，请勿关闭此窗口。</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="primary" class="btn dji-btn-ask" onclick=" $('.modal.dji-modal.fade').eq(0).hide(); $('.modal.dji-modal.fade.problem').show();">付款遇到问题</button>
+                            <button data-dismiss="modal" type="button" class="btn dji-btn-ask" onclick="location.reload()">已完成此次支付</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="dialog" tabindex="-1" class="modal dji-modal dji-loading-modal fade">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p class="spinner">
+                                <i class="fa fa-spinner"></i>
+                                <span>加载中，请稍候...</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="dialog" tabindex="-1" class="modal dji-modal fade">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">提示</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>提示内容</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="primary" class="btn btn-primary">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal dji-modal fade  problem" style="display:none;">
+                <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-label="Close" data-dismiss="modal" type="button" class="close" onclick="$('.modal-backdrop.fade.in').hide(); $(this).parent().parent().parent().parent().hide();">
+                            <img alt="x" src="https://pay.djicdn.com/assets/btn-close-icon-5a3a0e84a3d75839253ea0a2e56809709a1a3485d083e2023dbbd25e2297dc8f.svg" class="btn-icon-dji-modal-close">
+                        </button>
+                        <h4 class="modal-title">正在支付...</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h6 class="fs-16 fw-bold">支付遇到问题？没关系，您可以尝试以下方案：</h6>
+                            <ul class="retry-tips-list">
+                                <li>
+                                    <a href="javascript:void(0)" onclick="$('.modal-backdrop.fade.in').hide();$(this).parent().parent().parent().parent().parent().parent().parent().hide();" class="fs-14 color-blue">选择其他支付方式再试试 &gt;</a>
+                                </li>
+                                <li>
+                                    <a class="fs-14 color-blue pointer" onclick="$('.modal-backdrop.fade.in').hide();$(this).parent().parent().parent().parent().parent().parent().parent().hide();$('#page-root .BankPayPage').show(); $('#page-root .PayMainInfo').hide(); $('#page-root .WechatPayPage').hide();">选择银行转账 &gt;</a>
+                                    <p class="fs-12">转账后，一般1-3个工作日到账</p>
+                                </li>
+                            </ul>
+                            <p class="fs-14">温馨提示：不同的支付平台和银行一般都有支付限额，如遇限额问题，建议您拨打银行客服热线提高支付限额。</p>
+                            <br>
+                            <p class="fs-14">
+                                <span>如有其他支付问题，您可以随时点击右下方</span>联系在线客服&nbsp;&gt;
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="display: none;">
+                        <button type="primary" class="btn dji-btn-ask">付款遇到问题</button>
+                        <button data-dismiss="modal" type="button" class="btn dji-btn-ask">已完成此次支付</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+<!-- 消息框 -->
+<form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpZiper" style="display:none;">
+    <input name="upZiper" type="file" id="upZiper" onchange="fileZiperchange(this)" accept=".zip,.rar,.7z">
+</form>
+<script src="~/Current/js/jquery-form.js"></script>
+<div class="dealert upload" style="display: none;">
+    <div class="zz"></div>
+    <div class="detailcontent" style="width:400px;">
+        <h2 class="h2tit" style="margin-top:0px;margin-bottom:0px;">
+            上传Logo
+            <i onclick="$('.dealert').css('display','none')"></i>
+        </h2>
+        <div class="content">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding-left:0px;width:95px;padding-right:0px;">上传Logo</label>
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" id="SureUpload">上传Logo</button>
+                    <button class="layui-btn" type="button" id="OKUpload">确定上传</button>
+                    <input id="UpFileAddr" name="UpFileAddr" type="hidden" value="@OrderInfo.UserDesign" />
+                </div>
+            </div>
+            <div class="layui-form-item uploadItem">
+                @foreach (var item in DesignerZipList)
+                {
+                    var fileName = item.Split('/').LastOrDefault();
+                    <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                        <span onclick="DownUpFileAddr(this)"><a href="@ViewBag.AdminUrl@item" download="@fileName">@fileName</a></span>
+                        <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>
+                        <input type="hidden" class="hiddenUpFileAddr" value="@item" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 消息框 -->
+<div class="modal-backdrop fade in" style="display:block;"></div>
+
+
+<script>
+    $(function () {
+        var instance = new Clipboard('#btn-copy-example');
+        instance.on('success',
+            function () {
+                layer.msg("复制成功");
+            });
+        instance.on('error',
+            function () {
+                layer.msg("复制失败");
+            });
+    });
+</script>
+

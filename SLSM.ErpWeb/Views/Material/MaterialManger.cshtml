@@ -1,0 +1,89 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    List<Producer> ProducerList = ViewBag.ProducerList == null ? new List<Producer>() : (List<Producer>)ViewBag.ProducerList;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>btable</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/btable.css" rel="stylesheet" />
+    <link href="~/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Current/css/Material/MaterialManger.css" rel="stylesheet" />
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+    <style>
+        .layui-btn.layui-btn-mini.layui-icon {
+            font-size: 20px;
+            border: 0px;
+            background: transparent;
+            color: black;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('#ShowCart').click(function () {
+                //这是核心的代码。
+                parent.tab.tabAdd({
+                    href: '../../Material/WaitBuyerInfo', //地址
+                    icon: '&#xe60a',
+                    title: '待采购列表'
+                });
+            })
+           
+        })
+    </script>
+</head>
+
+<body class="bodyInfo">
+    <div class="showInfo">
+
+    </div>
+    <div style="margin:0px; background-color: white; margin:0 10px;min-width:1400px;">
+        <blockquote class="layui-elem-quote">
+            <form class="layui-form title-part" style="">
+                <div class="layui-inline" style="float:right;">
+                    <a href="javascript:;" class="layui-btn layui-btn-small" id="add" style="background:#34A8ff;">
+                        <i class="layui-icon">&#xe608;</i> &nbsp; 新建产品
+                    </a>
+                </div>
+                <div class="layui-inline" style="margin:0;clear: initial;">
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;float:right;padding-left:10px;">
+                        <button id="submit_btn" lay-filter="search" class="layui-btn layui-btn-small" lay-submit>搜索</button>
+                    </div>
+
+                </div>
+                <div class="layui-inline" style="margin:0;clear: initial;">
+                    <select id="ProduterId" lay-filter="Produter">
+                        <option value="aaa">全部</option>
+                        @foreach (var item in ProducerList)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </form>
+            <div style="clear:both;"></div>
+        </blockquote>
+        <div id="content" style="width: 100%;height: 533px;"></div>
+    </div>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/Material/MaterialManger.js?version=20181017001"></script>
+    <script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+    <link href="~/Current/css/Table/Table.css" rel="stylesheet" />
+</body>
+
+</html>

@@ -1,0 +1,1272 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "MyOrderList";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var List_Order = (List<SLSM.Web.Models.Response.Order.OrderInfoResponse>)ViewBag.Order;
+    var Images = (List<Carousel_Image>)ViewBag.AllImage;
+    var colorList = ViewBag.ColorList == null ? new List<Colorinfo>() : (List<Colorinfo>)ViewBag.ColorList;
+    var List_Comm = ViewBag.listCommdity == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+}
+@section js{
+    <script>
+    //确认收货
+    function ToConfirm(Id) {
+        var datas = { Id: Id }
+        layer.confirm('是否确认收货！？', {
+            closeBtn: 0,
+            btn: ['是', '否'] //按钮
+        }, function (index) {
+
+            jQuery.axpost('../../Api/Order/EnterThing', JSON.stringify(datas), function (data) {
+                layer.close(index);
+                layer.msg(data.Message);
+                window.location.reload();
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    // #region 去付款
+    function ToPay(ID) {
+        var data = new Object();
+        layer.load(1);
+        location.href = "../../PayPage/OrderPayPage?OrderInfoId=" + ID;
+    }
+    // #endregion
+
+    // #region 取消订单
+    function ToCancel(Id) {
+        var datas = { Id: Id }
+        layer.confirm('是否确认取消订单！？', {
+            closeBtn: 0,
+            btn: ['是', '否'] //按钮
+        }, function (index) {
+            jQuery.axpost('../../Api/Order/CancelOrder', JSON.stringify(datas), function (data) {
+                layer.close(index);
+                layer.msg(data.Message);
+                window.location.reload();
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+    // #endregion
+
+    function StartDesign(that, Id) {
+        var AdminUrl = $('#HiddenAdminUrl').val();
+        var obj = new Object();
+        obj.Id = Id;
+        $('#hiddDetailId').val(obj.Id);
+        jQuery.axpost('../../Api/Order/DetailDesign', JSON.stringify(obj), function (data) {
+            //移除原有图片框
+            $('.orderalert .conbox .rightbox .bd .model.model1 .left .imgbox').remove();
+            //移除原有背景框
+            $('.orderalert .conbox .leftbox .bjgbox').remove();
+            for (var i = 0; i < data.ListData.length; i++) {
+                // #region 添加图片框
+                var ImageUrl = "";
+                if (data.ListData[i].Image != null) {
+                    ImageUrl = AdminUrl + data.ListData[i].Image
+                }
+                else {
+                    ImageUrl = AdminUrl + data.ListData[i].MainImage
+                }
+                $('.orderalert .conbox .rightbox .bd .model.model1 .left').append('<div class="imgbox">\
+                                                                                    <img src= "'+ ImageUrl + '" onclick="ShowBjgBox(' + i + ')" >\
+                                                                                    <span>'+ data.ListData[i].PrintingPosition + ' </span>\
+                                                                                    <input type="hidden" class="Printing" value="'+ data.ListData[i].Printing + '"/>\
+                                                                                   </div>');
+                // #endregion
+
+                // #region 添加背景框
+                var active = "";
+                if (i == 0) {
+                    active = "active";
+                }
+                var str = '<div class="bjgbox ' + active + '" Position="' + data.ListData[i].PrintingPosition + '">\
+                            <div class="imgbox" >\
+                                <i></i>\
+                                <img src="'+ AdminUrl + data.ListData[i].MainImage + '" alt="">\
+                                <input type="hidden" value="'+ data.ListData[i].Id + '" class="designId" >\
+                            </div>\
+                            <div style="">\
+                            <div class="twowords">\
+                            ';
+                if (data.ListData[i].Content != null) {
+                    str = str + data.ListData[i].Content;
+                }
+                else {
+                    str = str + '<div class="pic1">\
+                                </div>\
+                                <div class="picbox" id="draggable">\
+                                </div>\
+                                <div class="bx">\
+                                </div>';
+                }
+                str = str + "</div>\
+                                </div>\
+                            </div>";
+                $('.orderalert .conbox .leftbox').append(str);
+                // #endregion
+            }
+            $('.orderalert .bjgbox img').each(function () {
+                ConvertImg(this);
+            });
+            AddMove();
+            $('.orderalert').show();
+        })
+    }
+
+    function LookDesign(that, Id) {
+        var AdminUrl = $('#HiddenAdminUrl').val();
+        var obj = new Object();
+        obj.Id = Id;
+        $('#hiddDetailId').val(obj.Id);
+        jQuery.axpost('../../Api/Order/DesignImageInfo', JSON.stringify(obj), function (data) {
+            $('.orderInfoalert .conbox .loca .left').empty();
+            for (var i = 0; i < data.ListData.length; i++) {
+                // #region 添加图片框
+                var ImageUrl = "";
+                var DesignImage = "";
+                if (data.ListData[i].Image != null) {
+                    ImageUrl = AdminUrl + data.ListData[i].Image
+                }
+                else {
+                    ImageUrl = AdminUrl + data.ListData[i].MainImage
+                }
+                debugger;
+                if (data.ListData[i].DesignImage == null) {
+                    DesignImage = "../Base/images/NothingMore.jpg";
+                }
+                else {
+                    DesignImage = AdminUrl + data.ListData[i].DesignImage;
+                }
+                if (i == 0) {
+                    $(".orderInfoalert .leftbox .imgbox img").eq(0).attr("src", DesignImage);
+                    $(".orderInfoalert .leftbox .imgbox img").eq(1).attr("src", ImageUrl);
+                }
+                $('.orderInfoalert .conbox .loca .left').append('<div class="imgbox">\
+                                                                                <img src= "'+ DesignImage + '" Design_src="' + ImageUrl + '" onclick="ShowOtherBox(this)" >\
+                                                                                <span>'+ data.ListData[i].PrintingPosition + ' </span>\
+                                                                                <input type="hidden" class="Printing" value="'+ data.ListData[i].Printing + '"/>\
+                                                                                </div>');
+                // #endregion
+            }
+            $('.orderInfoalert').show();
+        })
+    }
+
+    function SureDesign(that, Id) {
+
+        var AdminUrl = $('#HiddenAdminUrl').val();
+        var obj = new Object();
+        obj.Id = Id;
+        $('#hiddDetailId').val(obj.Id);
+        jQuery.axpost('../../Api/Order/DesignCommitInfo', JSON.stringify(obj), function (data) {
+            $('.SureDesignAlert').show();
+            $('.SureDesignAlert .orderNo').html(data.Model1.OrderDetailNo);
+            $('.SureDesignAlert .SKUNO').html(data.Model1.SKU);
+            $('.SureDesignAlert .CommdityName').html(data.Model1.CommodityName);
+            $('.SureDesignAlert .ColorName').html(data.Model1.ColorName);
+            $('.SureDesignAlert .PrintFunc').html(data.Model1.PrintingFunc);
+            $('.SureDesignAlert .proposal').html(data.Model1.proposal);
+            $('.SureDesignAlert .WorkSheetImg').attr('src', AdminUrl + data.Model1.SKUImage);
+            if (data.Model1.UserSure) {
+                $(".SureInfoBtn").hide();
+            }
+            else {
+                $(".SureInfoBtn").show();
+            }
+
+
+        })
+    }
+
+    function UploadDesign(Id) {
+        var obj = new Object();
+        obj.OrderID = Id;
+        $('#hiddDetailId').val(obj.Id);
+        jQuery.axpost('../../Api/Order/OrderDesignInfo', JSON.stringify(obj), function (data) {
+            $("#UpFileAddr").val(data.Message);
+            data.Message = data.Message == null ? "" : data.Message;
+            var DesignerZipList = data.Message.split('|');
+            $(".layui-form-item.uploadItem").empty();
+            for (var i = 0; i < DesignerZipList.length; i++) {
+                if (DesignerZipList[i] != "" && DesignerZipList[i] != undefined) {
+                    var fileNameList = DesignerZipList[i].split('/');
+                    var filename = fileNameList[fileNameList.length - 1];
+                    $(".layui-form-item.uploadItem").append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                                                <span onclick= "DownUpFileAddr(this)" >\
+                                                                <a href= "@ViewBag.AdminUrl'+ DesignerZipList[i] + '" download= "' + filename + '" > ' + filename+'</a ></span >\
+                                                                <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>\
+                                                                <input type="hidden" class="hiddenUpFileAddr" value="'+ DesignerZipList[i] + '" />\
+                                                                </div> ')
+                }
+            }
+            $(".dealert.upload").show();
+        })
+    }
+
+    function ShowOtherBox(that) {
+        var UserImage = $(that).attr("src");
+        var Designimage = $(that).attr("Design_src");
+        $(".orderInfoalert .leftbox .imgbox img").eq(0).attr("src", UserImage);
+        $(".orderInfoalert .leftbox .imgbox img").eq(1).attr("src", Designimage);
+    }
+
+    function ShowBjgBox(num) {
+        var index = layer.load(1);
+        CreateImage(num);
+        setTimeout(function () { layer.close(index) }, 3000);
+    }
+
+    // #region 图片方法
+    //创建图片
+    function CreateImage(num, hidden) {
+        var width = '480';
+        var height = '480';
+        $('.mydiv').each(function () {
+            $(this).children('div').eq(1).hide();
+        });
+        html2canvas(document.querySelector(".orderalert .bjgbox.active")).then(function (canvas) {
+            var a = Canvas2Image.convertToPNG(canvas, width, height);
+            $('.orderalert .bjgbox img').each(function () {
+                ConvertBackImg(this);
+            });
+            var datas = new Object();
+            // #region 初始参数
+            datas.DesignId = $(".orderalert .bjgbox.active .imgbox input").val();
+            datas.OrderDetailId = $('#hiddDetailId').val();
+            datas.Image = a.src;
+            for (var i = 0; i < $(".orderalert .bjgbox").length; i++) {
+                if ($(".orderalert .bjgbox").eq(i).hasClass('active')) {
+                    datas.PrintingPosition = $(".orderalert .conbox .rightbox .bd .model.model1 .left .imgbox").eq(i).find("span").html().trim();
+                    datas.Printing = $(".orderalert .conbox .rightbox .bd .model.model1 .left .imgbox").eq(i).find("input").val().trim();
+                    datas.Content = repalceKey($('.orderalert .conbox .leftbox .bjgbox').eq(i).find('.twowords').html());
+                    while (datas.Content.indexOf("data:image") != -1) {
+                        datas.Content = repalceKey($('.orderalert .conbox .leftbox .bjgbox').eq(i).find('.twowords').html());
+                    }
+                    $(".orderalert .conbox .rightbox .bd .model.model1 .left .imgbox").eq(i).find("img").attr('src', a.src);
+                }
+            }
+            var input = $(".orderalert .bjgbox.active .imgbox input");
+            // #endregion
+            jQuery.axpost('../../Api/Order/DetailPositionDesign', JSON.stringify(datas), function (data) {
+                $(input).val(data.Message);
+                layer.closeAll('loading');
+            })
+
+            $('.orderalert .conbox .leftbox .bjgbox.active').removeClass('active');
+            $('.orderalert .conbox .leftbox .bjgbox:eq(' + num + ')').addClass('active');
+            $('.orderalert .leftbox .bjgbox i').each(function () {
+                $(this).show();
+            });
+            if (hidden == true) {
+                $('.orderalert').hide();
+            }
+            $('.orderalert .bjgbox img').each(function () {
+                ConvertImg(this);
+            });
+        });
+    }
+
+
+    //替换所有html的特殊符号
+    function repalceKey(str) {
+        str = str.replace(/'/g, "Single_quotation&marks");
+        str = str.replace(/\"/g, 'Double_quotation&marks');
+        str = str.replace(/\\/g, 'BackSlash&marks');
+        return str;
+    }
+    // #endregion
+
+    $(function () {
+        $('.v2').click(function () {
+            var WordList = new Array();
+            $('.orderalert .bjgbox .bx .mydiv').each(function () {
+                var mydiv = $(this);
+                var Position = $(this).parent().parent().parent().parent().attr('position');
+                var zindex = $(this).css('z-index');
+                // #region 计算排列顺序
+                var Count_Index = 1;
+                var Count_Flag = false;
+                $('.orderalert .bjgbox .bx .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex > zindex) {
+                        Count_Index++;
+                    }
+                    else if (thiszindex = zindex) {
+                        if (Count_Flag) {
+                            Count_Index++;
+                        }
+                        if ($(this).is(mydiv)) {
+                            Count_Flag = true;
+                        }
+                    }
+                })
+                $('.orderalert .bjgbox .picbox .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex > zindex) {
+                        Count_Index++;
+                    }
+                })
+
+                $('.orderalert .bjgbox .pic1 .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex > zindex) {
+                        Count_Index++;
+                    }
+
+                })
+                // #endregion
+                var fontsize = $(this).find('.MyContent span').css('font-size');
+                var color = colorTo16($(this).find('.MyContent span').css('color'));
+                var fontFamily = $(this).find('.MyContent span').css('font-family');
+                var Text = $(this).find('.MyContent span').html().trim();
+                var rotate = 0;
+                if ($(this).css('transform').indexOf('matrix') != -1) {
+                    var array = $(this).css('transform').split('(')[1].split(')')[0].split(',');
+                    rotate = getmatrix(array[0], array[1], array[2], array[3], array[4], array[5]);
+                }
+                WordList.push({ fontsize: fontsize, color: color, fontFamily: fontFamily, Text: Text, Position: Position, rotate: rotate, Count_Index: Count_Index });
+            })
+
+            var OnLineImageList = new Array();
+            $('.orderalert .bjgbox .picbox .mydiv').each(function () {
+                var mydiv = $(this);
+                var Position = $(this).parent().parent().parent().parent().attr('position');
+                var zindex = $(this).css('z-index');
+                // #region 计算排列顺序
+                var Count_Index = 1;
+                var Count_Flag = false;
+                $('.orderalert .bjgbox .bx .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex >= zindex) {
+                        Count_Index++;
+                    }
+                })
+                $('.orderalert .bjgbox .picbox .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex > zindex) {
+                        Count_Index++;
+                    }
+                    else if (thiszindex = zindex) {
+                        if (Count_Flag) {
+                            Count_Index++;
+                        }
+                        if ($(this).is(mydiv)) {
+                            Count_Flag = true;
+                        }
+
+                    }
+                })
+
+                $('.orderalert .bjgbox .pic1 .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex > zindex) {
+                        Count_Index++;
+                    }
+
+                })
+                // #endregion
+                var ImageUrl = $(this).children('.MyContent').children('img').val();
+                var rotate = 0;
+                if ($(this).css('transform').indexOf('matrix') != -1) {
+                    var array = $(this).css('transform').split('(')[1].split(')')[0].split(',');
+                    rotate = getmatrix(array[0], array[1], array[2], array[3], array[4], array[5]);
+                }
+                OnLineImageList.push({ ImageUrl: ImageUrl, Position: Position, rotate: rotate, Count_Index: Count_Index });
+            })
+
+            var CustomerImageList = new Array();
+            $('.orderalert .bjgbox .pic1 .mydiv').each(function () {
+                var mydiv = $(this);
+                var Position = $(this).parent().parent().parent().parent().attr('position');
+                var zindex = $(this).css('z-index');
+                // #region 计算排列顺序
+                var Count_Index = 1;
+                var Count_Flag = false;
+                $('.orderalert .bjgbox .bx .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex >= zindex) {
+                        Count_Index++;
+                    }
+                })
+                $('.orderalert .bjgbox .picbox .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex >= zindex) {
+                        Count_Index++;
+                    }
+                })
+
+                $('.orderalert .bjgbox .pic1 .mydiv').each(function () {
+                    var thiszindex = $(this).css('z-index');
+                    if (thiszindex > zindex) {
+                        Count_Index++;
+                    }
+                    else if (thiszindex = zindex) {
+                        if (Count_Flag) {
+                            Count_Index++;
+                        }
+                        if ($(this).is(mydiv)) {
+                            Count_Flag = true;
+                        }
+                    }
+                })
+                // #endregion
+                var ImageUrl = $(this).children('.MyContent').children('img').val();
+                var rotate = 0;
+                if ($(this).css('transform').indexOf('matrix') != -1) {
+                    var array = $(this).css('transform').split('(')[1].split(')')[0].split(',');
+                    rotate = getmatrix(array[0], array[1], array[2], array[3], array[4], array[5]);
+                }
+                CustomerImageList.push({ ImageUrl: ImageUrl, Position: Position, rotate: rotate, Count_Index: Count_Index });
+            })
+            var datas = new Object();
+            datas.DetailID = $("#hiddDetailId").val();
+            datas.WordList = WordList;
+            datas.CustomerImageList = CustomerImageList;
+            datas.OnLineImageList = OnLineImageList;
+            jQuery.axpost('../../Api/Order/UpdateDesignInfo', JSON.stringify(datas), function (data) {
+                layer.msg(data.Message);
+                layer.closeAll('loading');
+                $('.orderalert').hide();
+
+            })
+            CreateImage(0, true);
+        })
+    })
+    function colorTo16(color) {
+        if (color.indexOf('rgb') != -1) {
+            var array = color.split('(')[1].split(')')[0].split(',');
+            var color = "#" + stringToHex(array[0].trim()) + stringToHex(array[1].trim()) + stringToHex(array[2].trim());
+        }
+        return color;
+    }
+
+    function stringToHex(str) {
+        var val = "";
+        var value = parseInt(str);
+        if (value != NaN) {
+            val = value.toString(16);
+            if (val.length < 2) {
+                return "0" + val;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return "00";
+        }
+
+    }
+
+    function getmatrix(a, b, c, d, e, f) {
+        var aa = Math.round(180 * Math.asin(a) / Math.PI);
+        var bb = Math.round(180 * Math.acos(b) / Math.PI);
+        var cc = Math.round(180 * Math.asin(c) / Math.PI);
+        var dd = Math.round(180 * Math.acos(d) / Math.PI);
+        var deg = 0;
+        if (aa == bb || -aa == bb) {
+            deg = dd;
+        } else if (-aa + bb == 180) {
+            deg = 180 + cc;
+        } else if (aa + bb == 180) {
+            deg = 360 - cc || 360 - dd;
+        }
+        return deg >= 360 ? 0 : deg;
+        //return (aa+','+bb+','+cc+','+dd);
+    }
+
+    var HiddenColorItem;
+    var HiddenFileItem;
+    // #region 文件改变
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(HiddenColorItem).attr('src', res);
+            $(HiddenColorItem).parent().find('input').val(res.replace('@ViewBag.AdminUrl', ''));
+            $('#upImg').val('');
+        });
+    }
+    // #endregion
+
+    // #region 文件改变
+    function fileZiperchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            var size = obj.files[i].size / 1024;
+            if (parseInt(size) > 1024 * 50) {
+                layer.msg("上传文件不能大于50MB");
+                isPic = false;
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            var fileName = res.split('/')[res.split('/').length - 1];
+            $('.UpFileAddr').attr('download', fileName);
+            $('.UpFileAddr').attr('href', res);
+            $('.UpFileAddr').html(fileName);
+            /**/
+            $('.UpFileAddr').parent().find('input').val(res.replace('@ViewBag.AdminUrl', ''));
+            /**/
+            $('.layui-form-item.uploadItem').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                                        <span onclick="DownUpFileAddr(this)"><a href="'+ res + '" download="' + fileName + '">' + fileName + '</a></span>\
+                                                        <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>\
+                                                        <input type="hidden" class="hiddenUpFileAddr" value="'+ res + '" />\
+                                                    </div >');
+            $('#upZiper').val('');
+            resetUpFileAddr();
+        });
+    }
+    // #endregion
+
+
+    function delUpFileAddr(that) {
+        $(that).parent().remove();
+
+        resetUpFileAddr();
+    }
+
+    function resetUpFileAddr() {
+        var UpFileAddr = "";
+        $(".hiddenUpFileAddr").each(function () {
+            /**/
+            UpFileAddr = UpFileAddr + $(this).val().replace('@ViewBag.AdminUrl', '') + "|";
+            /**/
+        })
+        $("#UpFileAddr").val(UpFileAddr);
+    }
+    $(function () {
+        $('.layui-form img').click(function () {
+            HiddenColorItem = this;
+            $('#upImg').trigger('click');
+        })
+        $('#SureUpload').click(function () {
+            $('#upZiper').trigger('click');
+        })
+
+        $('#OKUpload').click(function () {
+            var obj = new Object();
+            obj.OrderId = $('#hiddDetailId').val();
+            obj.DesignImage = $("#UpFileAddr").val();
+            jQuery.axpost('../../Api/Order/SureUploadOrder', JSON.stringify(obj), function (data) {
+                $('.dealert.upload').hide();
+            });
+        })
+    })
+
+
+    function sureDesignConfirm() {
+        layer.confirm('确认效果图无误？', {
+            btn: ['确定', '取消']//按钮
+        }, function (index) {
+            debugger;
+            var obj = new Object();
+            obj.Id = $('#hiddDetailId').val();
+            jQuery.axpost('../../Api/Order/SureOrdersubmit', JSON.stringify(obj), function (data) {
+                layer.msg("效果图已确认，订单转入生产");
+                layer.close(index);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            });
+        });
+    }
+    </script>
+    <script src="~/Current/script/canvas2image.js"></script>
+    <script src="~/Current/script/html2canvas.min.js"></script>
+    <link href="~/Current/css/layui.css" rel="stylesheet" />
+}
+@section css{
+    <link href="~/Current/css/UserInfo/MyOrderList.css?version=1.02" rel="stylesheet" />
+}
+
+@section TitelLink{
+    <li><a href="javascript:;">我的订单</a></li>
+}
+<div class="HiddenInput">
+    <input type="hidden" id="HiddenOrderId" value="" />
+    <input type="hidden" id="hiddDetailId" value="0" />
+</div>
+<h2 style="margin-bottom: 0px">我的订单</h2>
+<div class="row">
+    <div class="col-xs-12" id="order-list" style="min-height:700px;">
+        @foreach (var item in List_Order)
+        {
+            string xiadan = "", shenhe = "", changping = "", zhifu = "", chenggong = "";
+            <div class="order-item-li">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-5 pay" style="text-align:left;">
+                            <div class="row">
+                                <h3>
+                                    订单号:&nbsp;&nbsp;
+                                    <a>@item.OrderNo</a>
+                                </h3>
+                            </div>
+                        </div>
+                        @if (item.Status == "待付款")
+                        {
+                            xiadan = "active";
+                            <div class="col-xs-7">
+                                <div class="row">
+                                    &nbsp;&nbsp;
+                                    <a class="btn btn-primary" href="javascript:;" style="float:right;margin-left:10px;" onclick="ToCancel(@item.Id)">取消</a>
+                                    <a class="btn btn-primary" href="javascript:;" style="float:right;margin-left:10px;" onclick="ToPay(@item.Id)">支付</a>
+                                    <a class="btn btn-primary" href="javascript:;" style="float:right" onclick="UploadDesign(@item.Id)">上传Logo</a>
+
+                                </div>
+                            </div>
+                        }
+                        else if (item.Status == "待收货")
+                        {
+                            shenhe = "active";
+                            <div class="col-xs-7">
+                                <div class="row">
+                                    &nbsp;&nbsp;
+                                    <a class="btn btn-primary" href="javascript:;" style="float:right" onclick="ToConfirm(@item.Id)">确认收货</a>
+                                </div>
+                            </div>
+                        }
+                        else if (item.Status == "待发货")
+                        {
+                            changping = "active";
+                        }
+                        else if (item.Status == "待评价")
+                        {
+                            chenggong = "active";
+                        }
+                        else if (item.Status == "待发货")
+                        {
+                            zhifu = "active";
+                        }
+                        else
+                        {
+                            xiadan = "active";
+                        }
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="order-li">
+                    <div class="order-status-graph clearfix">
+                        <ul>
+                            <li class="@xiadan" style="width:19%">
+                                <span class="icon">1</span>
+                                <div class="order-status">下单</div>
+                            </li>
+                            <li class="@zhifu" style="width:19%">
+                                <span class="icon">2</span>
+                                <div class="order-status">支付成功</div>
+                            </li>
+                            <li class="@changping" style="width:19%">
+                                <span class="icon">3</span>
+                                <div class="order-status">产品制作</div>
+                            </li>
+                            <li class="@shenhe" style="width:19%">
+                                <span class="icon">4</span>
+                                <div class="order-status">已发货</div>
+                            </li>
+                            <li class="@chenggong" style="width:19%">
+                                <span class="icon">5</span>
+                                <div class="order-status">订单成功</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <style>
+                        table.table-responsive.state tr th,
+                        table.table-responsive.state tr td {
+                            text-align: center !important;
+                        }
+                    </style>
+                    <table class="table table-responsive state">
+                        <tbody>
+                            <tr>
+                                <th style="width:10%;">订单状态</th>
+                                <th style="width:10%;">支付方式</th>
+                                <th style="width:10%;">总金额</th>
+                                <th style="width:10%;">下单时间</th>
+                                <th style="width:35%;">收货地址</th>
+                                <th style="width:10%;">发票抬头</th>
+                                <th style="width:15%;">企业税号</th>
+                            </tr>
+                            <tr>
+                                @{
+                                    var InvoiceArray = item.Invoice == null ? new List<string>() : item.Invoice.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                }
+                                <td>@item.Status</td>
+                                <td>@item.PayType</td>
+                                <td><div>¥@item.TotalPrice</div></td>
+                                <td>@item.OrderTime</td>
+                                <td>@item.Address @item.BuyName @item.Phone</td>
+                                @if (InvoiceArray.Count >= 2)
+                                {
+                                    <td>@InvoiceArray[0]</td>
+                                    <td>@InvoiceArray[1]</td>
+                                }
+                                else
+                                {
+                                    <td>未填写</td>
+                                    <td>未填写</td>
+                                }
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed col-md-12">
+                        <tbody>
+                            <tr style="border-color:#ddd;background-color:whitesmoke;font-size:12px;color:#666">
+                                <th style="text-align: center; width: 45%">商品</th>
+                                <th style="text-align: center; width: 20%">印刷方案</th>
+                                <th style="text-align: center; width: 10%">价格</th>
+                                <th style="text-align: center; width: 10%">数量</th>
+                                <th style="text-align: center; width: 20%">小计</th>
+                            </tr>
+                            @foreach (var detail in item.ListDetail)
+                            {
+                                if (detail.DesignerImage != null)
+                                {
+                                    var designerImageList = detail.DesignerImage.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    if (designerImageList.Count != 0)
+                                    {
+                                        detail.Image = designerImageList[0].Split(',')[1];
+                                    }
+                                }
+                                var thisColor = colorList.Where(p => p.ChinaDescribe == detail.Color && p.ParentId != 0).FirstOrDefault();
+                                var Commodity = List_Comm.Where(p => p.Id == detail.CommodityId).FirstOrDefault();
+                                var ImageList = Commodity != null ? Commodity.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList() : new List<string>();
+                                string Image = "";
+                                foreach (var ImageInfo in ImageList)
+                                {
+                                    var ImageArray = ImageInfo.Split(';');
+                                    if (ImageArray[0] == $"{thisColor.Id}")
+                                    {
+                                        Image = ImageArray[1];
+                                    }
+                                }
+                                <tr>
+                                    <td>
+                                        <img alt="@detail.Name" src="@ViewBag.AdminUrl@Image" style="float:left;margin-top:10px;height: 110px;max-width: 162px;">&nbsp;&nbsp;&nbsp;
+                                        <a href="/Diy/Index?CommodityId=@detail.CommodityId" style="width: 214px;float: left;padding: 20px 4px;">
+                                            商品货号：@(detail.ProductNo) <br />
+                                            商品名称：@(detail.Name) <br />
+                                            商品颜色：@(detail.Color) <br />
+                                            印刷方式：@(detail.PrintFuncInfo)
+                                        </a>
+                                        @if ((item.Status == "待付款" || item.Status == "待发货") && item.IsErp != true)
+                                        {
+                                            @*<a class="btn btn-primary" href="javascript:;" style="float: right;margin-left: 10px;margin-top: 10px;color:white;background-color:#008376" onclick="StartDesign(this,@detail.Id)">开始设计</a>*@
+                                        }
+                                        else if (item.IsErp == true && detail.DesignCommit == true)
+                                        {
+                                            @*<a class="btn btn-primary" href="javascript:;" style="float: right;margin-top: 10px;color:white;background-color:#008376" onclick="LookDesign(this,@detail.Id)">查看设计</a>*@
+                                            <a class="btn btn-primary" href="javascript:;" style="float: right;margin-top: 10px;color:white;background-color:#008376" onclick="SureDesign(this,@detail.Id)">产品效果图</a>
+                                        }
+                                    </td>
+                                    <td style="vertical-align: middle !important;text-align: center;">@detail.PrintFuncInfo</td>
+                                    <td style="vertical-align: middle !important;text-align: center;">¥@Math.Round((detail.PayMoney / detail.Amount).Value, 2)</td>
+                                    <td style="vertical-align: middle !important;text-align: center;">@detail.Amount</td>
+                                    <td style="vertical-align: middle !important;text-align: center;">¥@detail.PayMoney</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="4" style="text-align: right;">商品总金额:</td>
+                                <td style="text-align: right;">¥@item.TotalPrice</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="text-align: right;">
+                                    <strong>总计:</strong>
+                                </td>
+                                <td style="text-align: right;">
+                                    <strong>¥@item.TotalPrice</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <div class="center"></div>
+    </div>
+</div>
+
+
+<!-- 定制开始 -->
+<div class="orderalert">
+    <div class="zz"></div>
+    <div class="conbox">
+        <div class="leftbox">
+            <div class="bjgbox active">
+                <div class="imgbox">
+                    <i></i>
+                    <img src="#" alt="" />
+                </div>
+                <div style="">
+                    <div class="twowords">
+                        <div class="pic1">
+                        </div>
+                        <div class="picbox" id="draggable">
+                        </div>
+                        <div class="bx">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rightbox">
+            <div class="hd">
+                <ul>
+                    <li>
+                        添加文字
+                    </li>
+                    <li>
+                        上传图片
+                    </li>
+                    <li>
+                        在线图库
+                    </li>
+                </ul>
+            </div>
+            <div class="bd">
+                <div class="model model1">
+                    <div class="link sombox">
+                        <div class="wordsend">
+                            <input type="text" class="words" placeholder="请输入文字" />
+                            <button>+</button>
+                        </div>
+                        <div class="check">
+                            <div class="box">
+                                <div class="s1">
+                                    字体：
+                                </div>
+                                <div class="s2">
+                                    <select name="" id="fontf">
+                                        <option value="黑体">黑体</option>
+                                        <option value="宋体">宋体</option>
+                                        <option value="微软雅黑">微软雅黑</option>
+                                        <option value="微软正黑体">微软正黑体</option>
+                                        <option value="楷体">楷体</option>
+                                        <option value="新宋体">新宋体</option>
+                                        <option value="仿宋">仿宋</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="box box2">
+                                <div class="s1">
+                                    字号：
+                                </div>
+                                <div class="s2">
+                                    <select name="" id="fontsz">
+                                        @for (int i = 12; i <= 50; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="s1">
+                                    色值：
+                                </div>
+                                <div class="s2">
+                                    <div class="colorse">
+                                        <h4>
+                                            <span class="colorbj1"></span>
+                                        </h4>
+                                        <div class="sel">
+                                            <div class="list">
+                                                <ul>
+                                                    <li class="colorbj1"></li>
+                                                    <li class="colorbj2"></li>
+                                                    <li class="colorbj3"></li>
+                                                    <li class="colorbj4"></li>
+                                                    <li class="colorbj5"></li>
+                                                    <li class="colorbj6"></li>
+                                                    <li class="colorbj7"></li>
+                                                    <li class="colorbj8"></li>
+                                                    <li class="colorbj9"></li>
+                                                    <li class="colorbj10"></li>
+                                                    <li class="colorbj11"></li>
+                                                    <li class="colorbj12"></li>
+                                                    <li class="colorbj13"></li>
+                                                    <li class="colorbj14"></li>
+                                                </ul>
+                                            </div>
+                                            <div class="word">
+                                                <span class="m1">
+                                                    自定义:
+                                                </span>
+                                                <div class="dm">
+                                                    <span class="m2">
+                                                        #
+                                                    </span>
+                                                    <input type="text" class="words" placeholder="输入颜色代码" />
+                                                </div>
+                                                <div class="resu colorbj1"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="desc">
+                            <p>
+                                注：选择不同的工艺可选择的颜色可能不同
+                            </p>
+                            <p>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如有疑问请联系 <a href="#"><img src="~/base/images/a.png" alt="" />在线客服</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="sendwords sombox model2">
+                        <p>
+                            上传图片说明
+                        </p>
+                        <p>
+                            1.图片格式
+                        </p>
+                        <p>
+                            2.图片要求
+                        </p>
+                        <p>
+                            3.图片分辨率
+                        </p>
+                        <p>
+                            4.图片版权
+                        </p>
+                        <p>
+                            5.等等等等
+                        </p>
+                        <div class="send">
+                            <input type="file" name="" class="file" value="" />
+                            <span>
+                                +添加本地图片
+                            </span>
+                        </div>
+                    </div>
+                    <div class="imglist sombox">
+                        <ul>
+                            @foreach (var item in Images)
+                            {
+                                <li>
+                                    <img src="@ViewBag.AdminUrl@item.Image" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="ntab">
+                        <div class="loca" style="clear: both;">
+                            <div class="left">
+                                <div class="imgbox">
+                                    @*@if (ShopCart.ForntView == "" || ShopCart.ForntView == null)
+                                        {
+                                        <img src="@AdminUrl@ViewModel.FrontView" alt="" />
+
+                                        }
+                                        else
+                                        {
+                                        <img src="@AdminUrl@ShopCart.ForntView" alt="" />
+                                        }*@
+                                    <img src="#" alt="" />
+                                    <span>
+                                        正面定制
+                                    </span>
+                                </div>
+                                <div class="imgbox">
+                                    @*@if (ShopCart.BackView == "" || ShopCart.BackView == null)
+                                        {
+                                        <img src="@AdminUrl@ViewModel.BackView" alt="" />
+                                        }
+                                        else
+                                        {
+                                        <img src="@AdminUrl@ShopCart.BackView" alt="" />
+                                        }*@
+                                    <img src="#" alt="" />
+                                    <span>
+                                        背面定制
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="allbox">
+                            <div class="s3">
+                                <a href="javascript:;">图层上移</a>
+                                <a href="javascript:;">图层下移</a>
+                            </div>
+
+                            <div class="rightbox1">
+                                <a href="javascript:;" onclick="$('.orderalert').hide()" class="v1"><img src="~/base/images/fg1.png" alt="" />取消定制</a>
+                                <a href="javascript:;" class="v2"><img src="~/base/images/fg2.png" alt="" />定制完成</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" model3">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 定制结束 -->
+<!-- 定制开始 -->
+<div class="orderInfoalert" style="display:none;">
+    <div class="zz"></div>
+
+    <div class="conbox">
+        <i onclick="$('.orderInfoalert').css('display','none')"></i>
+        <div class="leftbox">
+            <div class="bjgbox active">
+                <div class="imgbox">
+                    <img src="#" alt="" />
+                </div>
+            </div>
+        </div>
+        <div class="loca" style="clear: both;">
+            <div class="left">
+                <div class="imgbox">
+                    <img src="#" alt="" />
+                    <span>
+                        背面定制
+                    </span>
+                </div>
+                <div class="imgbox">
+                    <img src="#" alt="" />
+                    <span>
+                        背面定制
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 定制结束 -->
+<!-- 定制开始 -->
+<div class="SureDesignAlert" style="display:none;">
+    <div class="zz"></div>
+    <div class="conbox" style="height:98%">
+        <i onclick="$('.SureDesignAlert').css('display','none')"></i>
+        <div class="效果确认单" style="overflow: scroll;height: 100%;overflow-x: hidden;">
+            <style>
+                .ConfirmationSheet {
+                    font-family: 'Microsoft YaHei';
+                    font-size: 14px;
+                    border-collapse: collapse;
+                }
+
+                    .ConfirmationSheet .titletd td {
+                        height: 70px;
+                        background-color: #008375;
+                        color: white;
+                        padding-left: 91px;
+                        font-size: 21px;
+                        font-weight: 500;
+                        padding-left: 91px;
+                        padding-bottom: 20px;
+                    }
+
+                    .ConfirmationSheet .blanktd {
+                        height: 7px;
+                    }
+
+                    .ConfirmationSheet .titlebasetd {
+                        height: 24px;
+                    }
+
+                    .ConfirmationSheet .basebrodertd {
+                        height: 31px;
+                    }
+
+                        .ConfirmationSheet .basebrodertd td {
+                            border: 1px solid black;
+                            text-align: center;
+                        }
+            </style>
+            <table class="ConfirmationSheet" cellpadding="0" cellspacing="0">
+                <colgroup>
+                    <col style="width: 58px" />
+                    <col style="width: 91px" />
+                    <col style="width: 372px" />
+                    <col style="width: 210px" />
+                    <col style="width: 49px" />
+                </colgroup>
+                <tbody>
+                    <tr class="titletd">
+                        <td colspan="5" style="">
+                            产品效果图<br>
+                            Product & Artwork Proof
+                        </td>
+                    </tr>
+                    <!--工单信息开始-->
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            订单编号：
+                        </td>
+                        <td>
+                            <label class="orderNo">20180801001</label>
+                        </td>
+                        <td style="float: right;">
+                            客服电话：4008580505
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            SKU#:
+                        </td>
+                        <td>
+                            <label class="SKUNO">KA9894BU</label>
+                        </td>
+                        <td style="float: right;">
+                            客服邮箱：service@syloon.cn
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            产品名称：
+                        </td>
+                        <td>
+                            <label class="CommdityName">金属中性笔</label>
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            颜色：
+                        </td>
+                        <td>
+                            <label class="ColorName">黑色</label>
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            印刷方式：
+                        </td>
+                        <td>
+                            <label class="PrintFunc">丝网印刷</label>
+                        </td>
+                        <td style="float: right;">
+                            效果图比例：80%
+                        </td>
+                    </tr>
+                    <tr class="blanktd">
+                        <td></td>
+                    </tr>
+                    <!--工单信息结束-->
+                    <!--工单信息明细开始-->
+                    <tr style="height: 441px;">
+                        <td></td>
+                        <td colspan="3" style="border: 1px solid black;">
+                            <img class="WorkSheetImg" src="" style="width: 100%;height: 441px;">
+                        </td>
+                    </tr>
+                    <tr class="blanktd">
+                        <td></td>
+                    </tr>
+                    <tr style="height: 83px;">
+                        <td></td>
+                        <td colspan="3" style="border: 1px solid black;" valign="top">
+                            <div style="font-style: italic;padding-left: 5px;">
+                                我司对该订单及贵司印刷内容的建议：<label class="proposal"></label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="height: 230px;">
+                        <td></td>
+                        <td colspan="3" style="font-size: 12px;vertical-align: top;padding-left:7px;">
+                            <strong>尊敬的客户，请仔细阅读以下条款：</strong><br /><br />
+                            1，请您在收到该效果图后请仔细审阅，检查效果图中的各项细节，包括产品、产品颜色、印刷位置、印刷内容、印刷颜色等是否满足您的要求，若有任何地方需要修改请及时联系我司客服人员，以便做进一步的修改从而满足您的要求。<br /><br />
+                            2，该效果图所展示的颜色包括产品颜色和印刷颜色仅供参考，可能和实际的产品颜色有轻微的色差。印刷的颜色由于产品背景的颜色影响可能和效果图的颜色有细小的区别。该效果图的目的是为了让客户清楚的了解所采购的产品以及其定制化印刷的内容所在的位置、和产品的比例以及颜色参考。<br /><br />
+                            3，一旦该效果图被确认，您的订单将会按照上述效果图所示内容进行生产。除非我们的产品质量问题或印刷错误，一旦产品按照上述效果图进行生产，我司恕不接受退货。若因产品质量问题或印刷错误，宁波赛龙礼品有限公司接受客户索赔或退货，但我司要求将索赔货物寄回宁波赛龙礼品有限公司并由我司承担运费。
+                        </td>
+                    </tr>
+                    <!--工单信息明细结束-->
+                    <tr style="height: 44px;">
+                        <td colspan="5" style="background-color: #D9D9D9;text-align: center;font-size:12px;" valign="top">
+                            <strong>宁波赛龙礼品有限公司</strong><br />
+                            www.syloon.cn
+                        </td>
+                    </tr>
+                    <tr class="blanktd" style="height:30px;">
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align:center;">
+                            <a class="SureInfoBtn" style="margin-top: 10px;color: white;background-color: #008376;padding: 5px 10px;border-radius: 2px;cursor:pointer;" onclick="sureDesignConfirm();">确认效果图</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 定制结束 -->
+<!-- 消息框 -->
+<form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpZiper" style="display:none;">
+    <input name="upZiper" type="file" id="upZiper" onchange="fileZiperchange(this)" accept=".zip,.rar,.7z">
+</form>
+<script src="~/Current/js/jquery-form.js"></script>
+<div class="dealert upload" style="display: none;">
+    <div class="zz"></div>
+    <div class="detailcontent" style="width:400px;">
+        <h2 class="h2tit" style="margin-top:0px;margin-bottom:0px;">
+            上传Logo
+            <i onclick="$('.dealert').css('display','none')"></i>
+        </h2>
+        <div class="content">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding-left:0px;width:95px;padding-right:0px;">上传Logo</label>
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" id="SureUpload">上传Logo</button>
+                    <button class="layui-btn" type="button" id="OKUpload">确定上传</button>
+                    <input id="UpFileAddr" name="UpFileAddr" type="hidden" value="" />
+                </div>
+            </div>
+            <div class="layui-form-item uploadItem" style="margin-left: 40px;">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 消息框 -->

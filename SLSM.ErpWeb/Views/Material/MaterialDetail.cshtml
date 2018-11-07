@@ -1,0 +1,1700 @@
+﻿@using DbOpertion.Models;
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    Layout = null;
+    var raw_materials = ViewBag.Material == null ? new Raw_Materials() : (Raw_Materials)ViewBag.Material;
+    List<Colorinfo> listColorRes = ViewBag.ColorList == null ? new List<Colorinfo>() : (List<Colorinfo>)ViewBag.ColorList;
+    List<Producer> ProducerList = ViewBag.ProducerList == null ? new List<Producer>() : (List<Producer>)ViewBag.ProducerList;
+    List<Materials_Colorinfo> MyColorInfoList = ViewBag.MyColorInfoList == null ? new List<Materials_Colorinfo>() : (List<Materials_Colorinfo>)ViewBag.MyColorInfoList;
+    List<Materials_Producer> MyProducerList = ViewBag.MyProducerList == null ? new List<Materials_Producer>() : (List<Materials_Producer>)ViewBag.MyProducerList;
+    List<GradeRes> gradeList = ViewBag.GradeList == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.GradeList;
+    List<Technology> PrintList = ViewBag.PrintList == null ? new List<Technology>() : (List<Technology>)ViewBag.PrintList;
+    var aaa = 123;
+}
+<div>
+    <input type="hidden" id="ProInfoListCount" value="@(MyProducerList.Count>0?MyProducerList.Count:1)" />
+    <input type="hidden" id="ColorListCount" value="@(MyColorInfoList.Count>0?MyColorInfoList.Count:1)" />
+
+    <form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+        <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+<script>
+    var colorarray = new Array();
+    @foreach (var item in listColorRes)
+    {
+        if (item.ParentId==0)
+        {
+            @Html.Raw("colorarray.push({StandardColor:'" + @item.StandardColor + "',ChinaDescribe:'" + @item.ChinaDescribe + "',Id:'" + @item.Id + "'});")
+        }
+    }
+
+    var producerarray = new Array();
+    @foreach (var item in ProducerList)
+    {
+        @Html.Raw("producerarray.push({Id:'" + @item.Id + "',CodeInfo:'" + @item.ProducerCode + "',Name:'" + @item.Name + "'});")
+    }
+
+
+    $(function () {
+        TdColorInfoBind();
+        TdProInfoBind();
+    })
+
+    // #region 颜色信息绑定
+    function TdColorInfoBind() {
+        // #region 删除按钮
+        $(".DelColorBtn").unbind();
+        $(".DelColorBtn").click(function () {
+            var that = this;
+            if ($(".blankPart.color").length == 1) {
+                layer.msg("至少要有一种产品颜色！");
+            }
+            else {
+                layer.confirm('确定删除此产品颜色？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $(that).parent().parent().parent().remove();
+                    layer.close(index);
+                });
+            }
+        });
+        // #endregion
+
+        // #region 添加按钮
+        $(".AddColorBtn").unbind();
+        $(".AddColorBtn").click(function () {
+            layer.confirm('确定要添加产品颜色？', {
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                $(".blankPart.color:last").after(TdColorInfoHtml());
+                TdColorInfoBind();
+                layer.close(index);
+            });
+        });
+        // #endregion
+
+        // #region SKU图片改变
+        $(".blankPart.color Img").unbind();
+        $(".blankPart.color Img").click(function () {
+            $('.layui-layer.layui-layer-page .layui-form').hide();
+            $('.bigImage').show();
+            $('.bigImage .Image img').attr('src', $(this).attr('src'));
+        });
+        // #endregion
+        renderForm();
+    }
+    // #endregion 颜色信息绑定
+
+     // #region 颜色信息Html
+    function TdColorInfoHtml() {
+        var count = $("#ColorListCount").val();
+        var str ='<tr class="blankPart color" style="height:49px;">\
+                        <td>\
+                            <input type="text" name="ColorInfo_'+ count + '_SKU" autocomplete="off" class="layui-input SKU" value="">\
+                        </td>\
+                        <td colspan="2">\
+                            <select name="ColorInfo_@(MyColorInfoList.Count)_ColorSystem" lay-filter="colorsystem" lay-verify="selectItem">\
+                                <option value="">请选择色系</option>';
+        for (var i = 0; i < colorarray.length; i++) {
+            str = str +'<option value ="' +colorarray[i].Id+ '">'+colorarray[i].ChinaDescribe+'</option>';
+        }
+        str = str + '</select>\
+                        </td>\
+                        <td >\
+                            <input type="text" name="ColorInfo_'+ count + '_PantongColor" autocomplete="off" class="layui-input" value="" style="display:none;">\
+                            <select name="ColorInfo_'+ count + '_StanColorNum"  lay-filter="color" lay-verify="selectItem">\
+                                <option value="">请选择色号</option>\
+                            </select>\
+                        </td>\
+                        <td colspan="2">\
+                            <input type="text" name="ColorInfo_'+ count + '_ColorDesc" autocomplete="off" class="layui-input">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="ColorInfo_'+ count + '_EngColorDesc" autocomplete="off" class="layui-input Colour">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="ColorInfo_'+ count + '_HtmlCode" autocomplete="off" class="layui-input Colour">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="ColorInfo_'+ count + '_MinStock" autocomplete="off" class="layui-input" lay-verify="number">\
+                        </td>\
+                        <td  colspan="2" style="text-align:left;">\
+                            <input type="hidden" name="ColorInfo_'+ count + '_SKUImage" autocomplete="off" class="layui-input" value="">\
+                            <img class="SKUImgae" src="../../Content/noImg.svg"/>\
+                            <div class="printHidden" style="float: right;position: absolute;margin-left: 200px;margin-top:-30px;">\
+                                <a class="DelColorBtn" > 删除</a >\
+                            </div>\
+                             <div style="float:right;">\
+                                <a class="bingimagebutton" onclick="BigImage(this)">上传图片</a>\
+                            </div>\
+                        </td>\
+                    </tr>';
+        count++;
+        $("#ColorListCount").val(count);
+        return str;
+    }
+
+    // #endregion
+
+
+    // #region 采购信息绑定
+        function TdProInfoBind() {
+            // #region 删除按钮
+            $(".DelProducerBtn").unbind();
+            $(".DelProducerBtn").click(function () {
+                var that = this;
+                if ($(".blankPart.producer").length == 1) {
+                    layer.msg("至少要有一条采购信息！");
+                }
+                else {
+                    layer.confirm('确定删除此采购信息？', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function (index) {
+                        $(that).parent().parent().parent().remove();
+                        layer.close(index);
+                    });
+                }
+            });
+            // #endregion
+
+            // #region 添加按钮
+            $(".AddProducerBtn").unbind();
+            $(".AddProducerBtn").click(function () {
+                layer.confirm('确定要添加采购信息？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $(".blankPart.producer:last").after(ProInfoHtml());
+                    TdProInfoBind();
+
+                    layer.close(index);
+                });
+            });
+            // #endregion
+            renderForm();
+        }
+        // #endregion
+
+    // #region 采购信息Html
+        function ProInfoHtml() {
+            var count = $("#ProInfoListCount").val();
+            var str = '<tr class="blankPart producer">\
+                        <td>\
+                            <input type="hidden" name="producerList_'+ count + '_ProdecerCode" autocomplete="off" class="layui-input" disabled="disabled">\
+                            <input type="text" name="producerList_'+ count + '_ProdecerCodeInfo" autocomplete="off" class="layui-input" disabled="disabled">\
+                        </td>\
+                        <td colspan="3">\
+                            <select name="producerList_'+ count + '_ProdecerName" lay-filter="Prodecer" lay-verify="selectItem">\
+                                <option value="">请选择供应商</option>';
+            for (var i = 0; i < producerarray.length; i++) {
+                str = str +    '<option value ="' + producerarray[i].Id + '" CodeInfo="'+ producerarray[i].CodeInfo +'">' + producerarray[i].Name + '</option>';
+            }
+            str = str +    '</select>\
+                        </td>\
+                        <td colspan="2">\
+                            <input type="text" name="producerList_'+ count + '_FactoryNumber" autocomplete="off" class="layui-input" value="" lay-verify="required">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="producerList_'+ count + '_PurchasePrice" autocomplete="off" class="layui-input" value="" lay-verify="float">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="producerList_'+ count + '_QuotationDate" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})" lay-verify="date" value="">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="producerList_'+ count + '_ProCycle" autocomplete="off" class="layui-input" value="" lay-verify="required">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="producerList_'+ count + '_MinQuantity" autocomplete="off" class="layui-input" value="" lay-verify="required">\
+                        </td>\
+                        <td>\
+                            <input type="text" name="producerList_'+ count + '_PriceTag" autocomplete="off" class="layui-input" value="" lay-verify="required">\
+                            <div class="printHidden" style="float: right;position: absolute;margin-left: 110px;margin-top: -20px;">\
+                                <a class="DelProducerBtn">删除</a>\
+                            </div>\
+                        </td>\
+                     </tr>';
+            count++;
+            $("#ProInfoListCount").val(count);
+            return str;
+    }
+
+    // #endregion
+
+    function BigImage(that) {
+        HiddenColorItem = $(that).parent().parent().find('.SKUImgae');
+        $('#upImg').trigger('click');
+    }
+
+
+    function renderForm() {
+        layui.use('form', function () {
+            var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+            form.on('select(colorsystem)', function (data) {
+                var obj = new Object();
+                obj.Id = data.value;
+                jQuery.axpost("../../Api/Material/ColorListBySystem", JSON.stringify(obj), function (dataInfo) {
+                    var selectPantong = $(data.elem).parent().parent().find("select[name$='_StanColorNum']");
+                    $(selectPantong).html('<option value="">请选择</option>'); //清空
+                    var datas = dataInfo.ListData;
+                    if (datas.length > 0) {
+                        $.each(datas, function(key, val) {
+                            var optino1 = '<option value="' + val.Id + '" EngDescibe="' + val.EngDescibe + '" ChinaDescribe="' + val.ChinaDescribe + '" HtmlCode="' + val.HtmlCode + '">' + val.StandardColor + '</option>';
+                            $(selectPantong).append(optino1);
+                        });
+                    }
+                    $(selectPantong).append('<option value="-1">自选色号</option>');
+                    form.render('select');
+                    $(selectPantong).get(0).selectedIndex = 0;
+                    $(selectPantong).parent().find('input[name$="_PantongColor"]').hide();
+                    $(selectPantong).parent().find('.layui-unselect.layui-form-select').show();
+                });
+            });
+
+            form.on('select(color)', function (data) {
+                
+                if (data.value == "-1") {
+                    $(data.elem).parent().find('input[name$="_PantongColor"]').show();
+                    $(data.elem).parent().find('.layui-unselect.layui-form-select').hide();
+                }
+                else {
+                    $(data.elem.parentNode.parentNode).find('input[name$="_ColorDesc"]').val($(data.elem.selectedOptions[0]).attr('ChinaDescribe'));
+                    $(data.elem.parentNode.parentNode).find('input[name$="_EngColorDesc"]').val($(data.elem.selectedOptions[0]).attr('engdescibe'));
+                    $(data.elem.parentNode.parentNode).find('input[name$="_HtmlCode"]').val($(data.elem.selectedOptions[0]).attr('HtmlCode'));
+                }
+            });
+
+            form.on('select(Prodecer)', function (data) {
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProdecerCode"]').val(data.elem.selectedOptions[0].value);
+                $(data.elem.parentNode.parentNode).find('input[name$="_ProdecerCodeInfo"]').val($(data.elem.selectedOptions[0]).attr('CodeInfo'));
+            });
+        });
+    }
+
+    function PrintBtnInfo() {
+        var countstr = $("body.bodyInfo").html();
+        var newstr = $("div.PrintDiv").html();
+        $("body.bodyInfo").html(newstr);
+        $(".printHidden").hide();
+        var tata = document.execCommand("print");/* window.print(); 调用打印的功能*/
+        if (tata) {  //点击取消后执行的操作
+            $("body.bodyInfo").html(countstr);
+            window.location.reload();
+        }
+    }
+</script>
+
+
+
+<div class="PrintDiv" style="margin: 15px;">
+    <style>
+        .titletd {
+            background-color: #008375;
+            color: white;
+            font-size: 23px;
+            height: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+            .titletd img {
+                height: 52px;
+                width: 52px;
+                float: right;
+                margin-left: 155px;
+                margin-top: -11px;
+                position: absolute;
+            }
+
+        .blankLine {
+            height: 2px;
+        }
+
+        .BaseInfo {
+            height: 25px;
+        }
+
+            .BaseInfo td {
+                border: 1px solid black;
+                padding-left: 5px;
+                font-size: 12px;
+            }
+
+                .BaseInfo td.layertd {
+                    padding-left: 0px;
+                }
+
+                .BaseInfo td.yellowpart {
+                    background-color: yellow;
+                }
+
+                .BaseInfo td.blankPart {
+                    border: none;
+                }
+
+                .BaseInfo td .layui-input {
+                    height: 25px;
+                    line-height: 25px;
+                }
+
+        .layui-form-selected dl {
+            position: relative;
+        }
+
+        .layui-select-title {
+            position: relative;
+        }
+
+        .layui-anim.layui-anim-upbit {
+            top: 0px;
+        }
+
+        .hearpart {
+            background-color: yellow;
+            height: 26px;
+        }
+
+            .hearpart td {
+                border: 1px solid #000000;
+                text-align: center;
+                font-size: 12px;
+            }
+
+        .blankPart {
+            height: 23px;
+        }
+
+
+            .blankPart td {
+                border: 1px solid #000000;
+                text-align: center;
+                font-size: 12px;
+            }
+
+                .blankPart td .layui-input {
+                    height: 23px;
+                    line-height: 23px;
+                    text-align: center;
+                    padding-left: 0px;
+                    border: none;
+                }
+
+                .blankPart td textarea {
+                    min-height: 58px;
+                }
+
+
+            .blankPart.color td .layui-input {
+                height: 49px;
+                line-height: 49px;
+            }
+
+            .blankPart .SKUImgae {
+                position: relative !important;
+                height: 49px !important;
+                top: 0px !important;
+                margin-left: 0px !important;
+                cursor: pointer;
+                max-width: 120px;
+            }
+
+        .AddColorBtn {
+            cursor: pointer;
+        }
+
+        .DelColorBtn {
+            cursor: pointer;
+        }
+
+        .layui-form-select .layui-edge {
+            right: -12px;
+        }
+
+        .layui-select-title .layui-input.layui-unselect {
+            padding-right: 0px;
+        }
+
+        .layui-anim.layui-anim-upbit {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        .bingimagebutton {
+            margin-top: 10px;
+            height: 30px;
+            padding-top: 0px;
+            line-height: 30px;
+            padding: 0 10px;
+            display: block;
+            cursor: pointer;
+            background-color: #008375;
+            color: white;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
+
+            .bingimagebutton:hover {
+                color: white;
+            }
+
+        textarea {
+            resize: none !important;
+        }
+    </style>
+    <form class="layui-form">
+        <input type="hidden" value="@raw_materials.Id" name="MaterialId" />
+        <table style="width:785px;">
+            <colgroup>
+                <col style="width:80px;" />
+                <col style="width:43px;" />
+                <col style="width:53px;" />
+                <col style="width:80px;" />
+                <col style="width:65px;" />
+                <col style="width:10px;" />
+                <col style="width:83px;" />
+                <col style="width:72px;" />
+                <col style="width:95px;" />
+                <col style="width:90px;" />
+                <col style="width:105px;" />
+            </colgroup>
+            <tr>
+                <td colspan="11" class="titletd">
+                    宁波赛龙礼品有限公司 产品档案
+                    <img src="~/Base/images/Image/SyloonLogo.png" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            <!--产品明细开始-->
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    产品货号
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="ProductNo" value="@raw_materials.ProductNo" lay-verify="required" autocomplete="off" class="layui-input">
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    中文单位
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="ChinaUnit" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.ChinaUnit">
+                </td>
+            </tr>
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    中文品名
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="ChinaProductName" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.ChinaProductName">
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    英文单位
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="EnglishUnit" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.EnglishUnit">
+                </td>
+            </tr>
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    英文品名
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="EnglishProductName" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.EnglishProductName">
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    海关编码
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="HSCODE" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.HSCODE">
+                </td>
+            </tr>
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    产品属性
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="Attributes" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.Attributes">
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    退税率%
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="TaxRate" autocomplete="off" class="layui-input" lay-verify="number" value="@raw_materials.TaxRate">
+                </td>
+            </tr>
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    材料及工艺
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="MatAndPro" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.MatAndPro">
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    规格型号
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="Specification" autocomplete="off" class="layui-input" lay-verify="required" value="@raw_materials.Specification">
+                </td>
+            </tr>
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    开发时间
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="DeveTime" id="date" lay-verify="date" class="layui-input" onclick="layui.laydate({elem: this})" value="@(raw_materials.DeveTime!=null?raw_materials.DeveTime.Value.ToString("yyyy-MM-dd"):"")">
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    开发人员
+                </td>
+                <td colspan="3" class="layertd">
+                    <input type="text" name="DevePerson" autocomplete="off" lay-verify="required" class="layui-input" value="@raw_materials.DevePerson">
+                </td>
+            </tr>
+            <tr class="BaseInfo">
+                <td colspan="2" class="yellowpart">
+                    产品类别
+                </td>
+                <td colspan="3" class="layertd">
+                    <select name="Genera" lay-verify="selectItem">
+                        <option value="">请选择类别</option>
+                        @foreach (var item in gradeList)
+                        {
+                            var Selected = "";
+                            if (item.id.ToString() == raw_materials.Genera)
+                            {
+                                Selected = "selected=\"selected\"";
+                            }
+                            <option value="@item.id" @Selected>@item.name</option>
+                            foreach (var itemGrade in item.listGrade)
+                            {
+                                Selected = "";
+                                if (itemGrade.id.ToString() == raw_materials.Genera)
+                                {
+                                    Selected = "selected=\"selected\"";
+                                }
+                                <option value="@itemGrade.id" @Selected>&nbsp;&nbsp;&nbsp;&nbsp;@itemGrade.name</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td class="blankPart"></td>
+                <td colspan="2" class="yellowpart">
+                    是否赛龙专利
+                </td>
+                <td colspan="3" class="layertd">
+                    <select name="SyloonPatent" lay-verify="selectItem">
+                        <option value="">请选择是否</option>
+                        @if (raw_materials.SyloonPatent == "1")
+                        {
+                            <option value="true" selected>是</option>
+                            <option value="false">否</option>
+                        }
+                        else if (raw_materials.SyloonPatent == "0")
+                        {
+                            <option value="true">是</option>
+                            <option value="false" selected>否</option>
+                        }
+                        else
+                        {
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        }
+
+                    </select>
+                </td>
+            </tr>
+            <!--产品明细结束-->
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            <!--颜色开始-->
+            <tr class="hearpart">
+                <td>
+                    SKU #
+                </td>
+                <td colspan="2">
+                    色系
+                </td>
+                <td>
+                    潘通色号
+                </td>
+                <td colspan="2">
+                    颜色描述
+                </td>
+                <td>
+                    COLOUR
+                </td>
+                <td>
+                    Html代码
+                </td>
+                <td>
+                    最小库存
+                </td>
+                <td colspan="2">
+                    SKU图片
+                    <div class="printHidden" style="float: right;position: absolute;margin-left: 200px;margin-top: -16px;">
+                        <a class="AddColorBtn">添加</a>
+                    </div>
+
+                </td>
+            </tr>
+            @if (MyColorInfoList.Count == 0)
+            {
+                <tr class="blankPart color" style="height:49px;">
+                    <td>
+                        <input type="text" name="ColorInfo_@(MyColorInfoList.Count)_SKU" autocomplete="off" class="layui-input SKU" value="">
+                    </td>
+                    <td colspan="2">
+                        @*<input type="text" name="ColorInfo_@(MyColorInfoList.Count)_ColorSystem" autocomplete="off" class="layui-input" lay-verify="required">*@
+                        <select name="ColorInfo_@(MyColorInfoList.Count)_ColorSystem" lay-filter="colorsystem" lay-verify="selectItem">
+                            <option value="">请选择色系</option>
+                            @foreach (var item in listColorRes)
+                            {
+                                if (item.ParentId == 0)
+                                {
+                                    <option value="@item.Id">@item.ChinaDescribe</option>
+                                }
+                            }
+                            <option value="-1">自选色号</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="ColorInfo_@(MyColorInfoList.Count)_PantongColor" autocomplete="off" class="layui-input" value="" style="display:none;">
+                        <select name="ColorInfo_@(MyColorInfoList.Count)_StanColorNum" lay-filter="color" lay-verify="selectItem">
+                            <option value="">请选择色号</option>
+                        </select>
+                    </td>
+
+                    <td colspan="2">
+                        <input type="text" name="ColorInfo_@(MyColorInfoList.Count)_ColorDesc" autocomplete="off" class="layui-input" lay-verify="required">
+                    </td>
+                    <td>
+                        <input type="text" name="ColorInfo_@(MyColorInfoList.Count)_EngColorDesc" autocomplete="off" class="layui-input Colour" lay-verify="required">
+                    </td>
+                    <td>
+                        <input type="text" name="ColorInfo_@(MyColorInfoList.Count)_HtmlCode" autocomplete="off" class="layui-input" lay-verify="required" value="">
+                    </td>
+                    <td>
+                        <input type="text" name="ColorInfo_@(MyColorInfoList.Count)_MinStock" autocomplete="off" class="layui-input" lay-verify="required" value="">
+                    </td>
+                    <td colspan="2" style="text-align:left;">
+                        <input type="hidden" name="ColorInfo_@(MyColorInfoList.Count)_SKUImage" autocomplete="off" class="layui-input" value="">
+                        <img class="SKUImgae" src="../../Content/noImg.svg" />
+                        <div style="float:right;">
+                            <a class="bingimagebutton printHidden" onclick="BigImage(this)">上传图片</a>
+                        </div>
+                        <div class="printHidden" style="float: right;position: absolute;margin-left: 200px;margin-top:-30px;">
+                            <a class="DelColorBtn">删除</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                for (int i = 0; i < MyColorInfoList.Count; i++)
+                {
+                    var selectColor = listColorRes.Where(p => p.Id == MyColorInfoList[i].ColorId).FirstOrDefault();
+                    if (selectColor == null)
+                    {
+                        selectColor = new Colorinfo();
+                    }
+                    var selectList = listColorRes.Where(p => p.ParentId == selectColor.ParentId).ToList();
+                    <tr class="blankPart color" style="height:49px;">
+                        <td>
+                            <input type="text" name="ColorInfo_@(i)_SKU" autocomplete="off" class="layui-input SKU" value="@MyColorInfoList[i].SKU">
+                        </td>
+
+                        <td colspan="2">
+                            @*<input type="text" name="ColorInfo_@(i)_ColorSystem" autocomplete="off" class="layui-input" lay-verify="required" value="@ColorSystem">*@
+                            <select name="ColorInfo_@(i)_ColorSystem" lay-filter="colorsystem" lay-verify="selectItem">
+                                <option value="">请选择色系</option>
+                                @foreach (var item in listColorRes)
+                                {
+                                    if (item.ParentId == 0)
+                                    {
+                                        var select = "";
+                                        if (selectColor.ParentId == item.Id)
+                                        {
+                                            select = "selected=\"selectde\"";
+                                        }
+                                        <option value="@item.Id" @select>@item.ChinaDescribe</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="ColorInfo_@(i)_PantongColor" autocomplete="off" class="layui-input" value="" style="display:none;">
+                            <select name="ColorInfo_@(i)_StanColorNum" lay-filter="color" lay-verify="selectItem">
+                                <option value="">请选择色号</option>
+                                @foreach (var item in selectList)
+                                {
+                                    var selected = "";
+                                    if (item.Id == selectColor.Id)
+                                    {
+                                        selected = "selected=\"selected\"";
+                                    }
+                                    <option value="@item.Id" EngDescibe="@item.EngDescibe" ChinaDescribe="@item.ChinaDescribe" @selected>@item.StandardColor</option>
+                                }
+                                <option value="-1">自选色号</option>
+                            </select>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="ColorInfo_@(i)_ColorDesc" autocomplete="off" class="layui-input" lay-verify="required" value="@selectColor.ChinaDescribe">
+                        </td>
+                        <td>
+                            <input type="text" name="ColorInfo_@(i)_EngColorDesc" autocomplete="off" class="layui-input Colour" lay-verify="required" value="@selectColor.EngDescibe">
+                        </td>
+                        <td>
+                            <input type="text" name="ColorInfo_@(i)_HtmlCode" autocomplete="off" class="layui-input" lay-verify="required" value="@selectColor.HtmlCode">
+                        </td>
+                        <td>
+                            <input type="text" name="ColorInfo_@(i)_MinStock" autocomplete="off" class="layui-input" lay-verify="required" value="@MyColorInfoList[i].MinStockNum">
+                        </td>
+                        <td colspan="2" style="text-align:left;">
+                            <input type="hidden" name="ColorInfo_@(i)_SKUImage" autocomplete="off" class="layui-input" value="@ViewBag.AdminUrl@MyColorInfoList[i].SKUImage">
+                            <img class="SKUImgae" src="@ViewBag.AdminUrl@MyColorInfoList[i].SKUImage" />
+                            <div class="printHidden" style="float:right;">
+                                <a class="bingimagebutton" onclick="BigImage(this)">上传图片</a>
+                            </div>
+                            <div class="printHidden" style="float: right;position: absolute;margin-left: 200px;margin-top:-30px;">
+                                <a class="DelColorBtn">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            <!--颜色结束-->
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            <!--包装明细开始-->
+            <tr class="hearpart">
+                <td colspan="11">
+                    包装明细
+                </td>
+            </tr>
+            <tr class="blankPart">
+                <td>
+                    产品重量(g)
+                </td>
+                <td colspan="2">
+                    中箱数量
+                </td>
+                <td colspan="3">
+                    外箱数量
+                </td>
+                <td>
+                    外箱长(CM)
+                </td>
+                <td>
+                    外箱宽CM)
+                </td>
+                <td>
+                    外箱高(CM)
+                </td>
+                <td>
+                    外箱体积(CMB)
+                </td>
+                <td>
+                    毛净重(KGS)
+
+                </td>
+            </tr>
+            <tr class="blankPart">
+                <td>
+                    <input type="text" name="Weight" lay-verify="required" autocomplete="off" class="layui-input" value="@raw_materials.Weight">
+                </td>
+                <td colspan="2">
+                    <input type="text" name="NumMiddleBoxes" lay-verify="number" autocomplete="off" class="layui-input" value="@raw_materials.NumMiddleBoxes">
+                </td>
+                <td colspan="3">
+                    <input type="text" name="NumOuterBoxes" lay-verify="number" autocomplete="off" class="layui-input" value="@raw_materials.NumOuterBoxes">
+                </td>
+                <td>
+                    <input type="text" name="OuterBoxesLength" lay-verify="float" autocomplete="off" class="layui-input" value="@raw_materials.OuterBoxesLength">
+                </td>
+                <td>
+                    <input type="text" name="OuterBoxesWidth" lay-verify="float" autocomplete="off" class="layui-input" value="@raw_materials.OuterBoxesWidth">
+                </td>
+                <td>
+                    <input type="text" name="OuterBoxesVolume" lay-verify="float" autocomplete="off" class="layui-input" value="@raw_materials.OuterBoxesVolume">
+                </td>
+                <td>
+                    <input type="text" name="OuterBoxesVolume" lay-verify="float" autocomplete="off" class="layui-input" value="@raw_materials.OuterBoxesVolume">
+                </td>
+                <td>
+                    <input type="text" name="NetWeight" lay-verify="required" autocomplete="off" class="layui-input" value="@raw_materials.NetWeight">
+
+                </td>
+            </tr>
+            <!--包装明细结束-->
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            <!--采购信息开始-->
+            <tr class="hearpart">
+                <td colspan="11">
+                    采购信息
+                    <div class="printHidden" style="float: right;position: absolute;margin-left: 781px;margin-top: -16px;">
+                        <a class="AddProducerBtn">添加</a>
+                    </div>
+                </td>
+            </tr>
+            <tr class="blankPart">
+                <td>
+                    供应商代码
+                </td>
+                <td colspan="3">
+                    供应商名称
+                </td>
+                <td colspan="2">
+                    工厂货号
+                </td>
+                <td>
+                    采购单价
+                </td>
+                <td>
+                    报价日期
+                </td>
+                <td>
+                    生产周期
+                </td>
+                <td>
+                    最小起订量
+                </td>
+                <td>
+                    价格标识
+                </td>
+            </tr>
+            @if (MyColorInfoList.Count == 0)
+            {
+                <tr class="blankPart producer">
+                    <td>
+                        <input type="hidden" name="producerList_0_ProdecerCode" autocomplete="off" class="layui-input" disabled="disabled">
+                        <input type="text" name="producerList_0_ProdecerCodeInfo" autocomplete="off" class="layui-input" disabled="disabled">
+                    </td>
+                    <td colspan="3">
+                        <select name="producerList_0_ProdecerName" lay-filter="Prodecer" lay-verify="selectItem">
+                            <option value="">请选择供应商</option>
+                            @foreach (var item in ProducerList)
+                            {
+                                <option value="@item.Id" CodeInfo="@item.ProducerCode">@item.Name</option>
+                            }
+                        </select>
+                    </td>
+                    <td colspan="2">
+                        <input type="text" name="producerList_0_FactoryNumber" autocomplete="off" class="layui-input" lay-verify="required" value="">
+                    </td>
+                    <td>
+                        <input type="text" name="producerList_0_PurchasePrice" autocomplete="off" class="layui-input" lay-verify="float" value="">
+                    </td>
+                    <td>
+                        <input type="text" name="producerList_0_QuotationDate" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})" lay-verify="date">
+                    </td>
+                    <td>
+                        <input type="text" name="producerList_0_ProCycle" autocomplete="off" class="layui-input" lay-verify="required">
+                    </td>
+                    <td>
+                        <input type="text" name="producerList_0_MinQuantity" autocomplete="off" class="layui-input" lay-verify="required">
+                    </td>
+                    <td>
+                        <input type="text" name="producerList_0_PriceTag" autocomplete="off" class="layui-input" lay-verify="required" value="">
+                        <div class="printHidden" style="float: right;position: absolute;margin-left: 110px;margin-top: -20px;">
+                            <a class="DelProducerBtn">删除</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                for (int i = 0; i < MyProducerList.Count; i++)
+                {
+                    var producer = ProducerList.Where(p => p.Id == MyProducerList[i].ProducerId).FirstOrDefault();
+                    <tr class="blankPart producer">
+                        <td>
+                            <input type="hidden" name="producerList_@(i)_ProdecerCode" autocomplete="off" class="layui-input" value="@producer.Id">
+                            <input type="text" name="producerList_@(i)_ProdecerCodeInfo" autocomplete="off" class="layui-input" disabled="disabled" value="@producer.ProducerCode">
+                        </td>
+                        <td colspan="3">
+                            <select name="producerList_@(i)_ProdecerName" lay-filter="Prodecer" lay-verify="selectItem">
+                                <option value="">请选择供应商</option>
+                                @foreach (var item in ProducerList)
+                                {
+                                    var selected = "";
+                                    if (item.Id == MyProducerList[i].ProducerId)
+                                    {
+                                        selected = "selected=\"selected\"";
+                                    }
+                                    <option value="@item.Id" CodeInfo="@item.ProducerCode" @selected>@item.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="producerList_@(i)_FactoryNumber" autocomplete="off" class="layui-input" lay-verify="required" value="@MyProducerList[i].FactoryNumber">
+                        </td>
+                        <td>
+                            <input type="text" name="producerList_@(i)_PurchasePrice" autocomplete="off" class="layui-input" lay-verify="float" value="@MyProducerList[i].PurchasePrice">
+                        </td>
+                        <td>
+                            <input type="text" name="producerList_@(i)_QuotationDate" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})" lay-verify="date" value="@(MyProducerList[i].QuotationDate!=null?MyProducerList[i].QuotationDate.Value.ToString("yyyy-MM-dd"):"")">
+                        </td>
+                        <td>
+                            <input type="text" name="producerList_@(i)_ProCycle" autocomplete="off" class="layui-input" lay-verify="required" value="@MyProducerList[i].ProCycle">
+                        </td>
+                        <td>
+                            <input type="text" name="producerList_@(i)_MinQuantity" autocomplete="off" class="layui-input" lay-verify="required" value="@MyProducerList[i].MinQuantity">
+                        </td>
+                        <td>
+                            <input type="text" name="producerList_@(i)_PriceTag" autocomplete="off" class="layui-input" lay-verify="required" value="@MyProducerList[i].PriceTag">
+                            <div class="printHidden" style="float: right;position: absolute;margin-left: 110px;margin-top: -20px;">
+                                <a class="DelProducerBtn">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            <!--采购信息结束-->
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            <!--描述配置开始-->
+            <tr class="blankPart">
+                <td style="background-color:yellow;height:58px;">
+                    中文描述
+                </td>
+                <td colspan="10">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="ChinaDescibe">@raw_materials.Description</textarea>
+                </td>
+            </tr>
+            <tr class="blankPart">
+                <td style="background-color:yellow;height:58px;">
+                    英文描述
+                </td>
+                <td colspan="10">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="EngDescibe">@raw_materials.EngDescription</textarea>
+                </td>
+            </tr>
+            <tr class="blankPart">
+                <td style="background-color:yellow;height:31px;">
+                    重点配置
+                </td>
+                @{
+                    var typeList = raw_materials.TypeInfo == null ? new List<string>() : raw_materials.TypeInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    for (int i = typeList.Count; i < 6; i++)
+                    {
+                        typeList.Add("");
+                    }
+                }
+                <td colspan="2">
+                    <input type="text" name="Attributes1" autocomplete="off" class="layui-input" lay-verify="required" value="@(typeList[0])">
+                </td>
+                <td colspan="3">
+                    <input type="text" name="Attributes2" autocomplete="off" class="layui-input" lay-verify="required" value="@(typeList[1])">
+                </td>
+                <td>
+                    <input type="text" name="Attributes3" autocomplete="off" class="layui-input" lay-verify="required" value="@(typeList[2])">
+                </td>
+                <td colspan="2">
+                    <input type="text" name="Attributes4" autocomplete="off" class="layui-input" lay-verify="required" value="@(typeList[3])">
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <!--描述配置结束-->
+            <!--价格开始-->
+            <tr class="blankPart">
+                <td>
+                    销售数量
+                </td>
+                <td colspan="2">
+                    价格一
+                </td>
+                <td>
+                    价格二
+                </td>
+                <td colspan="2">
+                    价格三
+                </td>
+                <td>
+                    折扣率
+                </td>
+                <td colspan="4">
+                    产品介绍
+                </td>
+            </tr>
+
+            @if (raw_materials.SalesInfoList == "" || raw_materials.SalesInfoList == null)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    <tr class="blankPart">
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_ShopQuantity" autocomplete="off" class="layui-input" lay-verify="nannum" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="SalesInfo_@(i)_ChinaPrice" autocomplete="off" class="layui-input" lay-verify="nanfloat" value="">
+                        </td>
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_ChinaDiscountRate" autocomplete="off" lay-verify="nanfloat" class="layui-input" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="SalesInfo_@(i)_DollarPrice" autocomplete="off" class="layui-input" lay-verify="nanfloat" value="">
+                        </td>
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_DollarDiscountRate" autocomplete="off" lay-verify="nanfloat" class="layui-input" value="">
+                        </td>
+                        @if (i == 0)
+                        {
+                            <td colspan="4" rowspan="5">
+                                <textarea placeholder="请输入内容" class="layui-textarea" name="ProductDesibe" style="height: 130px;">@raw_materials.ProductDesibe</textarea>
+                            </td>
+                        }
+
+                    </tr>
+                }
+            }
+            else
+            {
+                var materList = raw_materials.SalesInfoList.Split(';').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                for (int i = 0; i < materList.Count && i < 5; i++)
+                {
+                    var array = materList[i].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    <tr class="blankPart">
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_ShopQuantity" autocomplete="off" class="layui-input" lay-verify="nannum" value="@array[0]">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="SalesInfo_@(i)_ChinaPrice" autocomplete="off" class="layui-input" lay-verify="nanfloat" value="@array[1]">
+                        </td>
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_ChinaDiscountRate" autocomplete="off" lay-verify="nanfloat" class="layui-input" value="@array[2]">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="SalesInfo_@(i)_DollarPrice" autocomplete="off" class="layui-input" lay-verify="nanfloat" value="@array[3]">
+                        </td>
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_DollarDiscountRate" autocomplete="off" lay-verify="nanfloat" class="layui-input" value="@array[4]">
+                        </td>
+                        @if (i == 0)
+                        {
+                            <td colspan="4" rowspan="5">
+                                <textarea placeholder="请输入内容" class="layui-textarea" name="ProductDesibe" style="height: 130px;">@raw_materials.ProductDesibe</textarea>
+                            </td>
+                        }
+
+                    </tr>
+                }
+                for (int i = materList.Count; i < 5; i++)
+                {
+                    <tr class="blankPart">
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_ShopQuantity" autocomplete="off" class="layui-input" lay-verify="nannum" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="SalesInfo_@(i)_ChinaPrice" autocomplete="off" class="layui-input" lay-verify="nanfloat" value="">
+                        </td>
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_ChinaDiscountRate" autocomplete="off" lay-verify="nanfloat" class="layui-input" value="">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="SalesInfo_@(i)_DollarPrice" autocomplete="off" class="layui-input" lay-verify="nanfloat" value="">
+                        </td>
+                        <td>
+                            <input type="text" name="SalesInfo_@(i)_DollarDiscountRate" autocomplete="off" lay-verify="nanfloat" class="layui-input" value="">
+                        </td>
+                        @if (i == 0)
+                        {
+                            <td colspan="4" rowspan="5">
+                                <textarea placeholder="请输入内容" class="layui-textarea" name="ProductDesibe" style="height: 130px;">@raw_materials.ProductDesibe</textarea>
+                            </td>
+                        }
+
+                    </tr>
+                }
+            }
+            <!--价格结束-->
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            <tr>
+                <td colspan="11" class="titletd">
+                    宁波赛龙礼品有限公司 产品档案
+                    <img src="~/Base/images/Image/SyloonLogo.png" />
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="11" class="blankLine"></td>
+            </tr>
+            @{
+                #region 印刷方式
+                string PrintFunc1Text = "", PrintFunc2Text = "", PrintFunc3Text = "";
+                var printList = raw_materials.PrintFuncInfo == null ? new List<string>() : raw_materials.PrintFuncInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach (var item in printList)
+                {
+                    var array = item.Split(':');
+                    if (array[0].ToLower() == "printfunc1")
+                    {
+                        PrintFunc1Text = array[1];
+                    }
+                    else if (array[0].ToLower() == "printfunc2")
+                    {
+                        PrintFunc2Text = array[1];
+                    }
+                    else if (array[0].ToLower() == "printfunc3")
+                    {
+                        PrintFunc3Text = array[1];
+                    }
+                }
+                #endregion
+
+                #region 印刷显示
+                var PercentageList = raw_materials.PercentageInfo == null ? new List<string>() : raw_materials.PercentageInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                string Percentage1Text = "", Percentage2Text = "", Percentage3Text = "";
+                foreach (var item in PercentageList)
+                {
+                    var array = item.Split(':');
+                    if (array[0].ToLower() == "printfunc1")
+                    {
+                        Percentage1Text = array[1];
+                    }
+                    else if (array[0].ToLower() == "printfunc2")
+                    {
+                        Percentage2Text = array[1];
+                    }
+                    else if (array[0].ToLower() == "printfunc3")
+                    {
+                        Percentage3Text = array[1];
+                    }
+                }
+                #endregion
+                #region 提示显示
+                var TipPercentList = raw_materials.TipPercentInfo == null ? new List<string>() : raw_materials.TipPercentInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                string TipPercent1Text = "", TipPercent2Text = "", TipPercent3Text = "";
+                foreach (var item in TipPercentList)
+                {
+                    var array = item.Split(':');
+                    if (array[0].ToLower() == "printfunc1")
+                    {
+                        TipPercent1Text = array[1];
+                    }
+                    else if (array[0].ToLower() == "printfunc2")
+                    {
+                        TipPercent2Text = array[1];
+                    }
+                    else if (array[0].ToLower() == "printfunc3")
+                    {
+                        TipPercent3Text = array[1];
+                    }
+                }
+                #endregion
+
+
+                #region 工艺详情
+                var PrintingList = new List<Tuple<string, List<List<string>>>>();
+                if (raw_materials.Printingdetail != null)
+                {
+                    var array = raw_materials.Printingdetail.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    foreach (var item in array)
+                    {
+                        var printInfo = item.Split('(');
+                        var ListListString = new List<List<string>>();
+                        var printingDtailList = printInfo[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        foreach (var printingDetailInfo in printingDtailList)
+                        {
+                            var printingDetailArray = printingDetailInfo.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                            var ListString = new List<string>();
+                            foreach (var printDetail in printingDetailArray)
+                            {
+                                ListString.Add(printDetail);
+                            }
+                            ListListString.Add(ListString);
+                        }
+                        PrintingList.Add(new Tuple<string, List<List<string>>>(item1: printInfo[0], item2: ListListString));
+                    }
+                }
+                #endregion
+            }
+            <!--印刷1开始-->
+            <tr class="hearpart">
+                <td>
+                    印刷方式一
+                </td>
+                <td colspan="2">
+                    显示
+                </td>
+                <td>
+                    提示
+                </td>
+                <td colspan="2">
+                    印刷工艺
+                </td>
+                <td>
+                    印刷位置
+                </td>
+                <td colspan="2">
+                    位置描述
+                </td>
+                <td>
+                    最大可印刷面积
+                </td>
+                <td>
+                    可印颜色
+                </td>
+            </tr>
+            @{
+                var printfunc1 = PrintingList.Where(p => p.Item1.ToLower() == "printfunc1").FirstOrDefault();
+                var Item1 = printfunc1 != null ? printfunc1.Item2 : new List<List<string>>();
+                var count = 0;
+                foreach (var item in Item1)
+                {
+                    <tr class="blankPart">
+                        @if (item == printfunc1.Item2[0])
+                        {
+                            <td rowspan="3">
+                                <input type="text" name="PrintFunc1" autocomplete="off" class="layui-input" value="@PrintFunc1Text" style="height: 72px;">
+                            </td>
+                            <td colspan="2" rowspan="3">
+                                <input type="text" name="Percentage1" autocomplete="off" class="layui-input" value="@Percentage1Text" style="height: 72px;">
+                            </td>
+                            <td rowspan="3">
+                                <input type="text" name="TipPercent1" autocomplete="off" class="layui-input" value="@TipPercent1Text" style="height: 72px;">
+                            </td>
+                        }
+                        <td colspan="2">
+                            <select name="PrintFunc1_PrintingProcess@(count)">
+                                <option value="-1">暂无</option>
+                                @foreach (var PrintInfo in PrintList)
+                                {
+                                    var cheacked = "";
+                                    if (PrintInfo.Id.ToString() == item[0])
+                                    {
+                                        cheacked = "selected=\"selected\"";
+                                    }
+                                    <option value="@PrintInfo.Id" @cheacked>@PrintInfo.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc1_PrintingPosition@(count)" autocomplete="off" class="layui-input" value="@item[1]">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="PrintFunc1_PositionDescription@(count)" autocomplete="off" class="layui-input" value="@item[2]">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc1_MaximumArea@(count)" autocomplete="off" class="layui-input" value="@item[3]">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc1_PrintableColor@(count)" autocomplete="off" class="layui-input" value="@item[4]">
+                        </td>
+                    </tr>
+                    count++;
+                }
+                for (int i = Item1.Count; i < 3; i++)
+                {
+                    <tr class="blankPart">
+                        @if (i == 0)
+                        {
+                            <td rowspan="3">
+                                <input type="text" name="PrintFunc1" autocomplete="off" class="layui-input" value="@PrintFunc1Text" style="height: 72px;">
+                            </td>
+                            <td colspan="2" rowspan="3">
+                                <input type="text" name="Percentage1" autocomplete="off" class="layui-input" value="@Percentage1Text" style="height: 72px;">
+                            </td>
+                            <td rowspan="3">
+                                <input type="text" name="TipPercent1" autocomplete="off" class="layui-input" value="@TipPercent1Text" style="height: 72px;">
+                            </td>
+                        }
+                        <td colspan="2">
+                            <select name="PrintFunc1_PrintingProcess@(i)">
+                                <option value="-1">请选择</option>
+                                @foreach (var PrintInfo in PrintList)
+                                {
+                                    <option value="@PrintInfo.Id">@PrintInfo.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc1_PrintingPosition@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="PrintFunc1_PositionDescription@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc1_MaximumArea@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc1_PrintableColor@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                    </tr>
+                }
+            }
+
+            <!--印刷1结束-->
+            <!--印刷2开始-->
+            <tr class="hearpart">
+                <td>
+                    印刷方式二
+                </td>
+                <td colspan="2">
+                    显示
+                </td>
+                <td>
+                    提示
+                </td>
+                <td colspan="2">
+                    印刷工艺
+                </td>
+                <td>
+                    印刷位置
+                </td>
+                <td colspan="2">
+                    位置描述
+                </td>
+                <td>
+                    最大可印刷面积
+                </td>
+                <td>
+                    可印颜色
+                </td>
+            </tr>
+            @{
+                var printfunc2 = PrintingList.Where(p => p.Item1.ToLower() == "printfunc2").FirstOrDefault();
+                var Item2 = printfunc2 != null ? printfunc2.Item2 : new List<List<string>>();
+                count = 0;
+                foreach (var item in Item2)
+                {
+                    <tr class="blankPart">
+                        @if (item == printfunc2.Item2[0])
+                        {
+                            <td rowspan="3">
+                                <input type="text" name="PrintFunc2" autocomplete="off" class="layui-input" value="@PrintFunc2Text" style="height: 72px;">
+                            </td>
+                            <td colspan="2" rowspan="3">
+                                <input type="text" name="Percentage2" autocomplete="off" class="layui-input" value="@Percentage2Text" style="height: 72px;">
+                            </td>
+                            <td rowspan="3">
+                                <input type="text" name="TipPercent2" autocomplete="off" class="layui-input" value="@TipPercent2Text" style="height: 72px;">
+                            </td>
+                        }
+                        <td colspan="2">
+                            <select name="PrintFunc2_PrintingProcess@(count)">
+                                <option value="-1">暂无</option>
+                                @foreach (var PrintInfo in PrintList)
+                                {
+                                    var cheacked = "";
+                                    if (PrintInfo.Id.ToString() == item[0])
+                                    {
+                                        cheacked = "selected=\"selected\"";
+                                    }
+                                    <option value="@PrintInfo.Id" @cheacked>@PrintInfo.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc2_PrintingPosition@(count)" autocomplete="off" class="layui-input" value="@item[1]">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="PrintFunc2_PositionDescription@(count)" autocomplete="off" class="layui-input" value="@item[2]">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc2_MaximumArea@(count)" autocomplete="off" class="layui-input" value="@item[3]">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc2_PrintableColor@(count)" autocomplete="off" class="layui-input" value="@item[4]">
+                        </td>
+                    </tr>
+                    count++;
+                }
+                for (int i = Item2.Count; i < 3; i++)
+                {
+                    <tr class="blankPart">
+                        @if (i == 0)
+                        {
+                            <td rowspan="3">
+                                <input type="text" name="PrintFunc2" autocomplete="off" class="layui-input" value="@PrintFunc2Text" style="height: 72px;">
+                            </td>
+                            <td colspan="2" rowspan="3">
+                                <input type="text" name="Percentage2" autocomplete="off" class="layui-input" value="@Percentage2Text" style="height: 72px;">
+                            </td>
+                            <td rowspan="3">
+                                <input type="text" name="TipPercent2" autocomplete="off" class="layui-input" value="@TipPercent2Text" style="height: 72px;">
+                            </td>
+                        }
+                        <td colspan="2">
+                            <select name="PrintFunc2_PrintingProcess@(i)">
+                                <option value="-1">暂无</option>
+                                @foreach (var PrintInfo in PrintList)
+                                {
+                                    <option value="@PrintInfo.Id">@PrintInfo.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc2_PrintingPosition@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="PrintFunc2_PositionDescription@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc2_MaximumArea@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc2_PrintableColor@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                    </tr>
+                }
+            }
+            <!--印刷2结束-->
+            <!--印刷3开始-->
+            <tr class="hearpart">
+                <td>
+                    印刷方式三
+                </td>
+                <td colspan="2">
+                    显示
+                </td>
+                <td>
+                    提示
+                </td>
+                <td colspan="2">
+                    印刷工艺
+                </td>
+                <td>
+                    印刷位置
+                </td>
+                <td colspan="2">
+                    位置描述
+                </td>
+                <td>
+                    最大可印刷面积
+                </td>
+                <td>
+                    可印颜色
+                </td>
+            </tr>
+            @{
+                var printfunc3 = PrintingList.Where(p => p.Item1.ToLower() == "printfunc3").FirstOrDefault();
+                var Item3 = printfunc3 != null ? printfunc3.Item2 : new List<List<string>>();
+                count = 0;
+                foreach (var item in Item3)
+                {
+                    <tr class="blankPart">
+                        @if (item == printfunc3.Item2[0])
+                        {
+                            <td rowspan="3">
+                                <input type="text" name="PrintFunc3" autocomplete="off" class="layui-input" value="@PrintFunc3Text" style="height: 72px;">
+                            </td>
+                            <td colspan="2" rowspan="3">
+                                <input type="text" name="Percentage3" autocomplete="off" class="layui-input" value="@Percentage3Text" style="height: 72px;">
+                            </td>
+                            <td rowspan="3">
+                                <input type="text" name="TipPercent3" autocomplete="off" class="layui-input" value="@TipPercent3Text" style="height: 72px;">
+                            </td>
+                        }
+                        <td colspan="2">
+                            <select name="PrintFunc3_PrintingProcess@(count)">
+                                <option value="-1">暂无</option>
+                                @foreach (var PrintInfo in PrintList)
+                                {
+                                    var cheacked = "";
+                                    if (PrintInfo.Id.ToString() == item[0])
+                                    {
+                                        cheacked = "selected=\"selected\"";
+                                    }
+                                    <option value="@PrintInfo.Id" @cheacked>@PrintInfo.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc3_PrintingPosition@(count)" autocomplete="off" class="layui-input" value="@item[1]">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="PrintFunc3_PositionDescription@(count)" autocomplete="off" class="layui-input" value="@item[2]">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc3_MaximumArea@(count)" autocomplete="off" class="layui-input" value="@item[3]">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc3_PrintableColor@(count)" autocomplete="off" class="layui-input" value="@item[4]">
+                        </td>
+                    </tr>
+                    count++;
+                }
+                for (int i = Item3.Count; i < 3; i++)
+                {
+                    <tr class="blankPart">
+                        @if (i == 0)
+                        {
+                            <td rowspan="3">
+                                <input type="text" name="PrintFunc3" autocomplete="off" class="layui-input" value="@PrintFunc3Text" style="height: 72px;">
+                            </td>
+                            <td colspan="2" rowspan="3">
+                                <input type="text" name="Percentage3" autocomplete="off" class="layui-input" value="@Percentage3Text" style="height: 72px;">
+                            </td>
+                            <td rowspan="3">
+                                <input type="text" name="TipPercent3" autocomplete="off" class="layui-input" value="@TipPercent3Text" style="height: 72px;">
+                            </td>
+                        }
+                        <td colspan="2">
+                            <select name="PrintFunc3_PrintingProcess@(i)">
+                                <option value="-1">暂无</option>
+                                @foreach (var PrintInfo in PrintList)
+                                {
+                                    <option value="@PrintInfo.Id">@PrintInfo.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc3_PrintingPosition@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td colspan="2">
+                            <input type="text" name="PrintFunc3_PositionDescription@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc3_MaximumArea@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                        <td>
+                            <input type="text" name="PrintFunc3_PrintableColor@(i)" autocomplete="off" class="layui-input">
+                        </td>
+                    </tr>
+                }
+            }
+            <!--印刷3结束-->
+            <!--印刷位置示意图开始-->
+            <tr class="blankPart" style="height:390px;">
+                <td style="background-color:yellow;font-size:15px;vertical-align:middle;">
+                    印刷位置<br />
+                    示意图
+                </td>
+                <td colspan="10"></td>
+            </tr>
+            <!--印刷位置示意图结束-->
+        </table>
+        <div class="printHidden" style="width:100%;text-align:center;margin-top:10px;">
+            <a class="layui-btn layui-btn-normal" onclick="PrintBtnInfo()" style="width:90px;">打印</a>
+        </div>
+
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+    <div class="bigImage" style="position:absolute;width:98%;height:100%;background-color:white;top:0px;display:none;">
+        <div>
+            <span class="layui-layer-setwin">
+                <a class="" href="javascript:;" style="background-image:url(../../Current/image/delete.png);background-size:  100%;width:  30px;height: 30px;" onclick="$('.layui-form').show(); $('.bigImage').hide()"></a>
+            </span>
+        </div>
+        <div class="Image" style="width:70%;margin:80px 15% 0 15%">
+            <img src="" style="width:100%;" />
+        </div>
+
+    </div>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=20181017001"></script>
+<script>
+    var HiddenColorItem = null;
+    $(function () {
+        $(".checkboxItem .layui-form-checkbox").click(function () {
+            var Item = "";
+            $(".checkboxItem").each(function () {
+                var a = $(this).children("input")[0];
+                if (a.checked == true) {
+                    Item = Item + a.name.split('[')[1].split(']')[0] + ",";
+                }
+            });
+            $("input[name='TechIds']").val(Item);
+        })
+    })
+
+    // #region 文件改变
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(HiddenColorItem).attr('src', res);
+            $(HiddenColorItem).parent().find('input').val(res);
+        });
+    }
+    // #endregion
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form(),
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            },
+            pass: [/(.+){6,12}$/, '密码必须6到12位'],
+            float: function (value) {
+                if (isNaN(value)) {
+                    return '只能填写数字';
+                }
+                else if (value < 0) {
+                    return '填写数字请不小于0';
+                }
+            },
+            nannum: function (value) {
+                if (value != "" && value != undefined) {
+                    if (isNaN(value)) {
+                        return '只能填写数字';
+                    }
+                    else if (value < 0) {
+                        return '填写数字请不小于0';
+                    }
+                    else if (parseInt(value) != value) {
+                        return '请输入整数';
+                    }
+                }
+            },
+            nanfloat: function (value) {
+                if (value != "" && value != undefined) {
+                    if (isNaN(value)) {
+                        return '只能填写数字';
+                    }
+                    else if (value < 0) {
+                        return '填写数字请不小于0';
+                    }
+                }
+            },
+            selectItem: function (value) {
+                if (value == "" || value == undefined) {
+                    return '请进行选择';
+                }
+            }
+        });
+    });
+</script>

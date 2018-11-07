@@ -1,0 +1,84 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Base/css/global.css" rel="stylesheet" />
+
+    <link href="~/Base/css/table.css" rel="stylesheet" />
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/jquery-1.10.2.min.js?version=2.00"></script>
+    <script src="~/Current/Scripts/Message/SendMessage.js?version=2.00"></script>
+    <script src="~/Current/Scripts/ajax.js?version=2.00"></script>
+</head>
+<body>
+    <div class="hidden-div">
+        <input type="hidden" id="MessageId" value="@ViewBag.Id"/>
+    </div>
+    <div class="admin-main">
+        <blockquote class="layui-elem-quote">
+            <a href="../../Message/Index" class="layui-btn layui-btn-small">
+                消息管理
+            </a>
+            @*<a href="#" class="layui-btn layui-btn-small" id="import">
+            <i class="layui-icon">&#xe608;</i> 导入信息
+        </a>
+        <a href="#" class="layui-btn layui-btn-small">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i> 导出信息
+        </a>
+            *@
+            <a href="#" class="layui-btn layui-btn-small" id="getSelected">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> 通知选中用户
+            </a>
+
+        </blockquote>
+        <fieldset class="layui-elem-field">
+            <legend>数据列表</legend>
+            <div class="layui-field-box layui-form">
+                <table class="layui-table admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>
+                            <th>昵称</th>
+                            <th>性别</th>
+                            <th>手机号码</th>
+                            <th>电子邮箱</th>
+                            <th>折扣</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content"></tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="admin-table-page">
+            <div id="paged" class="page">
+            </div>
+        </div>
+    </div>
+    <!--模板-->
+    <script type="text/html" id="tpl">
+        {{# layui.each(d.list, function(index, item){ }}
+        <tr>
+            <td><input type="checkbox" lay-skin="primary"><input type="hidden" value="{{ item.Id }}" name="Id" /></td>
+            <td>{{ item.Name }}</td>
+            <td>{{ item.Sex }}</td>
+            <td>{{ item.Phone }}</td>
+            <td>{{ item.Email }}</td>
+            <td>{{ item.Discount }}</td>
+            <td>{{ item.CreateTime }}</td>
+            <td>
+                <a onclick="SendMessage({{ item.Id }})" class="layui-btn layui-btn-mini">通知</a>
+            </td>
+        </tr>
+        {{# }); }}
+    </script>
+</body>
+</html>

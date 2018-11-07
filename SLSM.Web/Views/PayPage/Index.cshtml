@@ -1,0 +1,755 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var ListHisdesign = (List<SLSM.Web.Models.Response.Address.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+    List<Address> addressList = ViewBag.addressList == null ? new List<Address>() : (List<Address>)ViewBag.addressList;
+    var UserInfo = ViewBag.UserInfo == null ? new DbOpertion.Models.User() : (DbOpertion.Models.User)ViewBag.UserInfo;
+    UserInfo.Discount = UserInfo.Discount == null ? 0 : UserInfo.Discount;
+    var ShowDetailAdd = "none";
+    var ShowOneAdd = "block";
+    decimal? price = 0;
+    decimal? decountprice = 0;
+    decimal? payprice = 0;
+    var colorList = ViewBag.ColorList == null ? new List<Colorinfo>() : (List<Colorinfo>)ViewBag.ColorList;
+}
+<script>
+    javascript: window.history.forward(1);
+</script>
+<script src="~/Current/script/PayPage/PayPage.js?version=1.17"></script>
+<script>
+    function AddNewAddress() {
+        $('.detailcontent .modal-content .modal-body .address-form h4').html('添加并使用新地址');
+        $('.dealert.Address').show();
+        $('.InputText').val("");
+        $('.china-city .input .state').html('');
+        $('.china-city .input .city').html('');
+        $('.china-city .input .district').html('');
+        $('.overlay .wrap.province').show();
+        $('.overlay .wrap.district').hide();
+    }
+
+    $(function () {
+        $('.panel-context .index_table-wrap .table .quantity.ng-scope .qty').change(function () {
+            var data = new Object();
+            var that = this;
+            data.ShopCartId = $(that).parent().find('.hidShopCartId').val();
+            data.Amount = $(that).val();
+            var Amount = parseInt(data.Amount);
+            if (Amount == NaN || Amount <= 0) {
+                layer.msg("必须为大于0的整数");
+                var sumprice = $(that).parent().parent().parent().find('.SumPrice span label').html();
+                var onePrice = $(that).parent().parent().parent().find('.OnePrice label').html();
+                $(that).val(parseInt(sumprice / onePrice));
+                return;
+            }
+            jQuery.axpost("../../Api/ShopCart/ChangeAmount", JSON.stringify(data), function (dataInfo) {
+                var sumprice = $(that).parent().parent().parent().find('.SumPrice span label').html((dataInfo.Message * Amount).toFixed(2));
+                var onePrice = $(that).parent().parent().parent().find('.OnePrice label').html((dataInfo.Message * 1).toFixed(2));
+                PriceSum();
+            });
+        });
+
+        $('.panel-context .index_table-wrap .table .quantity.ng-scope .minus').click(function () {
+            var Amount = parseInt($(this).parent().find('.qty').val());
+            if (Amount == 0) {
+                return;
+            }
+            Amount--;
+            $(this).parent().find('.qty').val(Amount);
+            $('.panel-context .index_table-wrap .table .quantity.ng-scope .qty').trigger('change');
+        });
+
+        $('.panel-context .index_table-wrap .table .quantity.ng-scope .plus').click(function () {
+            var Amount = parseInt($(this).parent().find('.qty').val());
+            Amount++;
+            $(this).parent().find('.qty').val(Amount);
+            $('.panel-context .index_table-wrap .table .quantity.ng-scope .qty').trigger('change');
+        });
+        PriceSum();
+    })
+
+    function PriceSum() {
+        var floatPrice = 0;
+        $('.panel-context .index_table-wrap .table .SumPrice span label').each(function () {
+            var money = $(this).html();
+            if (!isNaN(money)) {
+                var Price = parseFloat(money);
+                floatPrice = floatPrice + Price;
+            }
+        });
+        var Discount = parseFloat($("#UserDiscount").val());
+        if ((floatPrice * Discount) < 10) {
+            floatPrice = 0;
+        }
+        if (floatPrice * Discount > 100) {
+            $('.clearfix .payAllMoney label').html(floatPrice.toFixed(2));
+            $('.clearfix .vipdiscount label').html((floatPrice * (1 - Discount)).toFixed(2));
+            $('.clearfix .payMoney label').html((floatPrice * Discount).toFixed(2));
+            $('.clearfix .Postage label').html("0.00");
+        }
+        else if (floatPrice * Discount > 10) {
+            $('.clearfix .payAllMoney label').html(floatPrice.toFixed(2));
+            $('.clearfix .vipdiscount label').html((floatPrice * (1 - Discount)).toFixed(2));
+            $('.clearfix .payMoney label').html(((floatPrice * Discount) + 10).toFixed(2));
+            $('.clearfix .Postage label').html("10.00");
+        }
+        else if (floatPrice * Discount >= 0) {
+            $('.clearfix .payAllMoney label').html("0.00");
+            $('.clearfix .vipdiscount label').html("0.00");
+            $('.clearfix .payMoney label').html((10).toFixed(2));
+            $('.clearfix .Postage label').html("10.00");
+        }
+
+    }
+    var tip = undefined;
+    var timeout;
+    function layerOpen() {
+        if (tip == undefined) {
+            tip = layer.tips('电子发票与纸质普票具有相同法律效力，是售后维修、用户维权的有效凭据，个人用户选择开具电子发票后无法换取个人抬头的纸质普票，请谨慎选择发票类型。', '.btn.btn-link', { tips: [1, '#008375'], time: 120000 });
+        }
+    }
+
+    function layerClose() {
+        layer.close(tip);
+        tip = undefined;
+    }
+
+</script>
+<style>
+    .container-fluid .leftpart {
+        float: left;
+        width: 100px;
+    }
+
+    .container-fluid .rightpart {
+        float: right;
+        width: 1100px;
+        line-height: 28px;
+    }
+
+        .container-fluid .rightpart > label {
+            margin-left: 5px;
+        }
+
+           .container-fluid .rightpart.active > label {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .container-fluid .rightpart span {
+            float: right;
+            width: 100px;
+            color: #5672C4;
+            font-size: 12px;
+            cursor: pointer;
+        }
+</style>
+<link href="~/Current/css/PayPage/PayPage.css?version=1.08" rel="stylesheet" />
+<div class="hiddenInput">
+    <input type="hidden" id="HiddenAddressId" />
+    <input type="hidden" id="ShopCartId" value="@ViewBag.ShopCartId" />
+    <input type="hidden" id="UserDiscount" value="@UserInfo.Discount" />
+</div>
+<div class="BackGroud">
+    <div class="wide_container">
+        <div class="react-app">
+            <h3>提交订单</h3>
+            @if (addressList != null && addressList.Count != 0)
+            {
+                ShowDetailAdd = "block";
+                ShowOneAdd = "none";
+            }
+
+            <div class="panel_panel noAddress" style="display:@ShowOneAdd">
+                <h4>收货地址</h4>
+                <div class="panel-context">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="address-form">
+                                    <form class="form-horizontal">
+                                        <div class="InputDiv">
+                                            <input type="text" class="InputText" id="NameInput">
+                                            <label for="NameInput">
+                                                姓名
+                                            </label>
+                                            <div>
+                                                <hr class="basehr">
+                                                <hr class="nexthr">
+                                            </div>
+                                            <div class="error-text">
+                                                请填写收货人姓名
+                                            </div>
+                                        </div>
+
+                                        <div class="InputDiv">
+                                            <input type="text" class="InputText" id="MoblieInput">
+                                            <label for="MoblieInput">
+                                                手机
+                                            </label>
+                                            <div>
+                                                <hr class="basehr">
+                                                <hr class="nexthr">
+                                            </div>
+                                            <div class="error-text">
+                                                请填写收货人手机号
+                                            </div>
+                                        </div>
+
+                                        <div class="china-city">
+                                            <div class="input">
+                                                <span class="state">
+                                                    省份
+                                                </span>
+                                                <span class="city">
+                                                    城市
+                                                </span>
+                                                <span class="district">
+                                                    区/县
+                                                </span>
+                                                <span class="toggle-icon fa fa-angle-down">
+                                                </span>
+                                            </div>
+                                            <div class="error-text">请选择正确的省市区</div>
+                                            <div class="overlay">
+                                                <div class="loading" style="display:none;">
+                                                    <span class="fa fa-spin fa-spinner"></span>
+                                                </div>
+                                                <div class="wrap province" style="display:block;">
+
+                                                </div>
+                                                <div class="wrap city" style="display:none;">
+
+                                                </div>
+                                                <div class="wrap district" style="display:none;">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="InputDiv">
+                                            <div class="detailInfo">比如：路名，街道名称，小区，门牌号等</div>
+                                            <label for="FullAddress">
+                                                详细地址
+                                            </label>
+                                            <input type="text" class="InputText" id="FullAddress">
+                                            <div>
+                                                <hr class="basehr">
+                                                <hr class="nexthr">
+                                            </div>
+                                            <div class="error-text">请填写详细收货地址</div>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 10px;">
+                                            <div class="col-sm-5">
+                                                <button class="load1 btn btn-primary" type="button" style="width: 100%;" onclick="$('.detailcontent .modal-content .modal-body .address-form h4').html('添加并使用新地址'); AddAndUse(this);">
+                                                    保存并使用
+                                                </button>
+                                            </div>
+                                            <div class="col-sm-7">
+                                                <span class="address-form__message__iRJL8"></span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span style="color: rgb(222, 112, 111);"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel_panel haveAddress" style="display:@ShowDetailAdd">
+                <h4>
+                    收货地址
+                    <a class="sub-title" href="javascript:;" onclick="AddNewAddress();">使用新地址</a>
+                </h4>
+                <div class="panel-context">
+                    <div class="container-fluid" style="padding: 0px;">
+                        <div class="leftpart">
+                            <img src="~/Current/images/Address.png" />
+                        </div>
+                        @foreach (var item in addressList)
+                        {
+                            var active = "";
+                            var checke = "";
+                            if (item == addressList[0])
+                            {
+                                active = "active";
+                                checke = "checked";
+                            }
+                            var arry = item.AddrArea.Split(',');
+                            var AddrArea = "";
+                            if (arry.Length == 3)
+                            {
+                                AddrArea = arry[0] + arry[1] + arry[2] + " " + item.AddrDetail;
+                            }
+
+                            <div class="rightpart @active">
+                                <input type="radio" name="addressInfo" @checke />
+                                <label>
+                                    <label class="address-full">@AddrArea</label> （<label class="address-name">@item.ContactName</label> 收）<label class="address-phone">@item.ContactPhone</label>
+                                </label>
+                                <span onclick="EditAddr(this)">修改本地址</span>
+                                <span style="color:#ff6a00" onclick="DeleteAddr(this)">删除地址</span>
+                                <input type="hidden" class="HiddenAddressId" value="@item.Id" />
+                            </div>
+
+                        }
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div>
+                        <span style="color: rgb(222, 112, 111);"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel_panel">
+                <h4 style="margin:10px 0;">物流方式</h4>
+                <div class="panel-context">
+                    <ul class="" style="padding: 0px; list-style-type: none;">
+                        <div class="btn select-button active" style="margin-left:0px;">
+                            <div class="index__ship-service__2sRO_ clearfix">
+                                <div class="ship-service-body">
+                                    <div class="service-image" style="background-image: url('http://asset1.djicdn.com/assets/checkout/sf-express-d08028a308af24c51a3238a6db2a823f.png');"></div>
+                                </div>
+                                <div class="ship-service-body">
+                                    <p class="desc">低于10元只需要运费，高于10元低于100元需要运费加物品价值，高于100包邮！</p>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel_panel">
+                <h4>发票信息</h4>
+                <div class="panel-context">
+                    <div>
+                        <ul class="Invoice">
+                            <span class="btn select-button active">不需要发票</span>
+                            <span class="btn select-button">增值税普通发票（电子）</span>
+                        </ul>
+                        <a target="help" class="btn btn-link" href="javascript:;" aria-describedby="invoice-tooltip" onmouseover="layerOpen()" onmouseout="layerClose()">
+                            什么是电子发票<i class="fa fa-question-circle"> </i>
+                        </a>
+                    </div>
+                    <div class="detailBtn" style="display:none;">
+                        <ul class="detailUl">
+                            <span class="btn select-button">个人</span>
+                            <span class="btn select-button">单位</span>
+                        </ul>
+                        <div class="detailInfo" style="display:none;">
+                            <div class="InputDiv">
+                                <label for="InvoiceInput">
+                                    发票抬头
+                                </label>
+                                <input type="text" id="InvoiceInput" class="InputText">
+                                <div>
+                                    <hr class="basehr">
+                                    <hr class="nexthr">
+                                </div>
+                                <div class="error-text">
+                                    请输入单位名称
+                                </div>
+                            </div>
+                            <div class="InputDiv">
+                                <label for="DutyParaInput">
+                                    企业税号
+                                </label>
+                                <input type="text" id="DutyParaInput" class="InputText">
+                                <div>
+                                    <hr class="basehr">
+                                    <hr class="nexthr">
+                                </div>
+                                <div class="error-text">
+                                    请输入企业税号
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <span>
+                            如需“增值税专用发票”，请勾选“不需要发票”，然后在订单成功之后，联系客服索取。
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @if (ViewBag.UserInfo == null)
+            {
+                <div class="panel_panel">
+                    <h4>手机验证</h4>
+                    <div class="panel-context">
+                        <div class="col-sm-6">
+                            <div class="InputDiv">
+                                <input type="text" class="InputText MoblieInput">
+                                <label for="NameInput">
+                                    手机号
+                                </label>
+                                <div>
+                                    <hr class="basehr">
+                                    <hr class="nexthr">
+                                </div>
+                                <div class="error-text">
+                                    请填写手机号
+                                </div>
+                            </div>
+
+                            <div class="InputDiv">
+                                <input type="text" class="InputText VaildInput">
+                                <label for="MoblieInput">
+                                    验证码
+                                </label>
+                                <div>
+                                    <hr class="basehr">
+                                    <hr class="nexthr">
+                                </div>
+                                <div class="error-text">
+                                    请填写验证码
+                                </div>
+                                <button style="float: right;position: inherit;margin-top: -80px;right: 20px;width: 130px;height: 34px;font-size: 14px;background: #008376;border: 1px solid #008376;color: #fff;" onclick="SendPhoneCode()">
+                                    发送验证码
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            <div class="panel_panel">
+                <h4>
+                    订单概览
+                    <a class="sub-title pull-right" href="/shopcart/Index">
+                        <i class="icon-cart"></i>返回购物车
+                    </a>
+                </h4>
+                <div class="panel-context">
+                    <div class="index_table-wrap">
+                        <table class="table">
+                            <colgroup>
+                                <col style="width:115px;" />
+                                <col style="width:365px;" />
+                                <col style="width:200px;" />
+                                <col style="width:200px;" />
+                                <col style="width:155px;" />
+                            </colgroup>
+                            <tbody>
+                                @foreach (var item in ListHisdesign)
+                                {
+                                    var arry = (string)ViewBag.ShopCartId == null ? new List<string>() : ((string)ViewBag.ShopCartId).Split(',').ToList();
+                                    var PrintingMethod = "暂无";
+                                    var thisColor = colorList.Where(p => p.ChinaDescribe == item.Color && p.ParentId != 0).FirstOrDefault();
+                                    var ImageList = item.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList();
+                                    string Image = "";
+                                    foreach (var ImageInfo in ImageList)
+                                    {
+                                        var ImageArray = ImageInfo.Split(';');
+                                        if (ImageArray[0] == $"{thisColor.Id}")
+                                        {
+                                            Image = ImageArray[1];
+                                        }
+                                    }
+                                    if (arry.Contains(item.ShopCartId.ToString()))
+                                    {
+                                        if (item.PrintingMethod != null && item.PrintFuncInfo != null)
+                                        {
+                                            var printInfo = item.PrintFuncInfo.Split('|').Where(p => p.ToLower().Contains(item.PrintingMethod.ToLower())).FirstOrDefault();
+                                            var printArray = printInfo.Split(':');
+                                            PrintingMethod = printArray[1];
+                                        }
+                                        <tr>
+                                            <td>
+                                                <img src="@ViewBag.AdminUrl@Image" style="height: 110px;max-width: 166px;border: 1px solid #008375;">
+                                            </td>
+                                            <td style="padding-left:  30px;">
+                                                商品货号：@(item.ProduceNo) <br />
+                                                商品名称：@(item.CommodityName) <br />
+                                                商品颜色：@(item.Color) <br />
+                                                印刷方式：@(PrintingMethod)
+                                            </td>
+                                            <td>
+                                                <span class="OnePrice">单价：<label>@item.OnePrice</label></span>
+                                            </td>
+                                            <td>
+                                                <div class="quantity ng-scope">
+                                                    <input class="minus" type="button" value="-">
+                                                    <input class="qty" type="text" value="@item.Amount">
+                                                    <input class="plus" type="button" value="+">
+                                                    <input type="hidden" class="hidShopCartId" value="@item.ShopCartId" />
+                                                </div>
+                                            </td>
+                                            <td class="SumPrice">
+                                                <span>¥<label>@item.Price</label></span>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <table class="table-coupon-and-credit table">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="pull-right">
+                            <table class="table-mini table">
+                                <tbody>
+                                    <tr>
+                                        <td class="table-mini-label">
+                                            商品总价：
+                                        </td>
+                                        <td>
+                                            <span class="payAllMoney">¥<label>@price</label></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>会员折扣：</td>
+                                        <td>
+                                            @if (ViewBag.Discount != null)
+                                            {
+                                                <span class="vipdiscount">¥<label>@System.Decimal.Round(decountprice.Value, 2)</label></span>
+                                            }
+                                            else
+                                            {
+                                                payprice = price;
+                                                <span class="vipdiscount">¥<label>0.00</label></span>
+                                            }
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>邮费：</td>
+                                        <td>
+                                            @if (payprice.Value > 100)
+                                            {
+                                                <span class="Postage">¥<label>0.00</label></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="Postage">¥<label>10.00</label></span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="total">
+                                        <td>应付总额：</td>
+                                        <td>
+                                            <span class="payMoney">¥<label>@System.Decimal.Round(payprice.Value, 2)</label> </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="pull-right order-submit-btn">
+                                <br>
+                                <div class="tips">
+                                    <div class="tip">
+                                        <span>&nbsp;</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="submitTopay()">
+                                    <i class="fa fa-lock"></i>&nbsp;提交订单，去支付
+                                </button>
+                                <p>
+                                    点击提交订单表示您同意
+                                    <a href="javascript:;" onclick="$('.SaleDealert').show()">SYLOON商城销售政策</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dealert Address" style="display: none;">
+    <div class="zz"></div>
+    <div class="detailcontent">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('.dealert.Address').hide()">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="address-form">
+                    <h4>添加并使用新地址</h4>
+                    <form class="form-horizontal" style="margin-top: -15px;">
+                        <div class="InputDiv">
+                            <input type="text" class="InputText" id="NameInput">
+                            <label for="NameInput">
+                                姓名
+                            </label>
+                            <div>
+                                <hr class="basehr">
+                                <hr class="nexthr">
+                            </div>
+                            <div class="error-text">
+                                请填写收货人姓名
+                            </div>
+                        </div>
+
+                        <div class="InputDiv">
+                            <input type="text" class="InputText" id="MoblieInput">
+                            <label for="MoblieInput">
+                                手机
+                            </label>
+                            <div>
+                                <hr class="basehr">
+                                <hr class="nexthr">
+                            </div>
+                            <div class="error-text">
+                                请填写收货人手机号
+                            </div>
+                        </div>
+
+                        <div class="china-city">
+                            <div class="input">
+                                <span class="state">
+                                    省份
+                                </span>
+                                <span class="city">
+                                    城市
+                                </span>
+                                <span class="district">
+                                    区/县
+                                </span>
+                                <span class="toggle-icon fa fa-angle-down">
+                                </span>
+                            </div>
+                            <div class="error-text">请选择正确的省市区</div>
+                            <div class="overlay">
+                                <div class="loading">
+                                    <span class="fa fa-spin fa-spinner"></span>
+                                </div>
+                                <div class="wrap province" style="display:block;">
+
+                                </div>
+                                <div class="wrap city" style="display:none;">
+
+                                </div>
+                                <div class="wrap district" style="display:none;">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="InputDiv">
+                            <div class="detailInfo">比如：路名，街道名称，小区，门牌号等</div>
+                            <label for="FullAddress">
+                                详细地址
+                            </label>
+                            <input type="text" class="InputText" id="FullAddress">
+                            <div>
+                                <hr class="basehr">
+                                <hr class="nexthr">
+                            </div>
+                            <div class="error-text">请填写详细收货地址</div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 10px;margin-bottom:30px;">
+                            <div class="col-sm-3">
+                                <button class="load1 btn btn-primary" type="button" style="width: 100%;" onclick="AddAndUse(this);">
+                                    保存并使用
+                                </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-link" onclick="$('.dealert.Address').hide()">取消</button>
+                            </div>
+                            <div class="col-sm-7">
+                                <span class="address-form__message__iRJL8"></span>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dealert Deletions" style="display: none;">
+    <div class="zz"></div>
+    <div class="detailcontent">
+        <div class="modal-body">
+            <h4>删除地址</h4>
+            <p>您确定要删除这个地址吗?</p>
+            <div>
+                <button type="button" class="btn btn-default" onclick="$('.dealert.Deletions').hide()">取消</button>
+                <button type="button" class="btn btn-primary" onclick="DeleteAddress()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="SaleDealert" style="display:none;">
+    <div class="modal-backdrop fade in"></div>
+    <div class="fade in modal" role="dialog" tabindex="-1" style="display: block; padding-left: 17px;">
+        <div class="modal-lg modal-dialog">
+            <div class="modal-content" role="document">
+                <div class="modal-header">
+                    <button type="button" class="close" onclick="$('.SaleDealert').hide()">
+                        <span aria-hidden="true">×</span>
+                    </button><h4 class="modal-title">销售政策</h4>
+                </div><div class="modal-body" style="height: 500px;overflow-y: scroll;">
+                    <div>
+                        <p>感谢您购买SYLOON的产品。</p>
+                        <p>请您务必注意，您一旦在SYLOON商城向我们发出订单，即表明您同意以下条款及SYLOON的隐私政策、网页使用条款和SYLOON定制礼品使用条款。</p>
+                        <p>SYLOON商城无理由退货政策</p>
+                        <p>由于本商城全部为定制产品，所售商品无法进行二次销售，故本商城不接受无理由退货！</p>
+                        <p>
+                            但以下情况例外：
+                        </p>
+                        <ul>
+                            <li>
+                                一、产品本身有质量问题：本商城产品质量标准按国家相关标准执行，没有国家标准的按行业标准执行，没有行业标准的按工厂内部质量标准执行；
+                            </li>
+                            <li>
+                                二、印刷质量有问题：产品的印刷我们以您最终确认的效果图为标准，我们的印刷问题包括LOGO或者文字印刷错误、掉色、残缺、大小和颜色明显错误等。但是由于显示器、打印机等显示设备和实际产品的颜色会有误差，色差不能作为印刷质量问题；
+
+                            </li>
+                            <li>
+                                三、交期延误：由于不同的商品和不同的印刷工艺都会有不同的生产周期，我们商品的详情页面会注明大致的交货周期，这是一个参考周期，实际往前往后一两天属正常范围，如果您是组织活动用，需要非常准确的交期，请事先与我们的客服人员联系说明，如果由于我们未能在和您确定的时间内无法发货，您可以全额退款。
+                            </li>
+                        </ul>
+                        <p>相关条款的遵守</p>
+                        <p>您在SYLOON商城购买和使用SYLOON产品，还须遵守下述网页中的条款：</p>
+                        <p><a href="../../Helper/PrivacyPolicy" target="_blank">隐私政策</a>和<a href="../../Helper/TermOfUser" target="_blank">使用条款</a>。</p>
+                        <p>此外：</p>
+                        <p>定价和价格调整</p>
+                        <p>SYLOON保留权利可以随时更改SYLOON商城中产品的价格，且SYLOON有权更正可能无意发生的错误定价。出现定价错误时，我们将向您发出通知，并允许您以正确价格继续交易，或在您不承担费用的情况下取消您的订单。</p>
+                        <p>仅在中国内地销售</p>
+                        <p>
+                            在本条款中，“中国内地”不包括香港特别行政区、澳门特别行政区和台湾地区。我们仅接受中国内地地址为收货地址的订单，中国大陆以外地区的订单请联系我们的进出口部门。
+                        </p>
+                        <p>SYLOON商城中的信息仅构成要约邀请。任何该等信息均不构成我们提供任何产品或服务的要约。</p>
+                        <p>通过向我们下订单，您声明并保证您在法律上有能力同意本条款的全部内容并签订有约束力的买卖协议。</p>
+                        <p>
+                            当您向我们下订单后，您的订单构成向我们购买产品或服务的要约。当您的订单中包含多件产品或服务时，您的订单将包含一系列由每件产品或服务单独构成的要约。
+                        </p>
+                        <p>
+                            一旦我们收到您的订单，我们会向您发出一封订单确认的电子邮件或短信。但您收到该邮件或短信并不表示我们已接受您的订单，也不构成我们要约销售的确认；这仅是确认我们收到了您的订单。一旦我们处理了您的订单并准备发货，我们将再向您发送一封电子邮件或短信，说明我们已经接受了您的订单，该邮件或短信将包括发货详情。我们有权自行决定是否接受您的订单，因为我们希望确保您订购的产品有货，我们将在您订购的产品发货时才会接受您的订单。
+                            在有些情况下，我们已确认了您的订单但随后又获悉无法供应订购的产品，此时我们将取消订单并全额退还您的购买价款。
+                        </p>
+                        <p>
+                            在发货或签收前，我们有权单方面取消非正常情况下产生的订单，如不当刷单、违反限购规则的订单等。
+                        </p>
+                        <p>对于预售的产品，SYLOON无法承诺将满足所有已付款的订单。我们可自行决定拒绝或取消任何订单并限制订单数量，并且，我们可在接受或处理任何订单前要求您提供额外的信息。但如该种情况发生，SYLOON会及时通知您。</p>
+                        <p>印刷效果确认前您可取消订单。确认之后，如果您仍需取消订单，我们将无法退款退款。您可以登录您的SYLOON账号查看订单的物流信息，如果您是以游客身份购买的，请留意SYLOON发送的发货邮件或短信。</p>
+                        <p>请注意：以物流损坏、漏发或错发商品为原因的退换货，如您已签收，并且无法提供物流公司开具的相关凭据，我们将无法为您办理退换货；因为物流公司的原因延误收货，导致错过您的活动，我们也无法为您办理退款。</p>
+                        <p>其他</p>
+                        <p>本条款适用于中国内地法律。与本条款有关的任何争议，您或SYLOON都应提交至宁波市北仑区人民法院通过诉讼解决。</p>
+                        <p>在本条款中，根据您购买的产品类别，SYLOON指宁波赛龙礼品有限公司。</p>
+                    </div>
+                </div><div class="modal-footer" style="text-align: center;"><a onclick="$('.SaleDealert').hide()" class="btn btn-primary" style="width: 170px; line-height: 30px;">确定</a></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+﻿@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var listGrade = ViewBag.listGrade == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.listGrade;
+    var listScence = ViewBag.listScence == null ? new List<GradeRes>() : (List<GradeRes>)ViewBag.listScence;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes gradeRes = ViewBag.grade;
+    var CountInfo = 0;
+    var ThisCount = true;
+}
+
+<link rel="stylesheet" href="~/base/css/style.css">
+<link href="~/Current/css/DJIndex.css" rel="stylesheet" />
+<link href="~/Current/css/Grade/Grade.css" rel="stylesheet" />
+<script>
+    var gradeId = '@ViewBag.gradeId'
+
+   
+</script>
+<style>
+    
+</style>
+
+<div id="dji-store-page">
+    <div id="category" style="padding-top:1px;">
+        <div aa="废弃">
+            @*<div class=" mainmenu__nav___3vTEL ">
+                    <nav class="nav-list__menu___1Zrce swiper-container">
+                        <ul class="nav-list__items___1VxiN swiper-wrapper">
+                            @foreach (var item in listGrade)
+                            {
+                                var active = "";
+                                if (item.id.ToString() == ((int)ViewBag.gradeId).ToString())
+                                {
+                                    active = "nav-list__active___3afqA";
+                                    ThisCount = false;
+                                }
+                                else
+                                {
+                                    if (ThisCount)
+                                    {
+                                        CountInfo++;
+                                    }
+                                }
+                                <li class="nav-list__item___2Uvwa swiper-slide @active">
+                                    <a href="../../CommodityList/Index?gradeId=@item.id">
+                                        <div class="nav-list__icon___3968Y">
+                                            <img src="@ViewBag.AdminUrl@item.Image" class=" lazyloaded">
+                                        </div>
+                                        <div>@item.name</div>
+                                    </a>
+                                </li>
+                            }
+                            @foreach (var item in listScence)
+                            {
+                                var active = "";
+                                if (item.id.ToString() == ((int)ViewBag.gradeId).ToString())
+                                {
+                                    active = "nav-list__active___3afqA";
+                                    ThisCount = false;
+                                }
+                                else
+                                {
+                                    if (ThisCount)
+                                    {
+                                        CountInfo++;
+                                    }
+                                }
+                                if (!item.name.Contains("#"))
+                                {
+                                    <li class="nav-list__item___2Uvwa swiper-slide @active">
+                                        <a href="../../CommodityList/Index?gradeId=@item.id">
+                                            <div class="nav-list__icon___3968Y">
+                                                <img src="@ViewBag.AdminUrl@item.Image" class=" lazyloaded">
+                                            </div>
+                                            <div>@item.name</div>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </nav>
+                </div>*@
+        </div>
+        <div class="banner__focus___3aZUR">
+            <div class="banner__banner___2XFfK" style="padding-bottom:37.5%;">
+                <div class="banner__inner___uAI5L" style="background-image:url(@ViewBag.AdminUrl@gradeRes.BigImage);">
+                    <div class="banner__caption___tna2V">@gradeRes.name</div>
+                </div>
+            </div>
+        </div>
+        @if (gradeRes != null)
+        {
+            var BaseCommList = List_Comm.Where(p => p.GradeId.Value == gradeRes.id).ToList();
+            if (ViewBag.gradeInfo == "scence")
+            {
+                List_Comm = List_Comm.Where(p => p.ScenceIds != null).ToList();
+                BaseCommList = List_Comm.Where(p => p.ScenceIds.Contains("," + gradeRes.id + "|")).ToList();
+            }
+            if (BaseCommList.Count != 0)
+            {
+                var loopCount = BaseCommList.Count;
+
+                for (int i = 0; i < loopCount; i++)
+                {
+                    var comm = BaseCommList[i];
+                    <div class="index__product___2o7DE index__product-small___39Ei3">
+                        <a href="../../Commodity/Index?CommodityId=@comm.Id" class="Item__product___2gc66 Item__product-small___1t73E">
+                            <div class="Item__image-holder___HhoSf">
+                                <img class="Item__image___3NVC9" src="@ViewBag.AdminUrl@comm.Image">
+                            </div>
+                            <div class="Item__info___3VZYt">
+                                <div class="Item__title___3Q70F">@comm.Name</div>
+                                <div class="Price__info___1vzHs Price__visible___3735J">
+                                    <span class="Price__price___334ig">¥@comm.minPrice</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+            foreach (var item in gradeRes.listGrade)
+            {
+                var IdList = item.listGrade.Select(p => p.id).ToList();
+                IdList.Add(item.id);
+                var commList = List_Comm.Where(p => IdList.Contains(p.GradeId.Value)).ToList();
+                if (ViewBag.gradeInfo == "scence")
+                {
+                    commList.Clear();
+                    foreach (var id in IdList)
+                    {
+                        var listInfo = List_Comm.Where(p => p.ScenceIds.Contains("," + id + "|")).ToList();
+                        foreach (var listiteminfo in listInfo)
+                        {
+                            commList.Add(listiteminfo);
+                        }
+                    }
+                }
+                if (commList.Count != 0)
+                {
+                    var loopCount = commList.Count;
+                    <div class="plpr20 page-goods-class pt40">
+                        <h2 class="public-box-title">@(gradeRes.name)</h2>
+                    </div>
+                    for (int i = 0; i < loopCount; i++)
+                    {
+                        var comm = commList[i];
+                        <div class="index__product___2o7DE index__product-small___39Ei3">
+                            <a href="../../Commodity/Index?CommodityId=@comm.Id" class="Item__product___2gc66 Item__product-small___1t73E">
+                                <div class="Item__image-holder___HhoSf">
+                                    <img class="Item__image___3NVC9" src="@ViewBag.AdminUrl@comm.Image">
+                                </div>
+                                <div class="Item__info___3VZYt">
+                                    <div class="Item__title___3Q70F">@comm.Name</div>
+                                    <div class="Price__info___1vzHs Price__visible___3735J">
+                                        <span class="Price__price___334ig">¥@comm.minPrice</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+
+            }
+        }
+    </div>
+</div>
+<div style="clear:both;"></div>
+
+<div class="go-top"></div>
+<script src="~/base/js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+    $(function () {
+        $('.page-class-box .list-box dt').click(function () {
+            $(this).parent().find('dd').toggle();
+        });
+        swiperTool();
+    });
+
+    function swiperTool() {
+        var swiperIndex = new Swiper('.page-banner-box', {
+            loop: true,
+            speed: 300,
+            autoplay: {
+                delay: 3000
+            },
+            pagination: {
+                el: '.swiper-pagination',
+            },
+        });
+        var swiperGood = new Swiper('nav.swiper-container', {
+            slidesPerView: 5,
+            spaceBetween: "1%",
+        });
+        swiperGood.slideTo(@CountInfo);
+    };
+
+
+</script>
+
+<script src="~/Current/js/CommodityList/index.js?ver201803231002"></script>

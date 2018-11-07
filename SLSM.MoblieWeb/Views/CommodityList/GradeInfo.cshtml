@@ -1,0 +1,43 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "GradeInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes gradeRes = ViewBag.grade;
+    var List_Comm = ViewBag.listCommView == null ? new List<Commodity_Stageprice_View>() : (List<Commodity_Stageprice_View>)ViewBag.listCommView;
+}
+<link href="~/Current/css/DJIndex.css" rel="stylesheet" />
+<link href="~/Current/css/Grade/subshop.css" rel="stylesheet" />
+<div id="dji-store-page" style="padding-top: 1px;padding-bottom:1px;">
+    <div id="category">
+        <div class="clearfix">
+            <h3 class="header__title___2C0jX">@gradeRes.name</h3>
+            <section class="product-list__wrap___225H3 product-list__separate___2FwYB">
+                <div class="product-list__list___3NLWZ">
+                    <ul>
+                        @foreach (var item in List_Comm)
+                        {
+                            <li>
+                                <a href="../../Commodity/Index?CommodityId=@item.Id">
+                                    <div class="product-list__media___FdXsy">
+                                        <img src="@ViewBag.AdminUrl@item.Image" class=" lazyloaded">
+                                    </div>
+                                    <div class="product-list__info___lKu_a">
+                                        <h5 class="product-list__title___3vMKn">@item.Name</h5>
+                                        <div class="product-list__money___F9srB">
+                                            <p class="product-list__price___2-rQq">¥ @item.minPrice</p>
+                                            <p class="product-list__save-price___2CNbs">
+                                                <span class="saving-price"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+

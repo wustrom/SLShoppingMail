@@ -1,0 +1,81 @@
+
+*,
+*:before,
+*:after { 
+
+}
+
+body {
+
+}
+
+.sectionHeading {
+	display: block;
+	line-height: 1em;
+	text-align: center;
+	font-weight: 600;
+	color: #212121;
+}
+
+.sectionHeading span {
+	background: #fff;
+	padding: 0 20px;
+	display: inline-block;
+}
+
+.clearfix:before,
+.clearfix:after {
+	content: " ";
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+.clearfix {
+	*zoom: 1;
+}
+
+.fl {
+	float: left;
+}
+
+.row {
+	width: 100%;
+}
+
+.grid12 {
+	float: left;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.small12 {
+	width: 100%;
+}
+
+.small3 {
+	width: 25%;
+}
+
+.slideDemos {
+	width: 100%;
+}
+
+.slideDemos-single {
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	margin-top: 1em;
+}
+
+.slideDemos-single .pogoSlider {
+	height: 225px;
+}
+
+.slideDemos-single h3 {
+	text-align: center;
+	margin-top: 90px;
+	color: #fff;
+	font-weight: 700;
+}

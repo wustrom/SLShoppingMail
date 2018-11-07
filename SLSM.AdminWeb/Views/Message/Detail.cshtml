@@ -1,0 +1,37 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var message = ViewBag.Message==null?new Message() : (Message)ViewBag.Message;
+    var Id = message == null ? 0 : message.Id;
+}
+
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="Id" id="Id" value="@Id" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="MainTitle" placeholder="请输入消息标题" lay-verify="required" autocomplete="off" class="layui-input" value="@message.MainTitle">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">消息内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="content" lay-verify="content" id="LAY_demo_editor">@Html.Raw(message.Content)</textarea>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script>
+
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+    }
+</style>

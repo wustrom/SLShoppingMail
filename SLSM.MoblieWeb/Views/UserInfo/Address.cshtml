@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Address";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var List_Address = (List<DbOpertion.Models.Address>)ViewBag.Address;
+    var first = true;
+
+}
+<div class="hiddenDiv">
+    <input type="hidden" id="hiddPageCount" value="@ViewBag.AddressCount" />
+</div>
+<div id="panel" class="public-content-box">
+
+    <div class="my_address">
+        <ul>
+            @foreach (var item in List_Address)
+            {
+                var area = item.AddrArea.Split(',');
+                if (area.Count() == 3)
+                {
+                    item.AddrArea = area[0] + " " + area[1] + " " + area[2];
+                }
+                <li>
+                    <dl>
+                        <dd>
+                            <span>@item.ContactName</span>
+                            @if (first)
+                            {
+                                first = false;
+                                <a href="#" class="moren_dz">
+                                    默认地址
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="sz_dz" onclick="Default(@item.Id)">
+                                    设为默认
+                                </a>
+                            }
+                        </dd>
+                        <dd><span>@item.AddrArea</span></dd>
+                        <dd><span>@item.AddrDetail</span></dd>
+                        <dd>
+                            <span>电话：@item.ContactPhone</span>
+                            <a  onclick="DeAddr(@item.Id)" title="删除" class="del_dz"></a>
+                        </dd>
+                    </dl>
+                </li>
+            }
+        </ul>
+        <a href="../../UserInfo/AddressAdd" class="add_dz">新增收货地址</a>
+    </div>
+    <!--尾部nav-->
+</div>
+@section js
+{
+<script src="~/Current/js/UserInfo/Address.js"></script>
+}

@@ -1,0 +1,200 @@
+﻿@using DbOpertion.Models
+@using SLSM.DBOpertion.Model.Extend.Response.GradeRes;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    GradeRes gradeRes = (GradeRes)ViewBag.gradeSingle;
+    var gradeId = ViewBag.gradeId;
+    var ListGrade = (List<GradeRes>)ViewBag.listGradeOfTitle;
+    var ListScence = (List<GradeRes>)ViewBag.listScence;
+}
+
+@section js{
+
+}
+@section css{
+    <link href="~/Current/css/CommodityList/CommCommon.css?version=1.05" rel="stylesheet" />
+    <link href="~/Current/css/CommodityList/GradeType.css" rel="stylesheet" />
+    <link href="~/Current/css/CommodityList/CommList.css" rel="stylesheet" />
+}
+
+<section style="min-width:1200px;background:rgba(0,0,0,0.8)" class="BackGroud-Image">
+    <div style="background-image:url(@ViewBag.AdminUrl@gradeRes.BigImage)" class="cover-image"></div>
+    <div class="content">
+        <h1 class="title">@(gradeRes.name != null ? gradeRes.name.Replace("#", "") : "") 系列</h1>
+    </div>
+</section>
+<div class="CommListcontainer">
+    @if (gradeRes != null)
+    {
+        var BaseCommList = List_Comm.Where(p => p.GradeId.Value == gradeRes.id).ToList();
+        if (ViewBag.gradeInfo != "grade")
+        {
+            List_Comm = List_Comm.Where(p => p.ScenceIds != null).ToList();
+            BaseCommList = List_Comm.Where(p => p.ScenceIds.Contains("," + gradeRes.id + "|")).ToList();
+        }
+
+        if (BaseCommList.Count != 0)
+        {
+            var loopCount = BaseCommList.Count; /*> 7 ? 7 : BaseCommList.Count;*/
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">@(gradeRes.name != null ? gradeRes.name.Replace("#", "") : "")</h2>
+                    <div class="btn-group"></div>
+                </div>
+                <div class="section-container">
+                    <ul class="section-countent product-list">
+                        @for (int i = 0; i < loopCount; i++)
+                        {
+                            <li class="section-item">
+                                <a class="product-item-link" href="../../Diy/Index?CommodityId=@BaseCommList[i].Id">
+                                    <div class="product-item product-item-has-hover-img">
+                                        <div class="image">
+                                            <div class="cover">
+                                                <img src="@ViewBag.AdminUrl@BaseCommList[i].Image" />
+                                            </div>
+                                            <div class="hover">
+                                                <div class="image-bg-cover">
+                                                    <img src="@ViewBag.AdminUrl@BaseCommList[i].BackView">
+                                                    <p class="hover-text">@BaseCommList[i].Introduce</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h4 class="title">@BaseCommList[i].Name</h4>
+                                        <div class="price">
+                                            <div class="money">
+                                                <span>
+                                                    <span class="price normal-price">¥@BaseCommList[i].minPrice</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+                        @*@if (BaseCommList.Count > 7)
+                        {
+                            <li class="section-item">
+                                <a class="link" href="../../../CommodityList/Index?gradeId=@gradeRes.id&IsMoreInfo=true">
+                                    <div class="more-item">
+                                        <h4 class="title">更多</h4>
+                                    </div>
+                                </a>
+                            </li>
+                        }*@
+                        <div style="clear:both;"></div>
+                    </ul>
+                </div>
+            </section>
+        }
+
+
+        foreach (var item in gradeRes.listGrade)
+        {
+            var IdList = item.listGrade.Select(p => p.id).ToList();
+            IdList.Add(item.id);
+            var commList = List_Comm.Where(p => IdList.Contains(p.GradeId.Value)).ToList();
+            if (ViewBag.gradeInfo != "grade")
+            {
+                commList.Clear();
+                foreach (var id in IdList)
+                {
+                    var listInfo = List_Comm.Where(p => p.ScenceIds.Contains("," + id + "|")).ToList();
+                    foreach (var listiteminfo in listInfo)
+                    {
+                        commList.Add(listiteminfo);
+                    }
+                }
+            }
+            var result = 0;
+            if (commList.Count != 0)
+            {
+                var loopCount = commList.Count;/*> 7 ? 7 : commList.Count;*/
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">@(item.name != null ? item.name.Replace("#", "") : "") </h2>
+                        <div class="btn-group"></div>
+                    </div>
+                    <div class="section-container">
+                        <ul class="section-countent product-list">
+                            @for (int i = 0; i < loopCount; i++)
+                            {
+                                <li class="section-item">
+                                    <a class="product-item-link" href="../../Diy/Index?CommodityId=@commList[i].Id">
+                                        <div class="product-item product-item-has-hover-img">
+                                            <div class="image">
+                                                <div class="cover">
+                                                    <img src="@ViewBag.AdminUrl@commList[i].Image" />
+                                                </div>
+                                                <div class="hover">
+                                                    <div class="image-bg-cover">
+                                                        <img src="@ViewBag.AdminUrl@commList[i].BackView">
+                                                        <p class="hover-text">@commList[i].Introduce</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4 class="title">@commList[i].Name</h4>
+                                            <div class="price">
+                                                <div class="money">
+                                                    <span>
+                                                        <span class="price normal-price">¥@commList[i].minPrice</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                            @*@if (commList.Count > 7)
+                            {
+                                <li class="section-item">
+                                    <a class="link" href="../../../CommodityList/Index?gradeId=@item.id&IsMoreInfo=true">
+                                        <div class="more-item">
+                                            <h4 class="title">更多</h4>
+                                        </div>
+                                    </a>
+                                </li>
+                            }*@
+                            <div style="clear:both;"></div>
+                        </ul>
+                    </div>
+                </section>
+            }
+
+        }
+    }
+    <section class="section features">
+        <div class="features-container">
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-truck.svg" alt="全场满¥99顺丰包邮（顺丰无法配送的区域将使用EMS）">
+                    </p>
+                    <h4>
+                        全国包邮
+                    </h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-card.svg" alt="支持支付宝、微信、线下支付">
+                    </p>
+                    <h4>支持支付宝、微信</h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-message.svg" alt="客服热线：400-700-0303">
+                    </p>
+                    <h4>
+                        客服热线：400-858-0505
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+

@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Evaluate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    SLSM.MoblieWeb.Models.Response.Order.OrderInfoResponse order = ViewBag.Order;
+    var List_OrderDetail = (SLSM.MoblieWeb.Models.Response.Order.OrderInfoResponse)ViewBag.OrderDetail;
+}
+
+
+<div id="panel" class="public-content-box" style="background: #f4f4f4;">
+    <!--面包屑-->
+    <div class="public-crumbs">
+        <ul class="clear">
+            <li class="home"><a href="../../Main/Index"><i class="icon-home"></i></a></li>
+            <li><a href="../../Index"> 个人中心</a></li>
+            <li><a href="../../UserInfo/MyOrderList">我的订单</a></li>
+            <li><a href="../../UserInfo/Evaluate">评价</a></li>
+        </ul>
+    </div>
+
+    <div class="evaluate-big-box">
+        <div class="evaluate-hd">
+            <strong>退货申请</strong>
+        </div>
+        <div class="evaluate-bg-box">
+            <div class="evaluate-shop-info">
+                <p class="number">订单编号：@order.OrderNo</p>
+                <p class="time">@order.OrderTime</p>
+            </div>
+            <input type="hidden" id="OrderId" value="@order.Id" />
+            <div class="evaluate-list">
+                @foreach (var item in List_OrderDetail.ListDetail)
+    {
+            <div class="item">
+                <div class="item-ceil">
+                    <div class="left-img">
+                        <a href="#"><img src="@item.FrontImage" alt=""></a>
+                    </div>
+                    <div class="item-info">
+                        <h4>@item.Name</h4>
+                        <p><lable>@item.Color</lable>/属性a</p>
+                        <p>@item.Amount</p>
+                        <p>&yen;@item.PayMoney</p>
+                    </div>
+                </div>
+
+                <div class="star-evaluate">
+                    <div class="star-item">
+                        <span>评价 : </span>
+                        <div class="star-icon">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="CommodityId" value="@item.CommodityId" />
+}
+            </div>
+            <div class="comment-box">
+                <p>点评 : </p>
+                <div class="text">
+                    <textarea class="text-input"></textarea>
+                </div>
+            </div>
+
+            <div class="clear slide-show-box">
+                <span>晒图 : </span>
+                <div class="img">
+                    <div class="add-img"></div>
+                </div>
+            </div>
+            <div class="evaluate-btn-box">
+                <button type="button" class="btn-block btn-primary">提交评价</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section js
+{
+    <script src="~/Current/js/UserInfo/Evaluate.js"></script>
+}

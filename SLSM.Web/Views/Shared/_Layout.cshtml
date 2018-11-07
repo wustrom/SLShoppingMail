@@ -1,0 +1,465 @@
+﻿@using DbOpertion.Models;
+@{
+    var user = (User)ViewBag.UserInfo;
+    var ListHisdesign = (List<SLSM.Web.Models.Response.Address.HisdesigninfoResponse>)ViewBag.HisdesignInfo;
+    var ListGrade = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listGradeOfTitle;
+    var ListCommShow = (List<Commshow>)ViewBag.CommShowList;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    List<int> list = new List<int>();
+    foreach (var item in ListGrade)
+    {
+        var commShow = ListCommShow.Where(p => p.GradeId == item.id).ToList();
+        if (commShow.Count != 0)
+        {
+            list.Add(item.id);
+        }
+    }
+    var service = (Customerservice)ViewBag.customerservice;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <title>赛龙商城</title>
+    <meta name="keywords" content="赛龙商城" />
+    <meta name="description" content="赛龙商城" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <script type="text/javascript" src="~/Base/js/jquery.min.js"></script>
+    <script src="~/Current/script/ajax.js"></script>
+    <script type="text/javascript" src="~/Base/js/banner.js?vasion=1.04"></script>
+    <script type="text/javascript" src="~/Base/js/Layerout.js?version=1.05"></script>
+    <script type="text/javascript" src="~/Base/js/jquery.SuperSlide.2.1.1.js"></script>
+    <script type="text/javascript" src="~/Base/js/global.js?version=1.01"></script>
+    <script type="text/javascript" src="~/Base/js/common.js"></script>
+    <script src="~/Current/script/home/LayOut.js?version=1.22"></script>
+    <script src="~/plugins/layer/layer.js"></script>
+    <link rel="icon" sizes="any" mask="" href="~/Base/images/SyloonSvg.png" />
+    @RenderSection("js", required: false)
+    <script>
+        $(function () {
+            bodyScroll();
+            $(".top-part .second-line .right-part .search-input").focus(function () {
+                $(this).addClass("focus");
+            })
+
+            $(".top-part .second-line .right-part .search-input").blur(function () {
+                $(this).removeClass("focus");
+            })
+        })
+        function bodyScroll() {
+            var top = document.documentElement.scrollTop + document.body.scrollTop;
+            if (top > 500) {
+                $("#return").show();
+            }
+            else {
+                $("#return").hide();
+            }
+            var num = document.getElementsByTagName('img').length;
+            var img = document.getElementsByTagName("img");
+            var n = 0; //存储图片加载到的位置，避免每次都从第一张图片开始遍历
+            var seeHeight = document.documentElement.clientHeight; //可见区域高度
+            var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop; //滚动条距离顶部高度
+            for (var i = n; i < num; i++) {
+                if (img[i].offsetTop < seeHeight + scrollTop) {
+                    if (img[i].getAttribute("lazy_src") != "" && img[i].getAttribute("lazy_src") != undefined && (img[i].src == "" || img[i].src == undefined || img[i].src == null)) {
+
+                        img[i].src = img[i].getAttribute("lazy_src");
+                    }
+                    n = i + 1;
+                }
+            }
+        }
+
+        //窗体改变大小事件
+        $(window).resize(function () {
+            //正文高度
+            var body_height = $(document.body).outerHeight(true);
+
+            //底部元素高度
+            var bottom_height = $(".FootInfo").outerHeight(true);
+
+            //浏览器页面高度
+            var window_height = $(window).height();
+            //判断并调整底部元素的样式
+            if ($(".FootInfo").hasClass('page-bottom')) {
+                //若包含有page-bottom类，就应用了position设置
+                //当position为absolute时，body高度不包含这个元素
+                //所以页面高度需要判断body和footer之和若小于浏览器窗口
+                //则移除样式，让footer自然跟随在正文后面
+                if (body_height + bottom_height >= window_height) {
+                    $(".FootInfo").removeClass('page-bottom');
+                }
+            } else {
+                //若没有page-bottom类，body高度包含footer
+                //判断body高度小于浏览器时，则悬浮于底部
+                if (body_height < window_height) {
+                    $(".FootInfo").addClass('page-bottom');
+                }
+            }
+        });
+
+        //页面加载时，模拟触发一下resize事件
+        $(window).trigger('resize');
+    </script>
+
+    <link href="~/Base/css/CommonClear.css" rel="stylesheet" />
+    <link href="~/Base/font/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Base/css/application.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Base/css/default.css" />
+    <link rel="stylesheet" href="~/Base/css/main.css" />
+    <link rel="stylesheet" href="~/Base/css/pogo-slider.min.css" />
+    <link rel="stylesheet" href="~/Base/css/css.css?version=1.09" />
+    <link rel="stylesheet" href="~/Base/css/banner.css?version=1.06" />
+    <link href="~/plugins/layer/mobile/need/layer.css?version=1.10" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Base/css/Layout.css?version=1.22" />
+    <style>
+        .dealert .detailcontent .h2tit i {
+            background: url(../../Current/images/delete.png);
+            background-size: 100% 100%;
+            height: 48px;
+            width: 48px;
+        }
+    </style>
+    @RenderSection("css", required: false)
+
+
+</head>
+<body ondragstart="return false;" onscroll="bodyScroll()" style="min-height: 100%;height: 100%;background-color: #f7f8f9;">
+    <div class="Base_Part">
+        @RenderSection("top_Part", required: false)
+        <div>
+            @RenderBody()
+            <div style="clear:both;"></div>
+        </div>
+
+        <!--底部开始-->
+        <div class="FootInfo" style="width: 100%;margin:auto;">
+            <div class="foot-part">
+                <div class="link-part">
+                    <div class="container">
+                        <div class="section-item">
+                            <h3>商城热卖</h3>
+                            <ul>
+                                @foreach (var item in ListGrade)
+                                {
+                                    <li>
+                                        <a href="../../../CommodityList/Index?gradeId=@item.id">@item.name</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="section-item">
+                            <h3>购买指南</h3>
+                            <ul>
+                                <li>
+                                    <a href="../../Helper/PurchaseGuide?tabname=account_management">账号管理</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/PurchaseGuide?tabname=shopping_guide">购物帮助</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/PurchaseGuide?tabname=payment_method">支付方式与发票</a>
+                                </li>
+                                <li style="display:none;">
+                                    <a href="../../Helper/PurchaseGuide?tabname=dji_credit">积分</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/PurchaseGuide?tabname=order_info">订单帮助</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/PurchaseGuide?tabname=shipping_and_delivery">物流与发货</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/PurchaseGuide?tabname=refund_and_return_policy">退换货政策</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="section-item">
+                            <h3>关于我们</h3>
+                            <ul>
+                                <li>
+                                    <a href="../../Helper/AboutUs?tabname=company_profile">公司介绍</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/AboutUs?tabname=exhibition">展会信息</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/AboutUs?tabname=recruitment_elites">人才招聘</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/AboutUs?tabname=news">最新动态</a>
+                                </li>
+                                <li>
+                                    <a href="../../Helper/AboutUs?tabname=contact_the_salon">联系我们</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear: both;"></div>
+
+                    </div>
+                </div>
+                <div class="bottom-Full">
+                    <div class="foot-bottom">
+                        <div class="bottom-logo">
+                            <a href="javascript:;">
+                                <img src="~/Base/images/SyloonLogo.png" alt="syloon Logo" />
+                            </a>
+                        </div>
+                        <div class="tipsign">
+                            点亮你的品牌
+                        </div>
+                        <div class="information">
+                            <span>
+                                <a href="javascript:;">©2018 SYLOON 赛龙礼品 版权所有</a>
+                                <a href="../../Helper/PrivacyPolicy">隐私政策</a>
+                                <a href="../../Helper/TermOfUser">使用条款</a>
+                                <a href="../../Helper/WebMap">网站地图</a>
+                            </span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--底部结束-->
+        <div class="slidebar">
+            <a href="javascript:;" id="return" style="display:none;">
+                <img src="~/base/images/im2.png" alt="" />
+            </a>
+            <a href="javasript:;" onclick="$('.dealert.Phone').css('display', 'block');" title="免费服务热线 400-858-0505">
+                <img src="~/Base/images/Layout/联系方式图标-1.png" alt="" style="width:48px;height:48px;" />
+            </a>
+            <a href="javasript:;" onclick="$('.dealert.wechat').css('display', 'block');" title="微信联系客服">
+                <img src="~/Base/images/Layout/联系方式图标-2.png" alt="" style="width:48px;height:48px;" />
+            </a>
+            <a href="tencent://message/?uin=2880254432&Site=在线客服&Menu=yes" title="QQ联系客服">
+                <img src="~/Base/images/Layout/联系方式图标-3.png" alt="" style="width:48px;height:48px;" />
+            </a>
+            <a target="_blank" href="http://amos.im.alisoft.com/msg.aw?v=2&uid=%E8%B5%9B%E9%BE%99%E7%A4%BC%E5%93%81%3A%E5%A4%A9%E5%A4%A9&&site=cntaobao&s=1&charset=utf-8">
+                <img src="~/Base/images/Layout/联系方式图标-4.png" alt="" style="width:48px;height:48px;" title="旺旺联系客服" />
+            </a>
+            <a href="javascript:;">
+                <img src="~/Base/images/Layout/联系方式图标-5.png" alt="" style="width:48px;height:48px;" title="在线交谈" />
+            </a>
+        </div>
+        <input type="hidden" id="HiddenAdminUrl" value="@ViewBag.AdminUrl" />
+        <!-- 登陆框 -->
+        <div class="loginalert">
+            <div class="zb"></div>
+            <div class="mainbx">
+                <i></i>
+                <div class="box">
+                    <div id="Login_Form" style="display:block;">
+                        <h2 class="h2tit">
+                            登录
+                        </h2>
+                        <form action="">
+                            <div class="model">
+                                <div class="s1">
+                                    *&nbsp;&nbsp;手机号
+                                </div>
+                                <div class="s2">
+                                    <input type="text" class="word1" id="PhoneNumber" style="width:187px;" />
+                                </div>
+                            </div>
+                            <div class="model">
+                                <div class="s1">
+                                    *&nbsp;&nbsp;图片验证
+                                </div>
+                                <div class="s2">
+                                    <input type="text" class="word2" id="ImageCode" style="width:116px;" />
+                                    <img src="~/api/Home/GetYZMImage" onclick="this.src=this.src+'?'" />
+
+                                </div>
+                            </div>
+                            <div class="model">
+                                <div class="s1">
+                                    <input type="radio" name="LoginType" value="phone" checked="checked" /> 手机验证码
+                                </div>
+                                <div class="s2">
+                                    <input type="text" class="word1" id="PhoneCode" style="width:122px;" />
+                                    <div class="s3" onclick="SendPhoneCode()" style="width:65px;">
+                                        发送验证码
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="model">
+                                <div class="s1">
+                                    <input type="radio" name="LoginType" value="password" /> 密码
+                                </div>
+                                <div class="s2">
+                                    <input type="password" class="word1" id="Password" disabled="disabled" style="width:187px;" />
+                                </div>
+                            </div>
+                            <div class="bx">
+                                <input type="button" class="send" value="登 录" onclick="LoginByPhone()" />
+                            </div>
+
+                            <div class="third">
+                                <span>
+                                    第三方登录：
+                                </span>
+                                <a onclick="$('#Login_Form').hide(); $('#login_container').show();$('#Register').hide();" href="javascript:;"><img src="~/base/images/Wechat_On.png" alt="" /></a>
+                                <a style="display:none;"><img src="~/base/images/QQ_On.png" alt="" /></a>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="login_container" style="display:none;">
+
+                    </div>
+                    <div id="Register">
+                        <h2 class="h2tit">
+                            绑定手机号
+                        </h2>
+                        <form action="">
+                            <div class="model">
+                                <div class="s1">
+                                    *手机号
+                                </div>
+                                <div class="s2">
+                                    <input type="text" class="word1" id="RegPhoneNumber" />
+                                </div>
+                            </div>
+                            <div class="model">
+                                <div class="s1">
+                                    *手机验证码
+                                </div>
+                                <div class="s2">
+                                    <input type="text" class="word1" id="RegPhoneCode" style="width:127px;" />
+                                    <input type="hidden" id="openWechatid" />
+                                    <input type="hidden" id="accessToken" />
+                                    <div class="s3" onclick="SendRegPhoneCode()" style="width:65px;">
+                                        发送验证码
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bx">
+                                <input type="button" class="send" value="绑 定" onclick="LoginByWechat()" />
+                            </div>
+                            <br />
+                            <br />
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- 登陆框 -->
+        <!-- 消息框 -->
+        <div class="dealert Message" style="display: none;">
+            <div class="zz"></div>
+            <div class="detailcontent">
+                <h2 class="h2tit">
+                    新闻
+                    <i onclick="$('.dealert').css('display','none')"></i>
+                </h2>
+                <div class="content">
+                    <h3 class="h3tit">
+                        <label class="title1">系统消息：开通会员享全年360元运费券礼包</label>
+                    </h3>
+                    <div class="time">
+                        <label class="time1">2018-01-19 18:26:17</label>
+                    </div>
+                    <div class="desc">
+                        已实名认证的会员可以获得全年360元运费券礼包；礼包每月5日发放，优惠券领取及使用有效期截至每月20日，若有效期内未领取，则视为您放弃该项权益且不再补发；礼包在会员首页“我的礼包”里领取。
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 消息框 -->
+        <!-- 消息框 -->
+        <div class="dealert Phone" style="display: none;">
+            <div class="zz"></div>
+            <div class="detailcontent">
+                <h2 class="h2tit">
+                    客服热线
+                    <i onclick="$('.dealert').css('display','none')"></i>
+                </h2>
+                <div class="content">
+                    <h3 class="h3tit">
+                        <label class="title1" style="font-size: 25px;color: #cc3300;">400-858-0505</label>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- 消息框 -->
+        <!-- 消息框 -->
+        <div class="dealert wechat" style="display: none;">
+            <div class="zz"></div>
+            <div class="detailcontent" style="width:500px;">
+                <h2 class="h2tit">
+                    微信扫一扫
+                    <i onclick="$('.dealert').css('display','none')"></i>
+                </h2>
+                <div class="content">
+                    关注公众号 ：
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    联系客服 ：
+                    <br />
+                    <img src="~/Current/images/公众号.png" style="width:200px;height:200px;margin-right: 40px;margin-top:10px;" />
+                    <img src="~/Current/images/客服.png" style="width:200px;height:200px;margin-top:10px;" />
+                </div>
+            </div>
+        </div>
+        <!-- 消息框 -->
+        <!-- 消息框 -->
+        <div class="dealert wechatpay" style="display: none;">
+            <div class="zz"></div>
+            <div class="detailcontent" style="width:400px;">
+                <h2 class="h2tit">
+                    微信支付(请扫描二维码)
+                    @*<i onclick="$('.dealert').css('display','none')"></i>*@
+                </h2>
+                <div class="content">
+                    <img src="" style="width:350px;height:350px;" />
+                </div>
+            </div>
+        </div>
+        <!-- 消息框 -->
+        <script src="~/Current/script/wxLogin.js"></script>
+        <script>
+            function DealertShow(that) {
+                $('.dealert.Message').css('display', 'block');
+                $('.dealert.Message .detailcontent .content .title1').html($(that).find('.MainTitle').val());
+                $('.dealert.Message .detailcontent .content .time1').html($(that).find('span').html());
+                $('.dealert.Message .detailcontent .content .desc').html($(that).find('.dealert').val());
+
+            }
+        </script>
+        <style>
+            #Password:disabled {
+                background-color: rgb(235, 235, 228) !important;
+            }
+        </style>
+    </div>
+    <script src='//kefu.easemob.com/webim/easemob.js?configId=1154d2cc-7177-41fd-85b3-076fb71950ea'></script>
+    <script type="text/javascript" src="//js.users.51.la/19729317.js"></script>
+
+    <style>
+        .easemobim-chat-panel.easemobim-minimized {
+            right: 4.05% !important;
+            bottom: 20px !important;
+            height: 48px !important;
+            width: 48px !important;
+            opacity: 0;
+        }
+
+        .page-bottom {
+            position: absolute; /*或者fixed*/
+            bottom: 0;
+        }
+
+        .em-widget-pop-bar.bg-color.icon-easemob {
+            opacity: 0;
+        }
+
+        .slidebar {
+            bottom: 20px;
+        }
+    </style>
+</body>
+</html>

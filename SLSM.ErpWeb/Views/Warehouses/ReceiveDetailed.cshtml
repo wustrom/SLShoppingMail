@@ -1,0 +1,257 @@
+﻿
+@{
+    Layout = null;
+    var List_Warehouse = (List<DbOpertion.Models.Warehouse>)ViewBag.WarehouseInfo;
+    var Receive = (DbOpertion.Models.Receive_Order_View)ViewBag.ReceiveInfo == null ? new DbOpertion.Models.Receive_Order_View() : (DbOpertion.Models.Receive_Order_View)ViewBag.ReceiveInfo;
+    var List_ReceiveDetailed = (List<DbOpertion.Models.Receive_Raw_View>)ViewBag.ReceiveDetailedInfo == null ? new List<DbOpertion.Models.Receive_Raw_View>() : (List<DbOpertion.Models.Receive_Raw_View>)ViewBag.ReceiveDetailedInfo;
+    var List_OrderDetailedInfo = (List<DbOpertion.Models.Production_Orderdetail_View>)ViewBag.OrderDetailedInfo == null ? new List<DbOpertion.Models.Production_Orderdetail_View>() : (List<DbOpertion.Models.Production_Orderdetail_View>)ViewBag.OrderDetailedInfo;
+    var OrderInfo = (DbOpertion.Models.Production_Orderdetail_View)ViewBag.Text;
+}
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+<script src="~/plugins/layui/layui.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/Receive/Index.js?version=20181017001"></script>
+<script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+<style>
+    .layui-form-item.titlepart .layui-inline .layui-input-block {
+        margin-top: 7px;
+        min-height: initial;
+        width: 180px;
+    }
+
+        .layui-form-item.titlepart .layui-inline .layui-input-block label {
+            border: none;
+            border-bottom: black solid 1px;
+            display: block;
+            width: 100%;
+            padding-right: 0px;
+        }
+
+    .layui-form-item.titlepart .layui-inline {
+        margin-bottom: 0px;
+    }
+
+    .layui-form-item.buttonGroup .layui-btn {
+        border-radius: 4px;
+        height: 45px;
+        font-weight: 100;
+        padding: 0px 35px;
+    }
+
+    .layui-table tr td {
+        height: 50px;
+    }
+
+    .layui-form-item.bottom_part .layui-inline .layui-input-block label {
+        border: none;
+        border-bottom: black solid 1px;
+        display: block;
+        width: 100%;
+        padding-right: 0px;
+        margin-top: 5px;
+        padding-bottom: 2px;
+        margin-left: -10px;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>采购入库详情信息</title>
+</head>
+<body>
+
+    <div style="margin:0px; background-color: white; margin:0 10px;min-width:1650px">
+        <div style="width:72%;">
+            @if (List_OrderDetailedInfo.Count > 0)
+            {
+                <input type="hidden" value="@List_OrderDetailedInfo[0].Id" id="ProductionId" />
+            }
+            <table class="layui-table">
+                <colgroup>
+                    <col width="200">
+                    <col />
+                    <col />
+                    <col width="100" />
+                    <col width="150" />
+                    <col width="150" />
+                    <col />
+                </colgroup>
+                <tr style="background-color:#707070; color:white; height:40px;">
+
+                    <td colspan="8">
+                        @if (ViewBag.SureEnter == null)
+                        {
+                            <div style="float:left;font-size:20px;">领料单：@(Receive.receiveStatus != null ? Receive.receiveStatus : "待申请")</div>
+                            <div style="float:right;font-size:20px;"> 制单人：<label id="receiveSinglePerson">@ViewBag.UserName</label> &nbsp; 时间: <label id="receiveSingleTime">@DateTime.Now.ToString("yyyy-MM-dd HH:mm")</label></div>
+                        }
+                        else
+                        {
+                            <div style="float:left;font-size:20px;">领料单：@Receive.receiveStatus</div>
+                            <div style="float:right;font-size:20px;">
+                                制单人：<label id="receiveSinglePerson">@Receive.receiveSinglePerson</label>
+                                &nbsp; 时间:<label id="receiveSingleTime">@Receive.receiveSingleTime.Value.ToString("yyyy-MM-dd HH:mm")</label>
+                            </div>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="height:60px;">
+                        <div class="layui-form-item titlepart" style="float:left;margin:1px -40px;">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">订单编号:</label>
+                                <div class="layui-input-block" style="border-bottom: 1px solid;">
+                                    <input id="ReceiveId" type="hidden" value="@Receive.Id" />
+                                    @OrderInfo.OrderNo
+                                </div>
+                            </div>
+                        </div>
+                        @if (List_ReceiveDetailed.Count == 0 && ViewBag.SureEnter == null)
+                        {
+                            <div style="float:right">
+                                <button class="layui-btn layui-btn-small" id="AddMaterInfo"><i class="layui-icon" style="color:white">&#xe608;</i>添加额外领料</button>
+                            </div>
+                        }
+                    </td>
+                </tr>
+                <tr style="height:60px;">
+                    <td>SKU#</td>
+                    <td>产品货号</td>
+                    <td>中文品名</td>
+                    <td>规格型号</td>
+                    <td>单位</td>
+                    <td>订单数量</td>
+                    <td>补申数量</td>
+                    <td>
+                        @if (Receive.receiveStatus == "已出库")
+                        {<lable>出库时间</lable>}
+                        else
+                        {<lable>领料时间</lable>}
+                    </td>
+                </tr>
+                @if (List_ReceiveDetailed.Count == 0)
+                {
+                    foreach (var item in List_OrderDetailedInfo)
+                    {
+                        <tr style="height:55px;">
+                            <td><label>@item.SKU</label></td>
+                            <td><label>@item.ProductNo</label></td>
+
+                            <td>@item.ChinaProductName</td>
+                            <td>@item.Specification</td>
+                            <td>@item.ChinaUnit</td>
+                            <td>
+                                @item.Amount
+                                <input type="hidden" class="layui-input AmountCount" value="@item.Amount" />
+                                <input type="hidden" class="layui-input Isadditional" value="true" />
+                                <input type="hidden" value="@item.MaterialId" class="MaterInfoId" />
+                                <input type="hidden" value="@item.SKU" class="SKU" />
+                            </td>
+                            <td><input type="text" class="layui-input additionalCount" value="0" /></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    foreach (var item in List_ReceiveDetailed)
+                    {
+                        <tr style="height:55px;">
+                            <td><label>@item.ChinaProductName</label></td>
+                            <td>
+                                @if (item != List_ReceiveDetailed[0] && ViewBag.SureEnter == null)
+                                {
+                                    <button class="layui-btn layui-btn-mini" style="background-color:white" onclick="removeTd(this)"> <i class="layui-icon" style="color:black;">&#xe640;</i></button>
+                                }
+                                @item.SKU
+                            </td>
+                            <td>@item.ChinaProductName</td>
+                            <td>@item.Specification</td>
+                            <td>@item.ChinaUnit</td>
+                            <td>
+                                @if (item != List_ReceiveDetailed[0])
+                                {
+                                    <label>0</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Amount</label>
+                                }
+                                <input type="hidden" value="@item.MaterialId" class="MaterInfoId" />
+                                <input type="hidden" value="@item.SKU" class="SKU" />
+                                <input type="hidden" class="layui-input AmountCount" value="@item.Amount" />
+                                <input type="hidden" class="layui-input Isadditional" value="true" />
+                                <input type="hidden" class="layui-input additionalCount" value="@item.additionalCount" />
+                            </td>
+                            <td>@item.additionalCount</td>
+                            <td>
+                                @if (Receive.receiveStatus == "已出库")
+                                {
+                                    @item.receiveOutTime
+                                }
+                                else
+                                {
+                                    @item.receiveTime
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                @if (List_ReceiveDetailed.Count < 6)
+                {
+                    for (int i = List_ReceiveDetailed.Count; i < 6; i++)
+                    {
+                        <tr style="height:55px;">
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+                }
+                <tr style="height:50px;">
+                    <td colspan="8">
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline" style="width:100%">
+                                <label class="layui-form-label" style="width:35px;margin:0px -15px;padding-top:0px;">备注:</label>
+                                <textarea type="text" class="layui-textarea" style="resize:none;min-height:60px;"></textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="layui-form-item" style="margin:0px; background-color: white; margin:0 10px;min-width:1188px">
+                <div style="text-align:center">
+                    <div class="layui-inline">
+                        @if (Receive.receiveStatus == "已出库")
+                        {
+                            <button class="layui-btn layui-btn-disabled" disabled="disabled" style="width:110px;display:none">已出库</button>
+                        }
+                        else if (List_ReceiveDetailed.Count != 0 && ViewBag.SureEnter != null)
+                        {
+                            <button class="layui-btn layui-btn-normal" id="Outwarehouse" style="width:110px;">确认出库</button>
+                        }
+                        else if (List_ReceiveDetailed.Count != 0 && ViewBag.SureEnter == null)
+                        {
+
+                        }
+                        else if (List_ReceiveDetailed.Count == 0 && ViewBag.SureEnter == null)
+                        {
+                            <button class="layui-btn layui-btn-normal" id="Applywarehouse" style="width:110px;">申请</button>
+                        }
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layui-btn-warm" id="CloseBtn" style="width:100px;">关闭</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

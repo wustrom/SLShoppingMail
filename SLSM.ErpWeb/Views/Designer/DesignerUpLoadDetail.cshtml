@@ -1,0 +1,234 @@
+﻿
+@{
+    Layout = null;
+    var Count = 0;
+    var Production = (DbOpertion.Models.Production_Orderdetail_View)ViewBag.ProductionInfo;
+
+    //设计信息处理开始
+    var DesignerList = Production.DesignerImage == null ? new List<string>() : Production.DesignerImage.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+    var DesignerInfoList = new List<Tuple<string, string>>();
+    foreach (var item in DesignerList)
+    {
+        var DesignerItemArray = item.Split(',');
+        DesignerInfoList.Add(new Tuple<string, string>(item1: DesignerItemArray[0], item2: DesignerItemArray[1]));
+    }
+    //设计信息处理结束
+    Production.DesignerZip = Production.DesignerZip == null ? "" : Production.DesignerZip;
+    var DesignerZipList = Production.DesignerZip.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+}
+<style>
+    .layui-form img {
+        height: 80px;
+        max-width: 150px;
+    }
+
+    .UpFileAddr {
+        text-decoration: underline;
+        color: blue;
+        margin-left: 30px;
+    }
+
+    .layui-input-block img {
+        height: 80px;
+        max-width: 150px;
+        cursor: pointer;
+    }
+
+    .layui-inline .layui-input-block {
+        margin-left: 0px;
+    }
+
+    .layui-icon.btn-delAttr {
+        cursor: pointer
+    }
+</style>
+<div>
+    <form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpImg" style="display:none;">
+        <input name="upImg" type="file" id="upImg" onchange="filechange(this)" accept=".png,.jpg,.jpeg">
+    </form>
+    <form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpZiper" style="display:none;">
+        <input name="upZiper" type="file" id="upZiper" onchange="fileZiperchange(this)" accept=".zip,.rar,.7z">
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-form.js?version=20181017001"></script>
+<div style="margin: 15px;">
+    <div class="layui-form-item" style="margin-left: 15px;">
+        下列为各个印刷部位图片
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">上传图片</label>
+        <div class="layui-input-block">
+            @foreach (var item in DesignerInfoList)
+            {
+                var src = ViewBag.AdminUrl + item.Item2;
+                <div class="layui-inline">
+                    <div class="layui-input-block" style="margin-left:0px;">
+                        <input type="hidden" name="PositionInfo" autocomplete="off" class="layui-input Position" value="@src.Replace(ViewBag.AdminUrl,"")">
+                        <img src="@src" />
+                        <i class="layui-icon btn-delAttr" style="top: -30px;right: 20px;position: relative;" onclick="ImgDelClick(this)">ဆ</i>
+                    </div>
+                </div>
+            }
+            <div class="layui-inline">
+                <div class="layui-input-block">
+                    <img class="addImage" src="~/Base/images/add.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <form class="layui-form">
+        <input type="hidden" value="@Production.Id" name="ProductionId" />
+        <input type="hidden" value="@Production.DesignerImage" name="Position1" id="DesignerImage" />
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding-left:0px;width:95px;">上传设计文件</label>
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" id="SureUpload">上传文件</button>
+                <input id="UpFileAddr" name="UpFileAddr" type="hidden" value="@Production.DesignerZip" />
+            </div>
+        </div>
+        <div class="layui-form-item uploadItem">
+            @foreach (var item in DesignerZipList)
+            {
+                var fileName = item.Split('/').LastOrDefault();
+                <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                    <span onclick="DownUpFileAddr(this)"><a href="@ViewBag.AdminUrl@item" download="@fileName">@fileName</a></span>
+                    <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>
+                    <input type="hidden" class="hiddenUpFileAddr" value="@item" />
+                </div>
+            }
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script>
+    var HiddenColorItem;
+    var HiddenFileItem;
+    // #region 文件改变
+    function filechange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+                layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
+                isPic = false;
+            } else {
+                var size = obj.files[i].size / 1024;
+                if (parseInt(size) > 2048) {
+                    layer.msg("图片大小不能超过2MB");
+                    isPic = false;
+                }
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            $(HiddenColorItem).parent().parent().before('<div class="layui-inline">\
+                                                            <div class="layui-input-block" >\
+                                                                <input type="hidden" name="PositionInfo" autocomplete="off" class="layui-input Position" value="'+res.replace('@ViewBag.AdminUrl', '')+'">\
+                                                                <img src="'+ res +'" />\
+                                                                <i class="layui-icon btn-delAttr" style="top: -30px;right: 20px;position: relative;" onclick="ImgDelClick(this)">ဆ</i>\
+                                                            </div>\
+                                                         </div >');
+            PositionAllInfo();
+            $('#upImg').val('');
+        });
+    }
+    // #endregion
+
+    function ImgDelClick(that) {
+        $(that).parent().parent().remove();
+        PositionAllInfo();
+    }
+
+    // #region 文件改变
+    function fileZiperchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            var size = obj.files[i].size / 1024;
+            if (parseInt(size) > 1024 * 50) {
+                layer.msg("上传文件不能大于50MB");
+                isPic = false;
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            var fileName = res.split('/')[res.split('/').length - 1];
+            $('.UpFileAddr').attr('download', fileName);
+            $('.UpFileAddr').attr('href', res);
+            $('.UpFileAddr').html(fileName);
+            $('.UpFileAddr').parent().find('input').val(res.replace('@ViewBag.AdminUrl',''));
+
+            //$(HiddenColorItem).attr('src', res);
+            //$(HiddenColorItem).parent().find('input').val(res);
+            $('.layui-form-item.uploadItem').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                                        <span onclick="DownUpFileAddr(this)"><a href="'+ res + '" download="' + fileName + '">' + fileName + '</a></span>\
+                                                        <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>\
+                                                        \
+                                                        <input type="hidden" class="hiddenUpFileAddr" value="'+ res + '" />\
+                                                    </div >');
+            $('#upZiper').val('');
+            
+            resetUpFileAddr();
+        });
+    }
+    // #endregion
+
+
+    function delUpFileAddr(that) {
+        $(that).parent().remove();
+
+        resetUpFileAddr();
+    }
+
+    function resetUpFileAddr() {
+        var UpFileAddr = "";
+        $(".hiddenUpFileAddr").each(function () {
+            UpFileAddr = UpFileAddr+$(this).val().replace('@ViewBag.AdminUrl','') + "|";
+        })
+        $("#UpFileAddr").val(UpFileAddr);
+    }
+
+
+    $(function () {
+        $('.layui-input-block .addImage').click(function () {
+            HiddenColorItem = this;
+            $('#upImg').trigger('click');
+        })
+
+
+        $('#SureUpload').click(function () {
+            $('#upZiper').trigger('click');
+        })
+    })
+
+    function PositionAllInfo() {
+        var PositionInfo = "";
+        $(".layui-input.Position").each(function () {
+            PositionInfo = PositionInfo+"111," + $(this).val()+"|";
+        })
+        $("#DesignerImage").val(PositionInfo);
+    }
+</script>
+<link href="http://localhost:8053/plugins/layer/mobile/need/layer.css" rel="stylesheet" />
+<style>
+    .layui-form-checked span a, .layui-form-checked:hover span a {
+        color: white;
+    }
+</style>

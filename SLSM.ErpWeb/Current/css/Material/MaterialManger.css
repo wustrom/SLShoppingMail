@@ -1,0 +1,57 @@
+﻿.layui-layer-title img {
+    width: 20px;
+    margin-top: -5px;
+    margin-right: 5px;
+}
+
+.layui-form-label {
+    padding-left: 5px;
+    padding-right: 0px;
+}
+/*
+
+.layui-layer .layui-layer-btn .layui-layer-btn0 {
+    width: 100px;
+    text-align: center;
+    height: 35px;
+    font-size: 20px;
+    padding-top: 5px;
+    margin-right: 285px;
+    padding-top: 3px;
+}
+
+
+
+.layui-input-block {
+    margin-left: 95px;
+}
+
+.layui-inline.leftPart .layui-form-label,
+.layui-form-item.noinline .layui-form-label {
+    padding-left: 10px;
+}
+
+.layui-inline.leftPart .layui-input-block {
+    width: 200px;
+}
+
+.layui-form-item.noinline .layui-input-block {
+    width: 583px;
+}
+
+.layui-inline.leftPart .layui-input-block,
+.layui-form-item.noinline .layui-input-block {
+    margin-left: 100px;
+}
+
+.layui-inline.lastChild .layui-form-label {
+    width: 40px;
+}
+
+.layui-inline.lastChild .layui-input-block {
+    margin-left: 60px;
+}
+
+.smallInput {
+    width: 100px;
+}*/

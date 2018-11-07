@@ -1,0 +1,315 @@
+﻿views\Designer\productioninfo.cshtml
+//客户上传图片
+//if (Production.ImageList != null)
+//{
+//    var ImgList = Production.ImageList.Split('|').Where(p => !string.IsNullOrEmpty(p));
+//    foreach (var item in ImgList)
+//    {
+//        var printList = item.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+//        if (printList.Count == 3)
+//        {
+//            var image = ImageList.Where(p => p.Item2 == printList[1]).FirstOrDefault();
+//            if (image != null)
+//            {
+//                var tuple = new Tuple<string, string, string>(item1: printList[0], item2: printList[1], item3: image.Item3);
+//                ImageList.Remove(image);
+//                ImageList.Add(tuple);
+//            }
+//            else
+//            {
+//                ImageList.Add(new Tuple<string, string, string>(item1: printList[0], item2: printList[1], item3: printList[2]));
+//            }
+//        }
+//    }
+//}
+//未设计图片
+//var PositionInfoList = Production.PositionInfo == null ? new List<string>() : Production.PositionInfo.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList();
+//foreach (var item in PositionInfoList)
+//{
+//    var PositionItem = item.Split('(');
+//    if (PositionItem.Length == 2 && PositionItem[0] == Production.ColorId.ToString())
+//    {
+//        var printList = PositionItem[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+//        foreach (var printitem in printList)
+//        {
+//            var printInfoList = printitem.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+//            if (printInfoList.Count == 3)
+//            {
+//                var ImageInfo = ImageList.Where(p => p.Item2 == printInfoList[1]).FirstOrDefault();
+//                if (ImageInfo == null)
+//                {
+//                    ImageList.Add(new Tuple<string, string, string>(item1: printInfoList[0], item2: printInfoList[1], item3: printInfoList[2]));
+//                }
+//            }
+//        }
+//    }
+//}
+
+<!--786到884-->
+<div style="display:none" id="PrintDiv">
+    <table class="layui-table">
+        <colgroup>
+            <col width="115">
+            <col width="110">
+            <col width="110">
+            <col width="110">
+            <col width="80">
+            <col width="80">
+            <col width="42">
+            <col width="90">
+            <col width="90">
+            <col width="120">
+        </colgroup>
+        <tr>
+            <td>素材</td>
+            <td colspan="3">内容</td>
+            <td>字体</td>
+            <td>字号</td>
+            <td colspan="2">色值</td>
+            <td>旋转角度</td>
+            <td>图层顺序</td>
+        </tr>
+        <tr>
+            <td>文字</td>
+            <td colspan="3">
+                @foreach (var item in Production.WordOpertion.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList())
+                {
+                    var ItemArray = item.Split('(');
+                    foreach (var textItem in ItemArray[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList())
+                    {
+                        var textArray = textItem.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        <div class="TextInfo" TextType="@textArray[1]" TextFont="@textArray[2]" TextColor="@textArray[3]" TextRotate="@textArray[4]" TextLayerOrder="@(ItemArray[0])@(textArray[5])">
+                            @textArray[0]
+                            <div class="SelectImg"></div>
+                        </div>
+                    }
+                }
+            </td>
+            <td class="TextType"></td>
+            <td class="TextFont"></td>
+            <td colspan="2">
+                <input id="styleInput" style="width:40px; height:20px;">
+                <input type="text" id="valueInput" value="" style="width:65px; height:20px;" disabled>
+            </td>
+            <td><label class="TextRotate">0</label>°</td>
+            <td><label class="TextLayerOrder"></label></td>
+        </tr>
+        <tr>
+            <td>客户上传图片</td>
+            <td colspan="3">
+                @foreach (var item in Production.CustomImageOpertion.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList())
+                {
+                    var ItemArray = item.Split('(');
+                    foreach (var textItem in ItemArray[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList())
+                    {
+                        var textArray = textItem.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        var lastName = textArray[0].Split('/').LastOrDefault();
+                        lastName = lastName.Substring(0, 4) + "." + lastName.Split('.').LastOrDefault();
+                        <div class="CustomerImg">
+                            <img CustomerImageScaling="@textArray[1]" CustomerImageRotate="@textArray[2]" CustomerImageLayerOrder="@(ItemArray[0])@(textArray[3])" LastName="@lastName" src="@(ViewBag.AdminUrl)@(textArray[0])" />
+                            <div class="SelectImg"></div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+
+                    }
+                }
+            </td>
+            <td colspan="4"><a class="CustomerDown" href="#"></a></td>
+            <td><label class="CustomerImageRotate">0</label>°</td>
+            <td><label class="CustomerImageLayerOrder"></label></td>
+        </tr>
+        <tr>
+            <td>在线图库</td>
+            <td colspan="3">
+                @foreach (var item in Production.OnLineImageOpertion.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList())
+                {
+                    var ItemArray = item.Split('(');
+                    foreach (var textItem in ItemArray[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList())
+                    {
+                        var textArray = textItem.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        var lastName = textArray[0].Split('/').LastOrDefault();
+                        lastName = lastName.Substring(0, 4) + "." + lastName.Split('.').LastOrDefault();
+                        <div class="OnlineImg">
+                            <img OnLineImageScaling="@textArray[1]" OnLineImageRotate="@textArray[2]" OnLineImageLayerOrder="@(ItemArray[0])@(textArray[3])" LastName="@lastName" src="@(ViewBag.AdminUrl)@(textArray[0])" class="" />
+                            <div class="SelectImg"></div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    }
+                }
+            </td>
+            <td colspan="4"><a class="OnLineImageDown" href="#"></a></td>
+            <td><label class="OnLineImageRotate">0</label>°</td>
+            <td><label class="OnLineImageLayerOrder"></label></td>
+        </tr>
+    </table>
+</div>
+
+<!--261-427-->
+<div id="PrintDiv">
+                <table class="layui-table" style="width:100%">
+                    <tr>
+                        <td colspan="7" style="background-color:#008375; font-size:32px">
+                            <div style="float:left;margin:10px"><label style="color:white">生产指示书</label></div>
+                            <div style="float:right"><img src="~/Base/images/图片top.png" /></div>
+                            <div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <button class="layui-btn" style="background-color:white;height:65px;">
+                                @if (DesignerImageList.Count > 1)
+                                {
+                                    <img class="ImgLeftBtn" src="~/Base/images/ImgLeft.png" />
+                                }
+                            </button>
+                            @if (DesignerImageList.Count >= 1)
+                            {
+                                <img src="@ViewBag.AdminUrl@DesignerImageList[0].Item3" style="width:480px;height:480px;" />
+                            }
+                            else
+                            {
+                                if (ImageList.Count >= 1)
+                                {
+                                    <img src="@ViewBag.AdminUrl@ImageList[0].Item3" style="width:480px;height:480px;margin-right:10px;" />
+                                }
+                            }
+                            <button class="layui-btn" style="background-color:white;height:65px">
+                                @if (DesignerImageList.Count > 1)
+                                {
+                                    <img class="ImgRightBtn" src="~/Base/images/ImgRight.png" />
+                                }
+                            </button>
+                            <div class="ImageList" style="margin-top:15px">
+                                @if (DesignerImageList.Count > 1)
+                                {
+                                    foreach (var item in DesignerImageList)
+                                    {
+                                        <i class="layui-icon"><img src="@ViewBag.AdminUrl@item.Item3" style="width:34px;" /></i>
+                                    }
+                                }
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>订单编号：</td>
+                        <td colspan="4" style="text-align:left">@Production.OrderNo</td>
+                        <td colspan="2" rowspan="2"><button id="BtnShow" class="layui-btn layui-btn-normal" style="font-size:18px">定制参数</button></td>
+                    </tr>
+                    <tr>
+                        <td>下单日期：</td>
+                        <td colspan="4" style="text-align:left">@Production.OrderTime</td>
+
+                    </tr>
+                    <tr>
+                        <td>货号</td>
+                        <td>名称</td>
+                        <td>颜色</td>
+                        <td>数量</td>
+                        <td>印刷位置</td>
+                        <td>印刷工艺</td>
+                        <td>备注</td>
+                    </tr>
+                    <tr>
+                        <td>@Production.ProductNo</td>
+                        <td>@Production.commodityName</td>
+                        <td>@Production.Color</td>
+                        <td>@Production.Amount</td>
+                        <td>
+                            @if (ImageList.Count > 0)
+                            {@ImageList[0].Item2}
+                        </td>
+                        <td>
+                            @if (ImageList.Count > 0)
+                            {@ImageList[0].Item1}
+                        </td>
+                        <td></td>
+                    </tr>
+                    @for (int i = 1; i < ImageList.Count; i++)
+                    {
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td>@ImageList[i].Item2</td>
+                            <td>@ImageList[i].Item1</td>
+                            <td> </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>客户备注：</td>
+                        <td colspan="6"></td>
+                    </tr>
+                    <tr>
+                        <td>客户原始文件：</td>
+                        <td colspan="2">
+                            @if (OrderInfo.UserDesign != null)
+                            {
+                                var DesignerZipList = OrderInfo.UserDesign.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                foreach (var item in DesignerZipList)
+                                {
+                                    <a href="@ViewBag.AdminUrl@item" download="@item.Split('/').LastOrDefault()" style="text-decoration: underline;color: blue;padding-right: 10px;">@item.Split('/').LastOrDefault()</a><br />
+                                }
+                            }
+                        </td>
+                        <td>设计完成文件：</td>
+                        <td colspan="3">
+                            @if (Production.DesignerZip != null)
+                            {
+                                var DesignerZipList = Production.DesignerZip.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                foreach (var item in DesignerZipList)
+                                {
+                                    <a href="@ViewBag.AdminUrl@item" download="@item.Split('/').LastOrDefault()" style="text-decoration: underline;color: blue;padding-right: 10px;">@item.Split('/').LastOrDefault()</a>
+                                }
+                            }
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>设计师备注：</td>
+                        <td colspan="6">
+                            @{
+                                var InspectionContextdisabled = "disabled=\"disabled\"";
+                                if (Production.DesignerStatus == "设计未处理" || Production.DesignerStatus == "二次修改待确认" || Production.OrderStatus == "设计退回待处理")
+                                {
+                                    InspectionContextdisabled = "";
+                                }
+                            }
+                            <div class="layui-input-inline" style="width:100%">
+                                <textarea type="text" id="InspectionContext" class="layui-textarea" style=" min-height: 50px;resize:none;" @InspectionContextdisabled>@Production.InspectionContext</textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>生产用文件：</td>
+                        <td colspan="6"></td>
+                    </tr>
+                    <tr>
+                        <td>退回原因：</td>
+                        <td colspan="2">@Production.ReturnContext</td>
+                        <td>客服反馈：</td>
+                        <td colspan="3"><input class="layui-input" type="text" value="@Production.ServiceContext" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <div class="layui-form-item">
+                                <div class="layui-input-inline" style="width:100%">
+                                    <label class="layui-form-label" style="width:110px;margin:0px -16px">生产参数和说明：</label>
+                                    @{
+                                        var Inspectiondisabled = "disabled=\"disabled\"";
+                                        if (Production.OrderStatus == "待处理")
+                                        {
+                                            Inspectiondisabled = "";
+                                        }
+                                    }
+                                    <textarea type="text" id="Inspection" class="layui-textarea" style=" min-height: 50px;resize:none;" @Inspectiondisabled></textarea>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>

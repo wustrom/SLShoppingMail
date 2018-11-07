@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = null;
+    var Storage = (DbOpertion.Models.Storage_View)ViewBag.StorageDetailedInfo;
+}
+<!DOCTYPE html>
+<style>
+    .layui-layer-setwin a:nth-child(1) {
+        display: none;
+    }
+
+    .layui-layer-setwin a:nth-child(2) {
+        display: none;
+    }
+
+    .layui-layer-btn a:last-child {
+        display: none;
+    }
+
+    .layui-layer-btn a:first-child {
+        display: none;
+    }
+
+    input {
+        color: black;
+        font-size: 15px;
+    }
+</style>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.ProductNo" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.ChinaProductName" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单位：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.ChinaUnit" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">型号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.Specification" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">材料：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.MatAndPro" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品属性：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.Attributes" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">定制工艺：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.MatAndPro" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">毛重：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.Weight" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">净重：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.NetWeight" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">组成材料：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.Material" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Storage.Remark" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

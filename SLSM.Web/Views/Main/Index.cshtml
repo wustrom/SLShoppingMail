@@ -1,0 +1,337 @@
+﻿@using DbOpertion.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    List<Commrecommend> List_Commrecommends = (List<Commrecommend>)ViewBag.Commrecommend == null ? new List<Commrecommend>() : (List<Commrecommend>)ViewBag.Commrecommend;
+    List_Commrecommends = List_Commrecommends.OrderBy(p => p.OrderID).ToList();
+    var List_Images = (List<Carousel_Image>)ViewBag.Images;
+    var ListCommShow = (List<Commshow>)ViewBag.CommShowList;
+    var List_Comm = (List<Commodity_Stageprice_View>)ViewBag.listCommdity;
+    var AdminUrl = ViewBag.AdminUrl;
+    var ListGrade = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listGradeOfTitle;
+    var ListScence = (List<SLSM.DBOpertion.Model.Extend.Response.GradeRes.GradeRes>)ViewBag.listScence;
+    List<Showgradeinfo> List_Showgrade = ViewBag.ShowgradeList == null ? new List<Showgradeinfo>() : (List<Showgradeinfo>)ViewBag.ShowgradeList;
+    List_Showgrade = List_Showgrade.OrderBy(p => p.OrderCount).ToList();
+    List<Grade> List_Grade = ViewBag.AllListGrade == null ? new List<Grade>() : (List<Grade>)ViewBag.AllListGrade;
+}
+@section css{
+    <link href="~/Current/css/CommodityList/CommCommon.css" rel="stylesheet" />
+    <style>
+        .content-part .center .box .ImageHide {
+            display: none;
+        }
+
+        .content-part .center .box:hover .ImageHide {
+            display: block;
+        }
+
+
+        .content-part .center .box .ImageShow {
+            display: block;
+        }
+
+        .content-part .center .box:hover .ImageShow {
+            display: none;
+        }
+
+        .content-part .SeriesList .type-List .centerlist .list-item .ImageShow {
+            display: block;
+        }
+
+        .content-part .SeriesList .type-List .centerlist .list-item:hover .ImageShow {
+            display: none;
+        }
+
+        .content-part .SeriesList .type-List .centerlist .list-item .ImageHide {
+            display: none;
+        }
+
+        .content-part .SeriesList .type-List .centerlist .list-item:hover .ImageHide {
+            display: block;
+        }
+
+        .content-part .SeriesList .type-List .MoreInfo {
+            cursor: pointer;
+        }
+
+            .content-part .SeriesList .type-List .MoreInfo a:hover {
+                color: #008376;
+            }
+
+        .section {
+            width: 1200px;
+            margin: 20px auto;
+        }
+    </style>
+}
+
+<!--轮播图开始-->
+<div class="sowingmap-Part">
+    <div class="banner">
+        <a>
+            <img class="change pre" src="~/Base/images/Layout/pre.png" />
+        </a>
+        <a>
+            <img class="change next" src="~/Base/images/Layout/next.png" />
+        </a>
+        <div class="cirbox">
+            @for (int i = 0; i < List_Images.Count; i++)
+            {
+                if (i == 0)
+                {
+                    <div class="cir cr"></div>
+                }
+                else
+                {
+                    <div class="cir"></div>
+                }
+            }
+        </div>
+        <div class="imgbox">
+            @foreach (var item in List_Images)
+            {
+                if (item == List_Images[0])
+                {
+                    <img class="img im" src="@ViewBag.AdminUrl@item.Image" />
+                }
+                else
+                {
+                    <img class="img" src="@ViewBag.AdminUrl@item.Image" />
+                }
+            }
+        </div>
+    </div>
+</div>
+<!--轮播图结束-->
+<div class="content-part">
+    <div class="SowingBox">
+        <div class="center">
+            @foreach (var commrecommend in List_Commrecommends)
+            {
+                var item = List_Comm.Where(p => p.Id == commrecommend.CommId).FirstOrDefault();
+                if (item != null)
+                {
+                    var spanList = commrecommend.AttrSpan.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    <div class="box">
+                        <a href="../../Diy/Index?CommodityId=@item.Id">
+                            <img src="@ViewBag.AdminUrl@commrecommend.FrontImage" class="ImageShow" />
+                            <img src="@ViewBag.AdminUrl@commrecommend.BehindImage" class="ImageHide" />
+                            <h1>@item.Name</h1>
+                            <div class="attribute">
+                                @foreach (var spanitem in spanList)
+                                {
+                                    <span>
+                                        @spanitem
+                                    </span>
+                                }
+                            </div>
+                            <div class="descript">
+                                @item.Introduce
+                            </div>
+                            <div class="priceof">
+                                ￥@item.minPrice
+                            </div>
+                        </a>
+                    </div>
+                }
+
+            }
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+
+    <div class="SeriesList">
+        @foreach (var item in List_Showgrade)
+        {
+            var commShow = ListCommShow.Where(p => p.GradeId == item.GradeId).ToList();
+            commShow = commShow.OrderBy(p => p.OrderId).ToList();
+            Commodity_Stageprice_View comm = null;
+            var flag = 0;
+            for (int i = 0; i < commShow.Count; i++)
+            {
+                comm = List_Comm.Where(p => p.Id == commShow[i].CommId).FirstOrDefault();
+                if (comm != null)
+                {
+                    flag = i;
+                    break;
+                }
+            }
+            var thisgrade = List_Grade.Where(p => p.Id == item.GradeId).FirstOrDefault();
+            var count = 0;
+            List<Commodity_Stageprice_View> commList = new List<Commodity_Stageprice_View>();
+            if (thisgrade != null)
+            {
+                if (thisgrade.IsScene == true)
+                {
+                    var ListCommId = commShow.Select(p => p.CommId).ToList();
+                    commList = List_Comm.Where(p => !ListCommId.Contains(p.Id) && p.ScenceIds != null && p.ScenceIds.Contains($",{item.GradeId}|")).ToList();
+
+                }
+                else
+                {
+                    List<int> childIdList = new List<int>();
+                    childIdList.Add(thisgrade.Id);
+                    var gradeFirstList = List_Grade.Where(p => p.ParentId == thisgrade.Id);
+                    foreach (var gradeFirst in gradeFirstList)
+                    {
+                        childIdList.Add(gradeFirst.Id);
+                        var gradeSecondList = List_Grade.Where(p => p.ParentId == gradeFirst.Id).ToList();
+                        foreach (var gradeSecond in gradeSecondList)
+                        {
+                            childIdList.Add(gradeSecond.Id);
+                        }
+                    }
+                    var ListCommId = commShow.Select(p => p.CommId).ToList();
+                    commList = List_Comm.Where(p => !ListCommId.Contains(p.Id) && childIdList.Contains(p.GradeId.Value)).ToList();
+                }
+                if (comm == null && commList.Count > 0)
+                {
+                    comm = commList[0];
+                    commList.Remove(commList[0]);
+                }
+                if (comm != null)
+                {
+                    <div class="center titleName">
+                        @(thisgrade.IsScene == true ? thisgrade.Name.Replace("#", "") : thisgrade.Name)
+                    </div>
+                    <div class="content-back" style="background-image: url(@ViewBag.AdminUrl@thisgrade.BigImage);">
+                        <a href="../../Diy/Index?CommodityId=@comm.Id">
+                            <div class="content">
+                                <div class="ImageBox">
+                                    <img src="@ViewBag.AdminUrl@comm.Image" />
+                                </div>
+                                <div class="InfoBox">
+                                    <div class="tableBox">
+                                        <div class="typename">
+                                            @comm.Name
+                                        </div>
+                                        <div class="descript">
+                                            @comm.Introduce
+                                        </div>
+                                        <div class="priceof">
+                                            ￥@comm.minPrice
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <section class="section">
+                        <div class="section-container">
+                            <ul class="section-countent product-list">
+                                @for (int i = 0; i < commShow.Count; i++)
+                                {
+                                    var commInfo = List_Comm.Where(p => p.Id == commShow[i].CommId).FirstOrDefault();
+                                    if (commInfo != null && i != flag)
+                                    {
+                                        count++;
+                                        <li class="section-item">
+                                            <a class="product-item-link" href="../../Diy/Index?CommodityId=@commInfo.Id">
+                                                <div class="product-item product-item-has-hover-img">
+                                                    <div class="image">
+                                                        <div class="cover">
+                                                            <img src="@ViewBag.AdminUrl@commInfo.Image" />
+                                                        </div>
+                                                        <div class="hover">
+                                                            <div class="image-bg-cover">
+                                                                <img src="@ViewBag.AdminUrl@commInfo.BackView">
+                                                                <p class="hover-text">@commInfo.Introduce</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h4 class="title">@commInfo.Name</h4>
+                                                    <div class="price">
+                                                        <div class="money">
+                                                            <span>
+                                                                <span class="price normal-price">¥@commInfo.minPrice</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                @foreach (var commInfo in commList)
+                                {
+                                    count++;
+                                    if (count <= 8)
+                                    {
+                                        <li class="section-item">
+                                            <a class="product-item-link" href="../../Diy/Index?CommodityId=@commInfo.Id">
+                                                <div class="product-item product-item-has-hover-img">
+                                                    <div class="image">
+                                                        <div class="cover">
+                                                            <img src="@ViewBag.AdminUrl@commInfo.Image" />
+                                                        </div>
+                                                        <div class="hover">
+                                                            <div class="image-bg-cover">
+                                                                <img src="@ViewBag.AdminUrl@commInfo.BackView">
+                                                                <p class="hover-text">@commInfo.Introduce</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h4 class="title">@commInfo.Name</h4>
+                                                    <div class="price">
+                                                        <div class="money">
+                                                            <span>
+                                                                <span class="price normal-price">¥@commInfo.minPrice</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                                <div style="clear:both;"></div>
+                            </ul>
+                        </div>
+                    </section>
+                    if (count > 8)
+                    {
+                        <div class="MoreInfo">
+                            <a href="../../../CommodityList/Index?gradeId=@item.GradeId">
+                                更多 >
+                            </a>
+                        </div>
+                    }
+                }
+            }
+
+        }
+    </div>
+    <section class="section features">
+        <div class="features-container">
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-truck.svg" alt="全场满¥99顺丰包邮（顺丰无法配送的区域将使用EMS）">
+                    </p>
+                    <h4>
+                        全国包邮
+                    </h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-card.svg" alt="支持支付宝、微信、线下支付">
+                    </p>
+                    <h4>支持支付宝、微信</h4>
+                </div>
+            </div>
+            <div class="features-section">
+                <div class="section-item">
+                    <p>
+                        <img src="~/Base/images/svg/icon-message.svg" alt="客服热线：400-700-0303">
+                    </p>
+                    <h4>
+                        客服热线：400-858-0505
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

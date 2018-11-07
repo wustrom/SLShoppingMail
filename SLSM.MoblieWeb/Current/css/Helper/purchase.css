@@ -1,0 +1,184 @@
+﻿.PurchaseGuid {
+    font-family: "Open Sans","PingFang SC","Microsoft YaHei","Helvetica Neue","Hiragino Sans GB","WenQuanYi Micro Hei",Arial,sans-serif;
+    box-sizing: border-box;
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.breadcrumb-nav .title {
+    color: #008374;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 36px;
+}
+
+.breadcrumb-nav .breadcrumb {
+    color: #707473;
+    font-size: 12px;
+}
+
+.breadcrumb > li, .pagination {
+    display: inline-block;
+}
+
+.breadcrumb-nav .breadcrumb > li + li:before {
+    color: #707473;
+    padding: 0px;
+}
+
+.breadcrumb > li + li:before {
+    content: '/\00a0';
+    padding: 0 5px;
+    color: #ccc;
+}
+
+.breadcrumb-nav .breadcrumb a {
+    color: #707473;
+}
+
+.breadcrumb {
+    padding-left: 3px;
+}
+
+.purchase {
+    padding-top: 40px;
+    padding-bottom: 60px;
+    background-color: white;
+}
+
+    .purchase .tab-content {
+        padding-top: 20px;
+    }
+
+.part-faq .faq-list .item-title h4 {
+    color: #008374;
+    display: inline-block;
+    position: relative;
+    padding-right: 25px;
+    font-weight: 400;
+    margin-bottom: 5px;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.part-faq .faq-list .faq-item {
+    margin-bottom: 25px;
+}
+
+.part-faq .faq-list .item-title {
+    position: relative;
+    vertical-align: middle;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    display: block;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+    .part-faq .faq-list .item-title h4 {
+        color: #008374;
+        display: inline-block;
+        position: relative;
+        padding-right: 25px;
+        font-weight: 400;
+        margin-bottom: 5px;
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .part-faq .faq-list .item-title .fa-angle-down {
+        color: #008374;
+        position: absolute;
+        display: inline-block;
+        right: 5px;
+        top: 50%;
+        margin-top: -6px;
+    }
+
+.part-faq .faq-list .faq-item .desc {
+    padding-top: 15px;
+    font-size: 13px;
+    line-height: 22px;
+}
+
+.faq-report .msq {
+    font-size: 12px;
+    margin-top: 25px;
+    text-align: right;
+    color: #008374;
+    transition: all .4s;
+}
+
+@media (max-width: 767px) {
+    .PurchaseGuid {
+        font-size: 14px;
+    }
+
+    .h4, h4 {
+        font-size: 14px;
+        line-height: 1.1;
+    }
+
+    .breadcrumb-nav {
+        padding: 30px 0;
+    }
+
+        .breadcrumb-nav .title {
+            font-size: 24px;
+            height: 26px;
+            line-height: 26px;
+        }
+
+    .care-tab-box {
+        display: inline-block;
+        width: 180px;
+        position: relative;
+    }
+
+        .care-tab-box .selected {
+            position: relative;
+            display: block;
+            margin-top: 15px;
+            padding: 10px 35px 10px 15px;
+            border: rgba(151,151,151,.26) solid 1px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #999;
+        }
+
+            .care-tab-box .selected .fa-caret-down {
+                position: absolute;
+                opacity: .4;
+                top: 50%;
+                margin-top: -7px;
+                right: 10px;
+            }
+
+        .care-tab-box .care-tab {
+            width: 100%;
+            z-index: 100;
+            position: absolute;
+            background-color: #f7f8f9;
+            display: none;
+        }
+
+            .care-tab-box .care-tab li {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+                .care-tab-box .care-tab li a {
+                    padding: 10px 15px;
+                    display: block;
+                    border: 0;
+                    color: #979797;
+                    cursor: pointer;
+                }
+}

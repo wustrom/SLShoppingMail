@@ -1,0 +1,13 @@
+﻿
+
+body{
+    width: 100%;
+    height: 100%;
+    font-size: 13px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    background-color: #fafafa;
+    border: 1px solid rgba(250, 250, 250, 0);
+    -webkit-font-smoothing: antialiased;
+    margin: 0 auto;
+}

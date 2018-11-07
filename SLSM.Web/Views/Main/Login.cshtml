@@ -1,0 +1,312 @@
+﻿@{
+    Layout = null;
+    var Login = ViewBag.Login;
+    Login = "register";
+    var login = "block";
+    var register = "none";
+    if (Login == "register")
+    {
+        login = "none";
+        register = "block";
+    }
+
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SYLOON账号 | 登录</title>
+    <meta name="keywords" content="SYLOON" />
+    <meta name="description" content="SYLOON" />
+    <meta name="keywords" content="SYLOON" />
+    <meta name="description" content="SYLOON" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,minimum-scale=1" />
+    <link href="~/Current/css/Login.css?version=1.01" rel="stylesheet" />
+    <script src="~/Base/js/jquery.min.js"></script>
+    <script src="~/Current/script/ajax.js"></script>
+    <script src="~/plugins/layer/layer.js"></script>
+    <script>
+        $(function () {
+            // #region 输入框特效
+            $(".md-input-required input").focus(function () {
+                $(this).parent().addClass('md-input-focused');
+                $(this).parent().removeClass('md-input-invalid');
+            })
+
+            $(".md-input-required input").blur(function () {
+                var value = $(this).val();
+                if (value == "" || value == undefined) {
+                    $(this).parent().addClass('md-input-invalid');
+                    $(this).parent().removeClass('md-has-value');
+                }
+                else {
+                    $(this).parent().removeClass('md-input-invalid');
+                    $(this).parent().addClass('md-has-value');
+                }
+                $(this).parent().removeClass('md-input-focused');
+            })
+
+            $(".md-input-required input").each(function () {
+
+                var value = $(this).val();
+                if (value == "" || value == undefined) {
+                    $(this).parent().removeClass('md-has-value');
+                }
+                else {
+                    $(this).parent().addClass('md-has-value');
+                }
+            })
+            // #endregion
+
+            $(".login-btn").click(function () {
+
+                var obj = new Object();
+                obj.UserPhone = $('input[name="username"]').eq(1).val();
+                obj.Password = $('input[name="password"]').val();
+                obj.IsThild = true;
+                if (obj.UserPhone == "" || obj.UserPhone == undefined || obj.Password == "" || obj.Password == undefined) {
+                    return;
+                }
+                jQuery.axpost('../../api/Home/LoginByPhone', JSON.stringify(obj), function (data) {
+                    layer.msg(data.Message);
+                    window.location.href = '../../Main/Index';
+                });
+            });
+
+            $(".inner-button").click(function () {
+                var obj = new Object();
+                obj.UserPhone = $('input[name="phone"]').val();
+                obj.IsThild = true;
+                debugger;
+                //obj.ImageCode = $('.vaildImgCode').val();
+                if (obj.UserPhone == undefined || obj.UserPhone == "") {
+                    $('input[name="phone"]').trigger('blur');
+                    $('.vaildImgCode').trigger('blur');
+                    return;
+                }
+                jQuery.axpost('../../api/Home/SendPhoneCode', JSON.stringify(obj), function (data) {
+                    layer.msg(data.Message);
+                });
+            })
+            $('.register-btn').click(function () {
+                var obj = new Object();
+                obj.UserPhone = $('input[name="phone"]').val();
+                obj.PhoneCode = $('.vaildPhoneCode').val();
+                obj.IsThild = true;
+                //obj.ImageCode = $('.vaildImgCode').val();
+                if (obj.UserPhone == undefined || obj.UserPhone == "" || obj.PhoneCode == "" || obj.PhoneCode == undefined) {
+                    $('input[name="phone"]').trigger('blur');
+                    $('.vaildImgCode').trigger('blur');
+                    $('#vaildPhoneCode').trigger('blur');
+                    return;
+                }
+                jQuery.axpost('../../api/Home/LoginByPhone', JSON.stringify(obj), function (data) {
+                    layer.msg(data.Message);
+                    layer.msg(data.Message);
+                    window.location.href = '../../Main/Index';
+                });
+            })
+        })
+
+    </script>
+
+    <style>
+        .btn.create-btn.second.lg {
+            color: #fff;
+            background: #008376;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" name="username" style="display: none;" disabled autocomplete="off" />
+    <input type="password" style="display: none;" disabled autocomplete="off" />
+    <div id="app" class="app-container">
+        <div class="main-container">
+            <div class="page-wrap">
+                <div class="f-container">
+                    <div class="row">
+                        <div class="left">
+                            <div class="swiper-container swiper-container-horizontal swiper-container-fade" style="height: 858px;">
+                                <div class="swiper-wrapper" style="transition-duration: 0ms;">
+                                    <div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active" style="width: 600px; transform: translate3d(0px, 0px, 0px); opacity: 1; transition-duration: 0ms;" data-swiper-slide-index="2">
+                                        <div class="carousel-img" style="background-image: url(&quot;https://account.djicdn.com/pc/static/img/3.61f61fa.jpg&quot;);">
+                                            <div class="title-container">
+                                                <div class="title">
+                                                    Exploration
+                                                </div>
+                                                <div class="sub-title">
+                                                    <span>by</span>
+                                                    <span>Hanbing Wang</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide swiper-slide-duplicate-next" style="width: 600px; transform: translate3d(-600px, 0px, 0px); opacity: 1; transition-duration: 0ms;" data-swiper-slide-index="0">
+                                        <div class="carousel-img" style="background-image: url(&quot;https://account.djicdn.com/pc/static/img/1.e61fc72.jpg&quot;);">
+                                            <div class="title-container">
+                                                <div class="title">
+                                                    Fishermen close the net
+                                                </div>
+                                                <div class="sub-title">
+                                                    <span>by</span>
+                                                    <span>Ge Zheng</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide swiper-slide-prev" style="width: 600px; transform: translate3d(-1200px, 0px, 0px); opacity: 1; transition-duration: 0ms;" data-swiper-slide-index="1">
+                                        <div class="carousel-img" style="background-image: url(&quot;https://account.djicdn.com/pc/static/img/2.643c4c1.jpg&quot;);">
+                                            <div class="title-container">
+                                                <div class="title">
+                                                    Overbridge
+                                                </div>
+                                                <div class="sub-title">
+                                                    <span>by</span>
+                                                    <span>Chenghan</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide swiper-slide-active" style="width: 600px; transform: translate3d(-1800px, 0px, 0px); opacity: 1; transition-duration: 0ms;" data-swiper-slide-index="2">
+                                        <div class="carousel-img" style="background-image: url(&quot;https://account.djicdn.com/pc/static/img/3.61f61fa.jpg&quot;);">
+                                            <div class="title-container">
+                                                <div class="title">
+                                                    Exploration
+                                                </div>
+                                                <div class="sub-title">
+                                                    <span>by</span>
+                                                    <span>Hanbing Wang</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide swiper-slide-duplicate swiper-slide-next" style="width: 600px; transform: translate3d(-2400px, 0px, 0px); opacity: 0; transition-duration: 0ms;" data-swiper-slide-index="0">
+                                        <div class="carousel-img" style="background-image: url(&quot;https://account.djicdn.com/pc/static/img/1.e61fc72.jpg&quot;);">
+                                            <div class="title-container">
+                                                <div class="title">
+                                                    Fishermen close the net
+                                                </div>
+                                                <div class="sub-title">
+                                                    <span>by</span>
+                                                    <span>Ge Zheng</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="login" style="display:@login;">
+                                <div class="text-center">
+                                    <a href="http://www.syloon.cn/Main/Index" title="dji" target="_blank">
+                                        <img src="~/Base/images/syloonLogin.png" class="logo" />
+                                    </a>
+                                </div>
+                                <div class="text-center">
+                                    <div class="title">
+                                        密码登入
+                                    </div>
+                                </div>
+                                <div class="form">
+                                    <div class="child">
+                                        <div class="row">
+                                            <div class="d-input">
+                                                <div class="md-input-container md-input-required">
+                                                    <label>手机</label>
+                                                    <input type="text" name="username" maxlength="100" class="md-input" />
+                                                    <div class="md-error">手机不能为空</div>
+                                                    <!---->
+                                                    <!---->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="d-password-tips">
+                                                <div class="md-input-container md-input-required">
+                                                    <label>密码</label>
+                                                    <input type="password" name="password" class="md-input" value="" />
+                                                    <div class="tips text-right">
+                                                        <a>忘记密码？</a>
+                                                    </div>
+                                                    <div class="md-error">密码不能为空</div>
+                                                    <!---->
+                                                    <!---->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!---->
+                                        <div class="row">
+                                            <!---->
+                                        </div>
+                                        <button type="button" autofocus="autofocus" class="btn login-btn primary lg">登录</button>
+                                        <!---->
+                                        <div class="line text-center line">
+                                            <div class="bg-orange line-text">
+                                                快捷登入
+                                            </div>
+                                        </div>
+                                        <button type="button" autofocus="autofocus" class="btn create-btn second lg" onclick="$('input[name=\'phone\']').val($('input[name=\'username\']').val()).trigger('focus'); $('.register').show(); $('.login').hide();">验证码登入 </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="register" style="display:@register;">
+                                <div class="text-center">
+                                    <a href="http://www.syloon.cn/Main/Index" title="dji" target="_blank">
+                                        <img src="~/Base/images/syloonLogin.png" class="logo" />
+                                    </a>
+                                </div>
+                                <div class="text-center">
+                                    <div class="title">验证码登入</div>
+                                </div>
+                                <div class="form">
+                                    <div class="child">
+                                        <div class="phone">
+                                            <div class="row phone-box">
+                                                <div class="d-select">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-secondary"> +86 </button>
+                                                    </div>
+                                                </div>
+                                                <div class="phone-num d-input">
+                                                    <div class="md-input-container md-input-required">
+                                                        <label>请输入手机号</label>
+                                                        <input type="text" name="phone" maxlength="100" class="md-input" />
+                                                        <div class="md-error">手机号不能为空</div>
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="d-input-button">
+                                                    <div class="md-input-container md-input-required">
+                                                        <label>短信验证码</label>
+                                                        <input type="text" class="md-input vaildPhoneCode" />
+                                                        <button type="button" autofocus="autofocus" class="btn inner-button primary lg">发送验证码</button>
+                                                        <div class="md-error">验证码必填</div>
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!---->
+                                            <div class="row register-btn">
+                                                <button type="button" autofocus="autofocus" class="btn register-btn primary lg">下一步</button>
+                                            </div>
+                                        </div>
+                                        <!---->
+                                        <div class="row to-login">
+                                            <a href="javascript:;" onclick="$('input[name=\'username\']').val($('input[name=\'phone\']').val()).trigger('focus'); $('.register').hide(); $('.login').show();">密码登入&gt;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,254 @@
+﻿
+@{
+    Layout = null;
+}
+
+<html lang="zh-CN" ng-app="dji-store" class="js no-touch no-csstransforms3d csstransitions csstransforms webkit chrome win js ng-scope" style="height: auto;">
+
+<head>
+    <style type="text/css">
+        @@charset "UTF-8";
+
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+            display: none !important;
+        }
+
+        ng\:form {
+            display: block;
+        }
+    </style>
+    <title>已有 SYLOON 账号？ | SYLOON 官方商城</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="http://store.dji.com/cn/checkout_login/new" name="canonical">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <link href="//asset1.djicdn.com/assets/favicon-761a20f87a33663953815f7963976f9a.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="~/Current/css/NoLogin.css" rel="stylesheet" />
+    <meta content="authenticity_token" name="csrf-param">
+    <script src="~/Base/js/jquery.min.js"></script>
+    <script src="~/Current/script/ajax.js"></script>
+    <script src="~/plugins/layer/layer.js"></script>
+    <script>
+        $(function () {
+            // #region 输入框特效
+            $(".md-input-required input").focus(function () {
+                $(this).parent().addClass('md-input-focused');
+                $(this).parent().removeClass('md-input-invalid');
+            })
+
+            $(".md-input-required input").blur(function () {
+                var value = $(this).val();
+                if (value == "" || value == undefined) {
+                    $(this).parent().addClass('md-input-invalid');
+                    $(this).parent().removeClass('md-has-value');
+                }
+                else {
+                    $(this).parent().removeClass('md-input-invalid');
+                    $(this).parent().addClass('md-has-value');
+                }
+                $(this).parent().removeClass('md-input-focused');
+            })
+
+            $(".md-input-required input").each(function () {
+                var value = $(this).val();
+                if (value == "" || value == undefined) {
+                    $(this).parent().removeClass('md-has-value');
+                }
+                else {
+                    $(this).parent().addClass('md-has-value');
+                }
+            })
+            // #endregion
+
+            $("input[name='LoginType']").click(function () {
+                if ($(this).val() == "2") {
+                    $('.d-input-button.MessageRadio .md-input.vaildPhoneCode').attr('disabled', true);
+                    $('.d-input-button.MessageRadio .btn.inner-button.primary').attr('disabled', true);
+                    $('.d-input-button.passwordRadio .md-input.vaildPhoneCode').attr('disabled', false);
+                }
+                else {
+                    $('.d-input-button.passwordRadio .md-input.vaildPhoneCode').attr('disabled', true);
+                    $('.d-input-button.MessageRadio .md-input.vaildPhoneCode').attr('disabled', false);
+                    $('.d-input-button.MessageRadio .btn.inner-button.primary').attr('disabled', false);
+                }
+            })
+
+            $("input[name='LoginType']").eq(0).trigger('click');
+
+            $(".inner-button").click(function () {
+                var obj = new Object();
+                obj.UserPhone = $('input[name="phone"]').val();
+                obj.IsThild = true;
+                if (obj.UserPhone == undefined || obj.UserPhone == "") {
+                    $('input[name="phone"]').trigger('blur');
+                    return;
+                }
+                jQuery.axpost('../../api/Home/SendPhoneCode', JSON.stringify(obj), function (data) {
+                    layer.msg(data.Message);
+                });
+            })
+
+            $('.register-btn').click(function () {
+                if ($("input[name='LoginType']:checked").val() == "2") {
+                    var obj = new Object();
+                    obj.UserPhone = $('input[name="phone"]').val();
+                    obj.Password = $('.password').val();
+                    obj.IsThild = true;
+                    if (obj.UserPhone == "" || obj.UserPhone == undefined || obj.Password == "" || obj.Password == undefined) {
+                        return;
+                    }
+                    jQuery.axpost('../../api/Home/LoginByPhone', JSON.stringify(obj), function (data) {
+                        layer.msg(data.Message);
+                        window.location.href = '../../PayPage/Index?Login=LoginIn&ShopCartId=@ViewBag.ShopCartId';
+                    });
+                }
+                else {
+                    var obj = new Object();
+                    obj.UserPhone = $('input[name="phone"]').val();
+                    obj.PhoneCode = $('.vaildPhoneCode').val();
+                    obj.IsThild = true;
+                    if (obj.UserPhone == "" || obj.UserPhone == undefined || obj.PhoneCode == "" || obj.PhoneCode == undefined) {
+                        return;
+                    }
+                    jQuery.axpost('../../api/Home/LoginByPhone', JSON.stringify(obj), function (data) {
+                        layer.msg(data.Message);
+                        window.location.href = '../../PayPage/Index?Login=LoginIn&ShopCartId=@ViewBag.ShopCartId';
+                    });
+                }
+
+            })
+        })
+
+    </script>
+</head>
+
+<body class="l-checkout_login l-new">
+    <div class="body" ng-init="user={}">
+        <header class="no-flat flat-menu clean-top">
+            <div class="header-top">
+                <div class="container">
+                    <div class="nav-box" style="border-bottom:1px solid #eee;">
+                        <nav class="nav-main mega-menu">
+                            <ul class="nav nav-pills nav-main">
+                                <li>
+                                    <a class="navbar-brand" href="../../Main/Index">
+                                        <img class="logo" src="~/Base/images/syloonLogin.png" style="height: 29px; margin-top:-5px;" />
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-bottom" style="margin-bottom:0px;">
+                <div class="container wide">
+                    <section class="page-top-order">
+                        <div class="store-header">
+                            <div class="container">
+                                <div class="store-masthead">
+                                    <h2></h2>
+                                </div>
+                                <div class="store-navigation">
+                                    <div class="header-cart header-help-center">
+                                        <div class="dropdown">
+                                            <a class="btn-cart" href="https://www.dji.com/cn/support/purchase" target="_blank">
+                                                <div class="help-title">
+                                                    &nbsp;
+                                                    <span></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </header>
+        <div class="main" id="main" role="main">
+            <div class="flash_messages">
+                <div class="container wide"></div>
+            </div>
+            <div class="container wide checkout-login">
+                <div id="react-app">
+                    <main data-reactroot="" class="index__login-panel__1HiRM">
+                        <div class="container">
+                            <div class="index__account-container__tI0R_">
+                                <article class="index__account-panel__pyMS5">
+                                    <section class="style__login-panel__3nSta">
+                                        <header>
+                                            <h1>已有 SYLOON 账号？</h1>
+                                            <p class="style__description__Bz_f1">请登录以便享受更加快捷方便的购买体验。</p>
+                                        </header>
+                                        <section>
+
+                                            <div class="child">
+                                                <div class="phone">
+                                                    <div class="row phone-box">
+                                                        <div class="phone-num d-input">
+                                                            <div class="md-input-container md-input-required">
+                                                                <label>请输入手机号</label>
+                                                                <input type="text" name="phone" maxlength="100" class="md-input" />
+                                                                <div class="md-error">手机号不能为空</div>
+                                                                <!---->
+                                                                <!---->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="d-input-button MessageRadio">
+                                                            <input type="radio" value="1" name="LoginType" checked="checked" style="float: left;position: absolute;margin-left: -30px;margin-top: 15px;" />
+                                                            <div class="md-input-container md-input-required">
+                                                                <label>短信验证码</label>
+                                                                <input type="text" class="md-input vaildPhoneCode" />
+                                                                <button type="button" autofocus="autofocus" class="btn inner-button primary lg">发送验证码</button>
+                                                                <!---->
+                                                                <!---->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div style="margin-top: 15px;margin-left: 5px;color: #008375;cursor: pointer;" onclick="$('.d-input-button.passwordRadio').show(); $(this).hide()">
+                                                            使用密码登录
+                                                        </div>
+                                                        <div class="d-input-button passwordRadio" style="display:none;">
+                                                            <input type="radio" value="2" name="LoginType" style="float: left;position: absolute;margin-left: -30px;margin-top: 15px;" />
+                                                            <div class="md-input-container md-input-required">
+                                                                <label>密码</label>
+                                                                <input type="text" class="md-input password" />
+                                                                <!---->
+                                                                <!---->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!---->
+                                                    <button type="button" autofocus="autofocus" class="btn register-btn primary lg">登入</button>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                        </section>
+                                    </section>
+                                </article>
+                            </div>
+                            <div class="index__continue-container__gleoY">
+                                <section class="index__continue-panel__30MRc">
+                                    <header>
+                                        <h1>没有 SYLOON 账号？</h1>
+                                        <p class="index__description__3pHEQ">以游客身份购买</p>
+                                    </header>
+                                    <div class="index__actions__3oME2">
+                                        <button class="index__continue-btn__21Am7 btn btn-primary" onclick="window.location.href='../../PayPage/Index?ShopCartId=@ViewBag.ShopCartId&NoLogin=true'">以游客身份购买</button>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+    <noscript>&lt;iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-NRLBC4X" style="display:none;visibility:hidden" width="0"&gt;&lt;/iframe&gt;</noscript>
+</body>
+
+</html>

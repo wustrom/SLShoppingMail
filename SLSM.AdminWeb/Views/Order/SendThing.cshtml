@@ -1,0 +1,48 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Order = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
+}
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+        padding-right: 10px;
+        border: 1px solid DarkGray;
+    }
+</style>
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">快递公司</label>
+            <div class="layui-input-block">
+                <input type="hidden" value="@ViewBag.OrderID" name="Id"/>
+                <select name="ExpressCompany" lay-verify="required">
+                    @{
+                        var str = "圆通速递,中通快递,邮政快递包裹,EMS,天天快递,韵达速递";
+                        var array = str.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        foreach (var item in array)
+                        {
+                            if (Order.ExpressCompany == item)
+                            {
+                                <option value="@item" selected="selected">@item</option>
+                            }
+                            else
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    }
+
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">快递编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="ExpressNo" autocomplete="off" class="layui-input" value="@Order.ExpressNo">
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

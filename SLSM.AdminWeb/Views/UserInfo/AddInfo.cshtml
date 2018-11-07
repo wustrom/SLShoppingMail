@@ -1,0 +1,66 @@
+﻿
+@{
+    Layout = null;
+}
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="NickName" placeholder="请输入昵称" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="true" title="男">
+                <input type="radio" name="sex" value="false" title="女" checked>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" placeholder="请输入手机号码" lay-verify="phone" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input name="email" class="layui-input" type="text" autocomplete="off" placeholder="请输入邮箱">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">折扣率%</label>
+            <div class="layui-input-inline">
+                <input name="discount" class="layui-input" type="text" autocomplete="off" placeholder="请输入折扣" lay-verify="number">
+            </div>
+            <div class="layui-form-mid layui-word-aux">折扣必须为数字,是百分比显示</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司名称</label>
+            <div class="layui-input-block">
+                <input name="CompanyName" class="layui-input" type="text" autocomplete="off" placeholder="公司名称" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司电话</label>
+            <div class="layui-input-block">
+                <input name="CompanyPhone" class="layui-input" type="text" autocomplete="off" placeholder="公司电话" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司地址</label>
+            <div class="layui-input-block">
+                <input name="CompanyAddr" class="layui-input" type="text" autocomplete="off" placeholder="公司地址" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司邮编</label>
+            <div class="layui-input-block">
+                <input name="ZipCode" class="layui-input" type="text" autocomplete="off" placeholder="公司邮编" />
+            </div>
+        </div>
+        
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>

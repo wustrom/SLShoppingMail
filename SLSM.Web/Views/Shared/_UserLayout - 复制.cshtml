@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "_UserLayout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Base/js/prettify.js"></script>
+<script src="~/Base/js/jquery.scrollbar.js"></script>
+
+<link href="~/Base/css/application.css" rel="stylesheet" />
+<script src="~/Base/js/jquery.SuperSlide.2.1.1.js"></script>
+<script src="~/Base/js/jquery.raty.min.js"></script>
+@*<link href="~/Base/css/globle.css" rel="stylesheet" />*@
+<script src="~/Base/js/webuploader.min.js"></script>
+<script src="~/Base/js/diyUpload.js"></script>
+
+<div class="myinforbox">
+    <div class="w1242">
+        <div class="position">
+            @RenderSection("bannner", required: false)
+        </div>
+        <div class="typane">
+            @RenderSection("name", required: false)
+        </div>
+        <div class="mycontent">
+            <div class="sidebar addbj" style="background-color:white">
+                <ul>
+                    <li @RenderSection("Info", required: false)>
+                        <a href="~/userinfo/Info">个人资料</a>
+                    </li>
+                    <li @RenderSection("Message", required: false)>
+                        <a href="~/userinfo/Message">消息</a>
+                    </li>
+                    <li @RenderSection("Address", required: false)>
+                        <a href="~/userinfo/Address">地址管理</a>
+                    </li>
+                    <li @RenderSection("MyOrderList", required: false)>
+                        <a href="~/userinfo/MyOrderList">我的订单</a>
+                    </li>
+                    @*<li @RenderSection("userLike", required: false)>
+                            <a href="~/userinfo/userLike">我的收藏</a>
+                        </li>*@
+                    <li @RenderSection("InvoiceInfo", required: false)>
+                        <a href="~/userinfo/InvoiceInfo">发票管理</a>
+                    </li>
+                    <li @RenderSection("customer", required: false)>
+                        <a href="~/userinfo/CustomerService">客户服务</a>
+                    </li>
+                </ul>
+            </div>
+            @RenderBody()
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+@RenderSection("AfterBody", required: false)

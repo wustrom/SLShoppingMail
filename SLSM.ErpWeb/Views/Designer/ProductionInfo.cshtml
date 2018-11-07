@@ -1,0 +1,802 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var Production = (Production_Orderdetail_View)ViewBag.ProductionInfo;
+    var receive = (Receive)ViewBag.receive;
+    Production.WordOpertion = Production.WordOpertion == null ? "" : Production.WordOpertion;
+    Production.CustomImageOpertion = Production.CustomImageOpertion == null ? "" : Production.CustomImageOpertion;
+    Production.OnLineImageOpertion = Production.OnLineImageOpertion == null ? "" : Production.OnLineImageOpertion;
+
+    var Text = ViewBag.Text;
+    var ReturnText = ViewBag.ReturnText;
+    var Consignment = ViewBag.Consignment;
+    var OrderText = ViewBag.OrderText;
+    var ImageList = new List<Tuple<string, string, string>>();
+    var DesignerImageList = new List<Tuple<string, string, string>>();
+    //设计师上传图片
+    if (Production.DesignerImage != null)
+    {
+        var ImgList = Production.DesignerImage.Split('|').Where(p => !string.IsNullOrEmpty(p));
+        foreach (var item in ImgList)
+        {
+            var printList = item.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+            if (printList.Count == 2)
+            {
+                DesignerImageList.Add(new Tuple<string, string, string>(item1: "", item2: printList[0], item3: printList[1]));
+            }
+        }
+    }
+    var printInfo = "";
+    if (Production.PrintFuncInfo != null)
+    {
+        var printArray = Production.PrintFuncInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToArray();
+        foreach (var item in printArray)
+        {
+            var itemarray = item.Split(':').ToArray();
+            if (Production.PrintingMethod == itemarray[0])
+            {
+                printInfo = itemarray[1];
+            }
+        }
+    }
+    //商品图片
+    if (Production.ImageInfoList != null)
+    {
+        var ImgList = Production.ImageInfoList.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+        foreach (var item in ImgList)
+        {
+            var printList = item.Split(';').Where(p => !string.IsNullOrEmpty(p)).ToList();
+            if (printList.Count == 2 && printList[0] == Production.ColorId.ToString())
+            {
+                ImageList.Add(new Tuple<string, string, string>(item1: "", item2: printList[0], item3: printList[1]));
+            }
+        }
+    }
+    DbOpertion.Models.Order_Info OrderInfo = ViewBag.OrderInfo == null ? new Order_Info() : (DbOpertion.Models.Order_Info)ViewBag.OrderInfo;
+    //印刷信息
+    List<List<string>> listInfo = new List<List<string>>();
+    if (Production.PrintingMethod != null && Production.Printingdetail != null)
+    {
+        var printlist = Production.Printingdetail.Split(')').Where(p => !string.IsNullOrEmpty(p)).ToList();
+        foreach (var item in printlist)
+        {
+            var itemarray = item.Split('(').Where(p => !string.IsNullOrEmpty(p)).ToList();
+            if (itemarray[0].ToLower() == Production.PrintingMethod.ToLower())
+            {
+                if (itemarray.Count > 1)
+                {
+                    var splititemList = itemarray[1].Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    foreach (var splititem in splititemList)
+                    {
+                        List<string> SplititemList = new List<string>();
+                        var douhaoSplititemList = splititem.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        foreach (var douhaoSplititem in douhaoSplititemList)
+                        {
+                            SplititemList.Add(douhaoSplititem);
+                        }
+                        listInfo.Add(SplititemList);
+                    }
+                }
+            }
+        }
+    }
+    List<Technology> listTechnology = ViewBag.TechnologyList == null ? new List<Technology>() : (List<Technology>)ViewBag.TechnologyList;
+}
+
+<link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Base/css/btable.css" rel="stylesheet" />
+<script src="~/plugins/layui/layui.js?version=20181017001"></script>
+<script src="~/Current/Scripts/jquery-1.10.2.min.js?version=20181017001"></script>
+<script src="~/Current/Scripts/Production/ProductionDetail.js?version=20181017001"></script>
+<script src="~/Current/Scripts/ajax.js?version=20181017001"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>采购入库详情信息</title>
+    <style>
+        .layui-table tr {
+            height: 50px;
+        }
+
+        .layui-table tbody tr:hover {
+            background-color: transparent;
+        }
+
+        .OnlineImg {
+            position: relative;
+            float: left;
+            cursor: pointer;
+        }
+
+            .OnlineImg Img {
+                height: 40px;
+                float: left;
+                margin-left: 10px;
+                border: 1px solid #E4E4E4;
+                box-sizing: border-box;
+            }
+
+            .OnlineImg .SelectImg {
+                background-image: url(../../Current/Icon/CheckOut.png);
+                background-size: 100%;
+                position: absolute;
+                float: left;
+                width: 18px;
+                height: 18px;
+                margin-top: -6px;
+                margin-left: 2px;
+                display: none;
+            }
+
+            .OnlineImg.active .SelectImg {
+                display: block;
+            }
+
+            .OnlineImg.active Img {
+                border: 1px solid #1BA095;
+            }
+
+            .OnlineImg .OnLineImageDown {
+                text-decoration: underline;
+                color: blue;
+            }
+
+        .CustomerImg {
+            position: relative;
+            float: left;
+            cursor: pointer;
+        }
+
+            .CustomerImg Img {
+                height: 40px;
+                float: left;
+                margin-left: 10px;
+                border: 1px solid #E4E4E4;
+                box-sizing: border-box;
+            }
+
+            .CustomerImg.active Img {
+                border: 1px solid #1BA095;
+            }
+
+            .CustomerImg .SelectImg {
+                background-image: url(../../Current/Icon/CheckOut.png);
+                background-size: 100%;
+                position: absolute;
+                float: left;
+                width: 18px;
+                height: 18px;
+                margin-top: -6px;
+                margin-left: 2px;
+                display: none;
+            }
+
+            .CustomerImg.active .SelectImg {
+                display: block;
+            }
+
+            .CustomerImg .OnLineImageDown {
+                text-decoration: underline;
+                color: blue;
+            }
+
+        .TextInfo {
+            float: left;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #E4E4E4;
+            margin-left: 10px;
+            position: relative;
+        }
+
+            .TextInfo.active {
+                border: 1px solid #75C6BF;
+            }
+
+            .TextInfo .SelectImg {
+                background-image: url(../../Current/Icon/CheckOut.png);
+                background-size: 100%;
+                position: absolute;
+                float: left;
+                width: 18px;
+                height: 18px;
+                margin-top: -34px;
+                margin-left: -20px;
+                display: none;
+            }
+
+            .TextInfo.active .SelectImg {
+                display: block;
+            }
+
+        .ImageList .layui-icon {
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".CustomerImg").click(function () {
+                $(".CustomerImg").removeClass('active');
+                $(this).addClass('active');
+                var img = $(this).find('img');
+                $('.CustomerImageScaling').html(img.attr('customerimagescaling'));
+                $('.CustomerImageRotate').html(img.attr('customerimagerotate'));
+                $('.CustomerImageLayerOrder').html(img.attr('customerimagelayerorder'));
+                $('.CustomerDown').html(img.attr('lastName'));
+                $('.CustomerDown').attr('download', img.attr('lastName'));
+                $('.CustomerDown').attr('href', img.attr('src'));
+            })
+
+            $(".OnlineImg").click(function () {
+                $(".OnlineImg").removeClass('active');
+                $(this).addClass('active');
+                var img = $(this).find('img');
+                $('.OnLineImageScaling').html(img.attr('onlineimagescaling'));
+                $('.OnLineImageRotate').html(img.attr('OnLineImageRotate'));
+                $('.OnLineImageLayerOrder').html(img.attr('OnLineImageLayerOrder'));
+                $('.OnLineImageDown').html(img.attr('lastName'));
+                $('.OnLineImageDown').attr('download', img.attr('lastName'));
+                $('.OnLineImageDown').attr('href', img.attr('src'));
+            })
+
+            $('.TextInfo').click(function () {
+                $(".TextInfo").removeClass('active');
+                $(this).addClass('active');
+                var that = $(this);
+                $('.TextType').html(that.attr('TextType'));
+                $('.TextFont').html(that.attr('TextFont'));
+                $('.TextRotate').html(that.attr('TextRotate'));
+                $('.TextLayerOrder').html(that.attr('TextLayerOrder'));
+                $('#styleInput').css('background-color', that.attr('textcolor'));
+                $('#valueInput').val(that.attr('textcolor'));
+            })
+
+            $('.ImageList .layui-icon').click(function () {
+                var imgBig = $(this).parent().parent().children('img').eq(0);
+                var imgBigDesign = $(this).parent().parent().children('img').eq(1);
+                var imgChilderen = $(this).children('img');
+                imgBig.attr('src', imgChilderen.attr('src'));
+                if (imgChilderen.attr('designsrc') == undefined || imgChilderen.attr('designsrc') == "") {
+                    imgBigDesign.hide();
+                }
+                else {
+                    var designsrc = imgChilderen.attr('designsrc');
+                    imgBigDesign.attr('src', designsrc);
+                    imgBigDesign.show();
+                }
+
+                $('.ImageList .layui-icon').removeClass('active');
+                $(this).addClass('active');
+            })
+
+            $('.ImgLeftBtn').click(function () {
+                var activeNode = $('.ImageList .layui-icon.active');
+                activeNode.remove('active');
+                var bother = activeNode.prev();
+                bother.trigger('click');
+                if (bother.length == 0) {
+                    activeNode.parent().find('.layui-icon:last-child').trigger('click');
+                }
+            })
+
+            $('.ImgRightBtn').click(function () {
+                var activeNode = $('.ImageList .layui-icon.active');
+                activeNode.remove('active');
+                var bother = activeNode.next();
+                bother.trigger('click');
+                if (bother.length == 0) {
+                    activeNode.parent().find('.layui-icon:first-child').trigger('click');
+                }
+            })
+
+            $(".CustomerImg").eq(0).trigger('click');
+            $(".OnlineImg").eq(0).trigger('click');
+            $('.TextInfo').eq(0).trigger('click');
+            $('.ImageList .layui-icon').eq(0).trigger('click');
+        })
+
+        function PrintBtnInfo() {
+            var countstr = $("body.bodyInfo").html();
+            var newstr = $("div.PrintDiv").html();
+            $("body.bodyInfo").html(newstr);
+            var tata = document.execCommand("print");/* window.print(); 调用打印的功能*/
+            if (tata) {  //点击取消后执行的操作
+                $("body.bodyInfo").html(newstr);
+                window.location.reload();
+            }
+        }
+    </script>
+</head>
+<body style="height:100%;" class="bodyInfo">
+    <div style="margin:0px; background-color: white; margin:0 10px;width:750px;" id="ContantInfo">
+        <div class="PrintDiv" style="padding-top: 20px;width:750px;">
+            <style>
+                .ProductionSheet {
+                    font-family: 'Microsoft YaHei';
+                    font-size: 15px;
+                    border-collapse: collapse;
+                    width: 730px;
+                }
+
+                    .ProductionSheet .layui-form .layui-input {
+                        height: 23px;
+                        line-height: 23px;
+                        padding-left: 0px;
+                    }
+
+                    .ProductionSheet .layui-form .layui-anim.layui-anim-upbit {
+                        position: initial;
+                    }
+
+
+                    .ProductionSheet .layui-form-select dl dd, .ProductionSheet .layui-form-select dl dt {
+                        line-height: 23px;
+                    }
+
+                    .ProductionSheet .titletd td {
+                        height: 70px;
+                        background-color: #008375;
+                        color: white;
+                        padding-left: 5px;
+                        font-size: 21px;
+                        font-weight: 500;
+                    }
+
+                    .ProductionSheet .blanktd {
+                        height: 7px;
+                    }
+
+                    .ProductionSheet .titlebasetd {
+                        height: 24px;
+                    }
+
+                    .ProductionSheet .basebrodertd {
+                        height: 23px;
+                    }
+
+                        .ProductionSheet .basebrodertd td {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding-left: 5px;
+                        }
+
+                            .ProductionSheet .basebrodertd td.gray {
+                                background-color: #D9D9D9;
+                                text-align: left;
+                                padding-left: 3px;
+                            }
+
+                            .ProductionSheet .basebrodertd td.grayinfo {
+                                background-color: #D9D9D9;
+                                text-align: center;
+                            }
+            </style>
+            <table class="ProductionSheet" cellpadding="0" cellspacing="0">
+                <colgroup>
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                    <col style="width: 81px" />
+                </colgroup>
+                <tbody>
+                    <tr class="titletd">
+                        <td colspan="9">
+                            <label style="margin-top: 15px;display: block;float: left;font-size: 24px;font-weight: 600;">生产作业指导书</label>
+                            <img src="~/Base/images/图片1.png" style="height: 53px;float: right;margin-right: 10px;">
+                        </td>
+                    </tr>
+                    <tr class="blanktd" style="height:3px;">
+                        <td colspan="9"></td>
+                    </tr>
+                    <!--工单信息开始-->
+                    <tr class="basebrodertd">
+                        <td class="gray">
+                            订单编号
+                        </td>
+                        <td colspan="2">
+                            @Production.OrderNo
+                        </td>
+                        <td class="gray">
+                            下单日期
+                        </td>
+                        <td colspan="2">
+                            @(Production.OrderTime == null ? "" : Production.OrderTime.Value.ToString("yyyy-MM-dd"))
+                        </td>
+                        <td class="gray">
+                            交货日期
+                        </td>
+                        <td colspan="2">
+                            @(Production.deliveryTime == null ? "" : Production.deliveryTime.Value.ToString("yyyy-MM-dd"))
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td class="gray">
+                            销售员
+                        </td>
+                        <td colspan="2">
+                            <label>@Production.SalePerson</label>
+                        </td>
+                        <td class="gray">
+                            设计师
+                        </td>
+                        <td colspan="2">
+                            @if ((Production.DesignerStatus == "设计未处理" && ReturnText != 1) || (Production.DesignerStatus == "待客户确认" && ReturnText != 1) || (Production.DesignerStatus == "生产退回待处理" && Production.OrderStatus != "设计退回待处理") || (Production.DesignerStatus == "生产退回待处理" && ReturnText == 1 && Production.OrderStatus != "设计退回待处理"))
+                            {
+                                <label>@ViewBag.UserName</label>
+                            }
+                            else
+                            {
+                                <label>@Production.DesigerPerson</label>
+                            }
+                        </td>
+                        <td class="gray">
+                            客服
+                        </td>
+                        <td colspan="2">
+                            <label>@Production.KefuPerson</label>
+                        </td>
+                    </tr>
+                    <tr class="blanktd" style="height:3px;">
+                        <td colspan="9"></td>
+                    </tr>
+                    <tr style="min-height: 300px;">
+                        <td colspan="9" style="border: 1px solid black;">
+                            @if (DesignerImageList.Count >= 1)
+                            {
+                                <img src="@ViewBag.AdminUrl@DesignerImageList[0].Item3" style="width: 100%;min-height: 300px;" />
+                            }
+                            else
+                            {
+                                if (ImageList.Count >= 1)
+                                {
+                                    <img src="@ViewBag.AdminUrl@ImageList[0].Item3" style="width: 100%;min-height: 300px;" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr class="blanktd">
+                        <td></td>
+                    </tr>
+                    <!--工单信息结束-->
+                    <!--产品信息开始-->
+                    <tr class="basebrodertd">
+                        <td rowspan="5" class="grayinfo">
+                            产品信息
+                        </td>
+                        <td colspan="2" class="grayinfo">
+                            SKU#
+                        </td>
+                        <td colspan="6" class="grayinfo" style="text-align:left;padding-left:5px;">
+                            @Production.SKU
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            中文品名
+                        </td>
+                        <td colspan="6" class="grayinfo" style="text-align:left;padding-left:5px;">
+                            @Production.ChinaProductName
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            颜色
+                        </td>
+                        <td colspan="6" class="grayinfo" style="text-align:left;padding-left:5px;">
+                            @Production.Color
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            数量
+                        </td>
+                        <td colspan="6" class="grayinfo" style="text-align:left;padding-left:5px;">
+                            @Production.Amount
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            单位
+                        </td>
+                        <td colspan="6" class="grayinfo" style="text-align:left;padding-left:5px;">
+                            @Production.ChinaUnit
+                        </td>
+                    </tr>
+                    <!--产品信息结束-->
+                    <!--印刷信息开始-->
+                    <tr class="basebrodertd">
+                        <td rowspan="8">
+                            印刷信息
+                        </td>
+                        <td colspan="2" style="text-align:center;">
+                            印刷方案
+                        </td>
+                        <td colspan="6">
+                            @printInfo
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            印刷工艺
+                        </td>
+                        <td colspan="6">
+                            <div class="layui-form">
+                                @{
+                                    var disabled = "disabled";
+                                    if (Production.ProductionStatus == "待生产确认")
+                                    {
+                                        disabled = "";
+                                    }
+                                    var flag = true;
+                                }
+                                @foreach (var item in listInfo)
+                                {
+                                    var technology = listTechnology.Where(p => p.Id.ToString() == item[0]).FirstOrDefault();
+                                    if (technology != null)
+                                    {
+                                        if (flag)
+                                        {
+                                            flag = false;
+                                        }
+                                        else
+                                        {
+                                            @(",")
+                                        }
+                                        @technology.Name
+                                    }
+                                }
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            印刷参数
+                        </td>
+                        <td colspan="6" style="padding-left:0px;">
+                            <div class="layui-input-inline" style="width:100%">
+                                <input type="text" id="PrintParm" class="layui-input" @disabled value="@Production.PrintParm" style="height: 23px;line-height: 23px;padding-left: 3px;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            客户原始文件
+                        </td>
+                        <td colspan="6">
+                            @if (OrderInfo.UserDesign != null)
+                            {
+                                var DesignerZipList = OrderInfo.UserDesign.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                var count = 0;
+                                foreach (var item in DesignerZipList)
+                                {
+                                    count++;
+                                    <a href="@ViewBag.AdminUrl@item" download="@item.Split('/').LastOrDefault()" style="text-decoration: underline;color: blue;padding-right: 10px;">@item.Split('/').LastOrDefault()</a>
+                                    if (count % 2 == 0)
+                                    {
+                                        <br />
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Html.Raw("客户暂未上传logo");
+
+                            }
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            确认LOGO文件
+                        </td>
+                        <td colspan="6">
+                            @if (Production.DesignerZip != null)
+                            {
+                                var DesignerZipList = Production.DesignerZip.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                var count = 0;
+                                foreach (var item in DesignerZipList)
+                                {
+                                    count++;
+                                    <a href="@ViewBag.AdminUrl@item" download="@item.Split('/').LastOrDefault()" style="text-decoration: underline;color: blue;padding-right: 10px;">@item.Split('/').LastOrDefault()</a>
+                                    if (count % 2 == 0)
+                                    {
+                                        <br />
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            客户备注
+                        </td>
+                        <td colspan="6"></td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            设计师备注
+                        </td>
+                        <td colspan="6" style="padding-left:0px;">
+                            @{
+                                var InspectionContextdisabled = "disabled=\"disabled\"";
+                                if (Production.DesignerStatus == "设计未处理" || Production.DesignerStatus == "二次修改待确认" || Production.OrderStatus == "设计退回待处理")
+                                {
+                                    InspectionContextdisabled = "";
+                                }
+                            }
+                            <div class="layui-input-inline" style="width:100%">
+                                <input type="text" id="InspectionContext" class="layui-input" @InspectionContextdisabled value="@Production.InspectionContext" style="height: 23px;line-height: 23px;padding-left: 3px;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" style="text-align:center;">
+                            客服提示
+                        </td>
+                        <td colspan="6">
+                            @Production.ReturnContext
+                        </td>
+                    </tr>
+                    <!--印刷信息结束-->
+                    <!--客户信息开始-->
+                    <tr class="basebrodertd">
+                        <td rowspan="4" class="grayinfo">
+                            客户信息
+                        </td>
+                        <td colspan="2" class="grayinfo">
+                            客户名称
+                        </td>
+                        <td colspan="6" class="grayinfo" style="padding-left:5px;text-align:left;">
+                            @Production.BuyName
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            公司名称
+                        </td>
+                        <td colspan="6" class="grayinfo" style="padding-left:5px;text-align:left;">
+                            @Production.CompanyName
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            收货地址
+                        </td>
+                        <td colspan="6" class="grayinfo" style="padding-left:5px;text-align:left;">
+                            @Production.Address
+                        </td>
+                    </tr>
+                    <tr class="basebrodertd">
+                        <td colspan="2" class="grayinfo">
+                            联系电话
+                        </td>
+                        <td colspan="6" class="grayinfo" style="padding-left:5px;text-align:left;">
+                            @Production.userphone
+                        </td>
+                    </tr>
+                    <!--客户信息结束-->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="layui-form-item" style="margin:0px; background-color: white; margin-top:20px;min-width:730px;">
+            <div style="text-align:center;">
+                <div class="layui-inline">
+                    @if ((Production.DesignerStatus == "设计未处理" && ReturnText != 1) || (Production.DesignerStatus == "待客户确认" && ReturnText != 1) || (Production.DesignerStatus == "生产退回待处理" && Production.OrderStatus != "设计退回待处理") || (Production.DesignerStatus == "生产退回待处理" && ReturnText == 1 && Production.OrderStatus != "设计退回待处理")||(Production.DesignerStatus== "设计已完成"&& Production.ProductionStatus == "生产已完成"))
+                    {
+                        <button class="layui-btn" onclick="Preservation(@Production.Id)" id="Preservation" style="width:110px;">保存</button>
+                        <button class="layui-btn" onclick="UpdesignZip(@Production.Id)" style="background-color:#884898;">上传设计文件</button>
+                    }
+                    @if ((Production.ProductionStatus == "生产中" && OrderText == 1) || (Production.ProductionStatus == "生产已完成" && OrderText == 1))
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="SeeDeliver(@Production.Id)" id="SeeDeliver" style="width:110px;background-color:#7033cc;">查看领料单</button>
+                    }
+                    @if ((Production.ProductionStatus == "待生产" && OrderText == 1) || (Production.ProductionStatus == "生产中" && OrderText == 1) || (Production.ProductionStatus == "生产已完成" && OrderText == 1))
+                    {
+                        <button class="layui-btn" id="PlannedDistribution" onclick="PlannedDistribution(@Production.Id)" style="width:120px;">生产计划分配</button>
+                    }
+                    @if (Production.ProductionStatus == "待生产确认" && OrderText == 1)
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="ConfirmProduction(@Production.Id)" id="ConfirmProduction" style="width:120px;">确认准备生产</button>
+                        <button class="layui-btn layui-btn-danger" id="ReturnDesign" onclick="ReturnDesign(@Production.Id)" style="width:110px;">退回设计</button>
+                    }
+                    @if ((Production.DesignerStatus == "设计未处理" && ReturnText != 1) || Production.DesignerStatus == "生产退回待处理" && ReturnText != 1)
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="SubmissionOrder(@Production.Id)" id="SubmissionOrder" style="width:110px;">转客户确认</button>
+                    }
+                    else if (Production.ProductionStatus == "待生产" && OrderText == 1)
+                    {
+                        if (receive == null)
+                        {
+                            <button class="layui-btn layui-btn-normal" onclick="GenerateDeliver(@Production.Id)" id="GenerateDeliver" style="width:110px;">生成领料单</button>
+                        }
+                        else
+                        {
+                            <button class="layui-btn layui-btn-normal" onclick="SeeDeliver(@Production.Id,123)" id="SeeDeliver" style="width:110px;background-color:#7033cc;">查看领料单</button>
+                        }
+                        <button class="layui-btn" onclick="StartProduction(@Production.Id)" id="StartProduction" style="width:110px; background-color:#df61a0;">开始生产</button>
+                    }
+                    else if (Production.ProductionStatus == "生产中" && OrderText == 1)
+                    {
+                        <button class="layui-btn" onclick="ProductionEnd(@Production.Id)" id="ProductionEnd" style="width:110px; background-color:#dd619f">结束生产</button>
+
+                    }
+                    else if (Production.OrderStatus == "生产完成待品检" && Text == 1)
+                    {
+                        <button class="layui-btn layui-btn-normal" id="ProductQualified" onclick="ProductQualified(@Production.Id)" style="width:110px;">合格</button>
+                        <button class="layui-btn layui-btn-danger" id="ProductNoQualified" onclick="ProductNoQualified(@Production.Id)" style="width:110px;">不合格</button>
+                    }
+                    @if ((Production.DesignerStatus == "生产退回待处理" && Production.ReturnCount == 1) || (Production.ProductionStatus == "待生产" && OrderText == 1) || (Production.DesignerStatus == "设计未处理" && ReturnText != 1) || (Production.ProductionStatus == "生产中" && OrderText == 1))
+                    {
+                        <button class="layui-btn layui-btn-danger" id="ReturnService" onclick="ReturnService(@Production.Id)" style="width:110px;">退回客服</button>
+                    }
+                    @if (ReturnText == 1 && Production.OrderStatus == "生产退回待处理")
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="AgainSubmission(@Production.Id)" id="AgainSubmission" style="width:145px;">处理完成再次提交</button>
+                        <button class="layui-btn layui-btn-danger" id="CancelOrder" onclick="CancelOrder(@Production.Id)" style="width:110px;">取消订单</button>
+                    }
+                    @if (ReturnText == 1 && Production.OrderStatus == "设计退回待处理")
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="AgainSubmission(@Production.Id)" id="AgainSubmission" style="width:145px;">处理完成再次提交</button>
+                        <button class="layui-btn layui-btn-danger" id="CancelOrder" onclick="CancelOrder(@Production.Id)" style="width:110px;">取消订单</button>
+                    }
+                    @if (Production.OrderStatus == "品检合格待发货" && Consignment == 1)
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="ConsignmentInfo(@Production.Id)" id="ConsignmentInfo" style="width:130px;">立即发货</button>
+                    }
+                    @if (Production.OrderStatus == "成品已发货" && Consignment == 1)
+                    {
+                        <button class="layui-btn layui-btn-normal" onclick="PrintExpress()" id="PrintExpress" style="width:130px;">打印快递单</button>
+                    }
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-normal"  onclick="PrintBtnInfo()" id="CloseBtn" style="width:90px;">打印</button>
+                    <button class="layui-btn layui-btn-warm" onclick="CloseBtn()" id="CloseBtn" style="width:90px;">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--定制参数-->
+
+    <script>
+        //#region 日期选择
+        $(function () {
+            //日期
+            layui.use(['form', 'layedit', 'laydate'], function () {
+                var form = layui.form(),
+                    layer = layui.layer,
+                    layedit = layui.layedit,
+                    laydate = layui.laydate;
+            });
+            //日期
+            $("#Time1 input").click(function () {
+                layui.laydate({
+                    elem: this,
+                    choose: function (datas) {
+                    }
+                })
+            })
+        })
+        //定制参数
+        $('#BtnShow').click(function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 1,
+                offset: ['250px', '15%'],
+                area: ['1000px', '242px'],
+                shadeClose: false,
+                shade: false,
+                content: $('#DivShow')
+            });
+        })
+
+                                                                                                                                                                                                                                                                                                                                                                          //#endregion
+    </script>
+</body>
+</html>

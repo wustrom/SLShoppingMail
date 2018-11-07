@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "UserLike";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var List_UserLike = (List<SLSM.Web.Models.Response.Order.LikeCommodityResponse>)ViewBag.LikeList;
+}
+@section UserLike{
+    class="current"
+}
+@section bannner{
+    <img src="~/Base/images/po.png" /> &nbsp; >&nbsp;  <a href="../../UserInfo/Index">我的</a>&nbsp; >&nbsp; <a href="../../UserInfo/UserLike">我的收藏</a>
+}
+@section name
+{
+    我的收藏
+}
+<script src="~/Current/script/UserInfo/UserLike.js"></script>
+<div class="hiddenDiv">
+    <input type="hidden" id="hiddPageCount" value="@ViewBag.PageCount" />
+</div>
+<div class="somecontet">
+    <div class="sclist">
+        <ul></ul>
+    </div>
+</div>
+
+<div class="propj">
+    <div class="pagesize1">
+        <ul></ul>
+    </div>
+</div>
+
+

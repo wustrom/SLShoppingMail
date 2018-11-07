@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewBag.Title = "InvoiceInfo";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var List_Invoice = (List<DbOpertion.Models.Invoice>)ViewBag.InvoiceList;
+}
+@section InvoiceInfo{
+    class="current"
+}
+@section bannner{
+    <img src="~/Base/images/po.png" /> &nbsp; > &nbsp; <a href="../../UserInfo/Index">我的</a>&nbsp; >&nbsp; <a href="../../UserInfo/InvoiceInfo">发票管理</a>
+}
+@section name
+{
+    发票管理
+}
+<div>
+    <input type="hidden" id="hiddPageCount" value="@List_Invoice.Count" />
+</div>
+<script src="~/Current/script/UserInfo/InvoiceInfo.js"></script>
+<style>
+    .myinforbox .mycontent .somecontet .lacagl .list li .rightbox .bt {
+        padding-bottom: 55px;
+    }
+</style>
+<link href="~/Current/css/UserInfo/Address.css" rel="stylesheet" />
+<div class="somecontet">
+    <div class="lacagl">
+        <div class="title">
+            <div class="s1">
+                发票管理
+            </div>
+            <div class="s2">
+                <a href="javascipt:;" class="a1" id="addInvoice">+新增发票</a>
+            </div>
+        </div>
+        <div class="list">
+            <ul>
+                @foreach (var item in List_Invoice)
+                {
+                    <li>
+                        <div class="left">
+                            <input type="hidden" class="words Id" value="@item.Id" />
+                            <input type="hidden" class="words UserId" value="@item.UserId" />
+                            <input type="hidden" class="words MobliePhone" value="@item.MobliePhone" />
+                            <input type="hidden" class="words OpeningBank" value="@item.OpeningBank" />
+                            <input type="hidden" class="words BankAccount" value="@item.BankAccount" />
+                            <input type="hidden" class="words Address" value="@item.Address" />
+                            <p class="Title">
+                                抬头：<span>@item.Title</span>
+                            </p>
+                            <p class="DutyParagraph">
+                                税号：<span>@item.DutyParagraph</span>
+                            </p>
+                            <p>
+                                类型：<label class="TypeInvoice">@item.TypeInvoice</label>
+                            </p>
+
+                        </div>
+                        <div class="rightbox">
+                            <div class="bt">
+                                @if (item == List_Invoice[0])
+                                {
+                                    <span>
+                                        默认发票
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="display:none;">
+                                        默认发票
+                                    </span>
+                                }
+                            </div>
+                            <div class="link">
+                                <a href="javascript:;" onclick="Deleteaddr('@item.Id',this)">删除</a>
+                                <a href="javascript:;" onclick="UpdateAddr('@item.Id',this)" id="UpAddr">修改</a>
+                                @if (item == List_Invoice[0])
+                                {
+                                    <a href="javascript:;" onclick="Default('@item.Id',this)" style="display:none;">设为默认</a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:;" onclick="Default('@item.Id',this)">设为默认</a>
+                                }
+                            </div>
+                        </div>
+                    </li>
+
+                }
+            </ul>
+        </div>
+        <div style="clear:both;" />
+        <!-- 修改发票信息 -->
+        <div class="addaddress Invoice">
+            <div class="zb"></div>
+            <div class="mainbox">
+                <h2 class="h2tit">
+                    <div class="s1">
+                        新增发票
+                    </div>
+                    <i onclick="$('.addaddress.Invoice').hide()"></i>
+                </h2>
+                <div class="model">
+                    <div class="s1">
+                        抬头：
+                    </div>
+                    <div class="s2">
+                        <input type="text" class="words Title" />
+                    </div>
+                </div>
+                <div class="model">
+                    <div class="s1">
+                        税号：
+                    </div>
+                    <div class="s2">
+                        <input type="text" class="words DutyParagraph" />
+                    </div>
+                </div>
+                <div class="model FourNum">
+                    <div class="s1">
+                        发票类型：
+                    </div>
+                    <div class="s2 radio">
+                        <input type="radio" name="TypeInvoice" id="GeneralInvoice" value="普通发票" checked="checked">
+                        <label for="GeneralInvoice">普通发票</label>
+                        <input type="radio" name="TypeInvoice" id="ElectronicInvoice" value="电子发票" />
+                        <label for="ElectronicInvoice">电子发票</label>
+                        <input type="radio" name="TypeInvoice" id="SpecialInvoice" value="专用发票" />
+                        <label for="SpecialInvoice">专用发票</label>
+                    </div>
+                </div>
+                <div class="model">
+                    <div class="s1">
+                        电话：
+                    </div>
+                    <div class="s2">
+                        <input type="text" class="words MobiePhone" disabled="disabled" />
+                    </div>
+                </div>
+                <div class="model ThreeNum">
+                    <div class="s1">
+                        开户行：
+                    </div>
+                    <div class="s2">
+                        <input type="text" class="words OpeningBank" disabled="disabled" />
+                    </div>
+                </div>
+                <div class="model FourNum">
+                    <div class="s1">
+                        银行账号：
+                    </div>
+                    <div class="s2">
+                        <input type="text" class="words BankAccount" disabled="disabled" />
+                    </div>
+                </div>
+
+                <div class="model">
+                    <div class="s1">
+                        地址：
+                    </div>
+                    <div class="s2">
+                        <select name="province" id="province" autocomplete="off" disabled="disabled">
+                            <option selected="selected" value="-1">请选择省</option>
+                        </select>
+                        <span class="t">-</span>
+                        <select name="city" id="city" autocomplete="off" disabled="disabled">
+                            <option selected="selected" value="-1">请选择市</option>
+                        </select>
+                        <span class="t">-</span>
+                        <select name="area" id="area" autocomplete="off" disabled="disabled">
+                            <option selected="selected" value="-1">请选择县/区</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="model">
+                    <div class="s1">
+
+                    </div>
+                    <div class="s2">
+                        <textarea name="" placeholder="请输入详细地址" id="" disabled="disabled"></textarea>
+                        <input type="hidden" id="hiddenInvoiceId" />
+                    </div>
+                </div>
+                <div class="h13"></div>
+                <input type="submit" class="keep" value="保存" />
+            </div>
+        </div>
+        <!-- 修改发票信息 -->
+    </div>
+</div>
+
+
+

@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "Evaluate";
+    Layout = "~/Views/Shared/_UserLayout2.cshtml";
+
+    SLSM.Web.Models.Response.Order.OrderInfoResponse order = ViewBag.Order;
+    var List_OrderDetail = (SLSM.Web.Models.Response.Order.OrderInfoResponse)ViewBag.OrderDetail;
+
+}
+@section bannner{
+    &nbsp; >&nbsp;  <a href="../../UserInfo/Index">我的</a>&nbsp; >&nbsp; <a href="../../UserInfo/MyOrderList">我的订单</a>&nbsp; >&nbsp; <a href="../../UserInfo/Evaluate">商品评价</a>
+}
+
+<script src="~/Current/script/UserInfo/Evaluate.js"></script>
+<div class="ricont">
+    <div class="ztitem">
+        <div class="s1">
+            订单编号：@order.OrderNo &nbsp; &nbsp; &nbsp;      @order.OrderTime
+        </div>
+        <input type="hidden" id="userId" value="@order.UserId" />
+        <input type="hidden" id="Id" value="@order.Id" />
+    </div>
+    <div class="chat">
+        @foreach (var item in List_OrderDetail.ListDetail)
+        {
+            <div class="model">
+                <div class="imgbox">
+                    <a href="#">
+                        <img src="../../@item.FrontImage" alt="" />
+                    </a>
+                </div>
+                <div class="content">
+                    <h2 class="h2tit">
+                        <a href="#">@item.Name</a>
+                    </h2>
+                    <div class="type">
+                        @item.Color/属性a
+                    </div>
+                    <a href="#" class="pen">定制效果</a>
+                </div>
+                <div class="pf">
+                    <span class="word">评分：</span>
+                    <div class="df">
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="CommodityId" value="@item.CommodityId" />
+        }
+    </div>
+    <div class="chawords">
+        <div class="modelbx">
+            <div class="s1">点评：</div>
+            <div class="s2">
+                <textarea name="" id=""></textarea>
+            </div>
+        </div>
+        <div class="modelbx">
+            <div class="s1">晒图：</div>
+            <div class="s2">
+                <div>
+                    <ul class="upload-ul clearfix">
+                        <li class="upload-pick">
+                            <div class="webuploader-container clearfix" id="goodsUpload"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sendbx">
+        <input type="button" class="sub" onclick="Evaluate()" value="提交" />
+    </div>
+</div>
+
+@section AfterBody{
+    <script>
+        $('.df div').raty();
+        $(function () {
+            //上传图片
+            var $tgaUpload = $('#goodsUpload').diyUpload({
+                url: '/uploadFilePath',
+                success: function (data) { },
+                error: function (err) { },
+                buttonText: '',
+                accept: {
+                    title: "Images",
+                    extensions: 'gif,jpg,jpeg,bmp,png'
+                },
+                thumb: {
+                    width: 120,
+                    height: 90,
+                    quality: 100,
+                    allowMagnify: true,
+                    crop: true,
+                    type: "image/jpeg"
+                }
+            });
+            //评价星级样式
+            $('.df div').css({ "width": "150px", "height": "50px" });
+        });
+    </script>
+    <link href="~/Base/css/globle.css" rel="stylesheet" />
+}
+
