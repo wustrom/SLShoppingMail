@@ -355,7 +355,8 @@ namespace SLSM.Web.Controllers.PageController
                 SendMail.Instance.SendEmail(orderInfo.Phone, "{\"code\":\"" + orderInfo.OrderNo + "\",\"code2\":\"" + orderInfo.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
                 if (Order_InfoFunc.Instance.Update(orderInfo))
                 {
-                    return RedirectToAction("MyOrderList");
+                    this.TempData["OrderId"] = orderInfo.Id;
+                    return RedirectToAction("OrderPaySuccessPage", "PayPage");
                 }
             }
             return RedirectToAction("MyOrderList");

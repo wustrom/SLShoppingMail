@@ -79,7 +79,7 @@
                     if (obj.UserSure === false) {
                         html = html + '<input type="button" value="上传Logo" data-action="UpLogo" data-id="' + val + '" class="layui-btn layui-btn-mini" />';
                     }
-                    if (obj.DesignCommit !== true) {
+                    if (obj.DesignCommit === true) {
                         html = html + '<input type="button" value="产品效果图" data-action="SureDesign" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
                     if (obj.Status === '待收货') {

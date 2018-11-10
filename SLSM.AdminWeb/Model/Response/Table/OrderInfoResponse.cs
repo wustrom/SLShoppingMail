@@ -49,7 +49,7 @@ namespace SLSM.AdminWeb.Model.Response.Table
             //订单类型
             this.OrderType = order_Allinfo.OrderType == 1 ? "网页订单" : "手机订单";
             //用户名称
-            this.Name = order_Allinfo.Name == null ? (order_Allinfo.AdminName == null ? "" : order_Allinfo.AdminName) : "";
+            this.Name = order_Allinfo.Name == null ? (order_Allinfo.AdminName == null ? "" : order_Allinfo.AdminName) : order_Allinfo.Name;
             //购买人姓名
             this.BuyName = order_Allinfo.BuyName;
             //地址区域

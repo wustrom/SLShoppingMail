@@ -368,6 +368,7 @@
     <Content Include="Current\images\ExpressionImages\logo.png" />
     <Content Include="Current\images\Image\alipay.svg" />
     <Content Include="Current\images\Image\SYLOONPatent.png" />
+    <Content Include="Current\images\Image\TB10aO.KFXXXXcTXpXXXXXXXXXX-31-32.png" />
     <Content Include="Current\images\Image\wxPhone.svg" />
     <Content Include="Current\images\Image\wxpay.svg" />
     <Content Include="Current\images\Image\图片1.png" />
@@ -761,9 +762,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>57524</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/8053</IISUrl>
+          <IISUrl>http://localhost:8053</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

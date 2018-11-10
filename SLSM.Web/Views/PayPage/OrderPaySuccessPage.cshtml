@@ -1,12 +1,62 @@
-﻿
+﻿@using DbOpertion.Models;
 @{
     ViewBag.Title = "OrderPaySuccessPage";
     Layout = "~/Views/Shared/_Layout_Base.cshtml";
+    var orderinfo = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
 }
-<div style="width:1200px;margin:0px auto;">
-    <div>
-        12331321
+<div style="width:1200px;margin:40px auto;">
+    <div id="J_AmountList" class="take-delivery">
+        <h2>您已成功付款</h2>
+        <div class="summary-status summary-paydone">
+            <ul>
+                <li>
+                    实付款：
+                    <span>
+                        <em style="color:#b10000;font-weight: bolder;">￥@orderinfo.TotalPrice.Value.ToString("f2")</em>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="summary-status summary-paydone">
+            <ul>
+                <li>
+                    订单编号：
+                    <span>
+                        <em style="font-weight: bolder;">@orderinfo.OrderNo</em>
+                    </span>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
 
+    <div id="J_ButtonList">
+        <span class="info">您可以</span>
+        <a class="J_MakePoint" target="_blank" href="http://www.syloon.cn/UserInfo/MyOrderList" data-point-url="undefined">查看已买到的宝贝</a>
+        <a class="J_MakePoint" target="_blank" href="http://www.syloon.cn" data-point-url="undefined">继续购物</a>
+    </div>
+
+</div>
+<style>
+    #J_AmountList h2 {
+        height: 60px;
+        line-height: 60px;
+        padding: 0 0 0 76px;
+        background: url(../../Current/images/Image/TB10aO.KFXXXXcTXpXXXXXXXXXX-31-32.png) 30px 15px no-repeat #ecffdc;
+    }
+
+    #success-pay, .take-delivery .summary-status {
+        padding: 0 0 0 76px;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    #J_ButtonList {
+        margin: 13px 0 25px 76px;
+    }
+
+        #J_ButtonList a.J_MakePoint {
+            color: #008375;
+            margin: 0 5px;
+        }
+</style>
 
