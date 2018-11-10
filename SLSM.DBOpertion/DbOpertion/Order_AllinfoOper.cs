@@ -122,6 +122,14 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.UserDesign == model.UserDesign);
                 }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    query.Where(p => p.AdminName == model.AdminName);
+                }
                 if (!model.Name.IsNullOrEmpty())
                 {
                     query.Where(p => p.Name == model.Name);
@@ -233,6 +241,14 @@ namespace DbOpertion.Operation
                 if (SelectFiled.Contains("userdesign,"))
                 {
                     query.Select(p => new { p.UserDesign });
+                }
+                if (SelectFiled.Contains("isadmin,"))
+                {
+                    query.Select(p => new { p.IsAdmin });
+                }
+                if (SelectFiled.Contains("adminname,"))
+                {
+                    query.Select(p => new { p.AdminName });
                 }
                 if (SelectFiled.Contains("name,"))
                 {
@@ -357,6 +373,14 @@ namespace DbOpertion.Operation
                 if (!model.UserDesign.IsNullOrEmpty())
                 {
                     query.Where(p => p.UserDesign == model.UserDesign);
+                }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    query.Where(p => p.AdminName == model.AdminName);
                 }
                 if (!model.Name.IsNullOrEmpty())
                 {
@@ -495,6 +519,14 @@ namespace DbOpertion.Operation
             {
                 query.Where(p => p.UserDesign.In(KeyIds));
             }
+            if("isadmin" == Key.ToLowerInvariant())
+            {
+                query.Where(p => p.IsAdmin.In(KeyIds));
+            }
+            if("adminname" == Key.ToLowerInvariant())
+            {
+                query.Where(p => p.AdminName.In(KeyIds));
+            }
             if("name" == Key.ToLowerInvariant())
             {
                 query.Where(p => p.Name.In(KeyIds));
@@ -622,6 +654,14 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.UserDesign == model.UserDesign);
                 }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    query.Where(p => p.AdminName == model.AdminName);
+                }
                 if (!model.Name.IsNullOrEmpty())
                 {
                     query.Where(p => p.Name == model.Name);
@@ -733,6 +773,14 @@ namespace DbOpertion.Operation
                 if (SelectFiled.Contains("userdesign,"))
                 {
                     query.Select(p => new { p.UserDesign });
+                }
+                if (SelectFiled.Contains("isadmin,"))
+                {
+                    query.Select(p => new { p.IsAdmin });
+                }
+                if (SelectFiled.Contains("adminname,"))
+                {
+                    query.Select(p => new { p.AdminName });
                 }
                 if (SelectFiled.Contains("name,"))
                 {

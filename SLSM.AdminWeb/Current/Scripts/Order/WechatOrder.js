@@ -42,7 +42,7 @@
                 field: 'PayType',
                 width: '60px',
                 format: function (val, obj) {
-                    if (obj.Status == '待付款') {
+                    if (obj.Status === '待付款') {
                         html = "-";
                     }
                     else {
@@ -80,29 +80,29 @@
                 field: 'id',
                 format: function (val, obj) {
                     var html = '<input type="button" value="查看订单" data-action="edit" data-id="' + val + '" class="layui-btn layui-btn-mini" /> ';
-                    if (obj.Status == '待付款') {
+                    if (obj.Status === '待付款') {
                         html = html + '<input type="button" value="修改价格" data-action="ChangePrice" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    if ((obj.Status == '待付款' || obj.Status == '未发货') && obj.ToErp != true) {
+                    if ((obj.Status === '待付款' || obj.Status === '未发货') && obj.ToErp !== true) {
                         html = html + '<input type="button" value="转到Erp" data-action="ConvertErp" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    if (obj.Status == '待付款' && obj.PayType == '线下支付') {
+                    if (obj.Status === '待付款' && obj.PayType === '线下支付') {
                         html = html + '<input type="button" value="确认支付" data-action="SurePay" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    else if (obj.Status == '未发货') {
+                    else if (obj.Status === '未发货') {
                         html = html + '<input type="button" value="确认发货" data-action="SendThing" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    else if (obj.Status == '待收货' && obj.ToErp != true) {
+                    else if (obj.Status === '待收货' && obj.ToErp !== true) {
                         html = html + '<input type="button" value="快递信息" data-action="ExPresss" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    else if (obj.Status == '退货中') {
+                    else if (obj.Status === '退货中') {
                         html = html + '<input type="button" value="退货成功" data-action="ReturnSuccess" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                         html = html + '<input type="button" value="退货失败" data-action="ReturnFail" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    else if (obj.Status == '评价成功' && obj.ToErp != true) {
+                    else if (obj.Status === '评价成功' && obj.ToErp !== true) {
                         html = html + '<input type="button" value="快递信息" data-action="ExPresss" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
-                    else if (obj.Status == '待评价' && obj.ToErp != true) {
+                    else if (obj.Status === '待评价' && obj.ToErp !== true) {
                         html = html + '<input type="button" value="快递信息" data-action="ExPresss" data-id="' + val + '" class="layui-btn layui-btn-mini layui-btn-normal" />';
                     }
                     return html;
@@ -190,9 +190,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -230,9 +230,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -301,8 +301,8 @@
                                                     dataType: "json",
                                                     contentType: "application/json; charset=utf-8",
                                                     success: function (data) {
-                                                        if (data.HttpCode != 200) {
-                                                            if (data.Message == null || data.Message == "") {
+                                                        if (data.HttpCode !== 200) {
+                                                            if (data.Message === null || data.Message === "") {
                                                                 layer.msg("程序出现问题！");
                                                             }
                                                             else {
@@ -350,9 +350,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -390,9 +390,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -430,9 +430,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -470,9 +470,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -502,7 +502,6 @@
                                     placeholder: '改变价格',
                                     title: '请输入值',
                                 }, function (value, index, elem) {
-                                    debugger;
                                     if (value === "") {
                                         layer.msg("请填写改变价格的原因")
                                         return;
@@ -524,9 +523,9 @@
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
 
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {

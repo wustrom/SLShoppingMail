@@ -1,10 +1,14 @@
 ﻿using Common.Extend;
 using Common.Filter.WebApi;
+using Common.Helper;
 using Common.Result;
 using DbOpertion.Function;
+using DbOpertion.Models;
 using SLSM.AdminWeb.Common.BaseController;
+using SLSM.AdminWeb.Model.Request.Commdity;
 using SLSM.AdminWeb.Model.Request.Order;
 using SLSM.DBOpertion.Function;
+using SLSM.Web.Models.Resquest.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -185,7 +189,6 @@ namespace SLSM.AdminWeb.Controllers.AjaxController
             }
         }
 
-
         /// <summary>
         /// 取消订单
         /// </summary>
@@ -195,6 +198,87 @@ namespace SLSM.AdminWeb.Controllers.AjaxController
         {
             OrderFunc.Instance.CancelTodayOrder();
         }
+
+        #region 后台下单
+        /// <summary>
+        /// 后台下单
+        /// </summary>
+        /// <returns></returns>
+        public ResultJson AdminBackOrder(AdminBackOrderRequest request)
+        {
+            var userGuid = CookieOper.Instance.GetUserGuid();
+            var user = MemCacheHelper2.Instance.Cache.GetModel<DbOpertion.Models.Erploginuer>("AdminUserGuID_" + userGuid);
+            if (OrderFunc.Instance.CreateAdminOrder(request.OrderType, $"{request.CommArea} {request.CommDetailArea}", request.CommName, request.CommPhone, (request.InvoiceInfo == 2 ? $"{request.InvoicesRaised},{request.EnterpriseTaxNumber}" : null), request.CommID, request.CommPrint, request.CommNum, request.CommColor, user.erpLoginName))
+            {
+                return new ResultJson { HttpCode = 200, Message = "下单成功" };
+            }
+            else
+            {
+                return new ResultJson { HttpCode = 300, Message = "下单失败" };
+            }
+
+        }
+
+        /// <summary>
+        /// 用户确认
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ResultJson SureOrdersubmit(IdRequest request)
+        {
+            var detail = Order_DetailFunc.Instance.SelectByModel(new Order_Detail { OrderId = request.Id }).FirstOrDefault();
+            if (detail != null)
+            {
+                var production = ProductionFunc.Instance.SelectByModel(new DbOpertion.Models.Production { order_detailId = detail.Id }).FirstOrDefault();
+                if (production == null)
+                {
+                    return new ResultJson { HttpCode = 300, Message = "并无对应订单" };
+                }
+                if (Order_DetailFunc.Instance.Update(detail))
+                {
+                    detail.UserSure = true;
+                    production.ProductionStatus = "待生产确认";
+                    production.DesignerStatus = "设计已完成";
+                    if (ProductionFunc.Instance.Update(production))
+                    {
+                        return new ResultJson { HttpCode = 200, Message = "提交成功" };
+                    }
+                    else
+                    {
+                        detail.UserSure = false;
+                        Order_DetailFunc.Instance.Update(detail);
+                        return new ResultJson { HttpCode = 300, Message = "更新订单失败，请再次尝试" };
+                    }
+                }
+                else
+                {
+                    return new ResultJson { HttpCode = 300, Message = "更新订单失败，请再次尝试" };
+                }
+            }
+            else
+            {
+                return new ResultJson { HttpCode = 200, Message = "订单明细不存在成功" };
+            }
+        }
+
+
+        /// <summary>
+        /// 确定上传订单详情
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ResultJson SureUploadOrder(OrderDesignRequest request)
+        {
+            if (Order_InfoFunc.Instance.Update(new Order_Info { Id = request.OrderId, UserDesign = request.DesignImage }))
+            {
+                return new ResultJson { HttpCode = 200, Message = "订单更新成功！" };
+            }
+            else
+            {
+                return new ResultJson { HttpCode = 300, Message = "订单更新失败！" };
+            }
+        }
+        #endregion
 
     }
 }

@@ -14,6 +14,7 @@ using Common.ThirdParty.AliPay;
 using Common.ThirdParty;
 using DbOpertion.Function;
 using SLSM.MoblieWeb.Controllers.AjaxController;
+using AliyunHelper.SendMail;
 
 namespace SLSM.Web.Controllers.PageController
 {
@@ -150,9 +151,16 @@ namespace SLSM.Web.Controllers.PageController
         {
             if (request.app_id == AlipayHelper.Instance.app_id)
             {
-                if (OrderFunc.Instance.OrderSurePay(request.out_trade_no))
+                var OrderInfo = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = request.out_trade_no }).FirstOrDefault();
+                if (OrderInfo.Status != 1)
                 {
                     return RedirectToAction("MyOrderList");
+                }
+                SendMail.Instance.SendEmail(OrderInfo.Phone, "{\"code\":\"" + OrderInfo.OrderNo + "\",\"code2\":\"" + OrderInfo.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
+                if (OrderFunc.Instance.OrderSurePay(request.out_trade_no))
+                {
+                    this.TempData["OrderId"] = OrderInfo.Id;
+                    return RedirectToAction("OrderPaySuccessPage", "PayPage");
                 }
             }
             return RedirectToAction("MyOrderList");

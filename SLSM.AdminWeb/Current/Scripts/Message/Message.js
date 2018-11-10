@@ -103,8 +103,8 @@ layui.config({
                                                     dataType: "json",
                                                     contentType: "application/json; charset=utf-8",
                                                     success: function (data) {
-                                                        if (data.HttpCode != 200) {
-                                                            if (data.Message == null || data.Message == "") {
+                                                        if (data.HttpCode !== 200) {
+                                                            if (data.Message === null || data.Message === "") {
                                                                 layer.msg("程序出现问题！");
                                                             }
                                                             else {
@@ -151,9 +151,9 @@ layui.config({
                                         contentType: "application/json; charset=utf-8",
                                         success: function (data) {
                                             
-                                            if (data.HttpCode != 200) {
+                                            if (data.HttpCode !== 200) {
 
-                                                if (data.Message == null || data.Message == "") {
+                                                if (data.Message === null || data.Message === "") {
                                                     layer.msg("程序出现问题！");
                                                 }
                                                 else {
@@ -251,8 +251,8 @@ layui.config({
                             dataType: "json",
                             contentType: "application/json; charset=utf-8",
                             success: function (data) {
-                                if (data.HttpCode != 200) {
-                                    if (data.Message == null || data.Message == "") {
+                                if (data.HttpCode !== 200) {
+                                    if (data.Message === null || data.Message === "") {
                                         layer.msg("程序出现问题！");
                                     }
                                     else {

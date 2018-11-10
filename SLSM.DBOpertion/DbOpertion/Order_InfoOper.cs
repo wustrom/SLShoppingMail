@@ -136,6 +136,14 @@ namespace DbOpertion.Operation
                 {
                     delete.Where(p => p.UserDesign == model.UserDesign);
                 }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    delete.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    delete.Where(p => p.AdminName == model.AdminName);
+                }
             }
             return delete.GetDeleteResult(connection, transaction);
         }
@@ -246,6 +254,14 @@ namespace DbOpertion.Operation
             {
                 update.Set(p => p.UserDesign == model.UserDesign);
             }
+            if (!model.IsAdmin.IsNullOrEmpty())
+            {
+                update.Set(p => p.IsAdmin == model.IsAdmin);
+            }
+            if (!model.AdminName.IsNullOrEmpty())
+            {
+                update.Set(p => p.AdminName == model.AdminName);
+            }
             return update.GetUpdateResult(connection, transaction);
         }
 
@@ -351,6 +367,14 @@ namespace DbOpertion.Operation
             {
                 insert.Insert(p => p.UserDesign == model.UserDesign);
             }
+            if (!model.IsAdmin.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.IsAdmin == model.IsAdmin);
+            }
+            if (!model.AdminName.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.AdminName == model.AdminName);
+            }
             return insert.GetInsertResult(connection, transaction) >= 0;
         }
 
@@ -455,6 +479,14 @@ namespace DbOpertion.Operation
             if (!model.UserDesign.IsNullOrEmpty())
             {
                 insert.Insert(p => p.UserDesign == model.UserDesign);
+            }
+            if (!model.IsAdmin.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.IsAdmin == model.IsAdmin);
+            }
+            if (!model.AdminName.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.AdminName == model.AdminName);
             }
             return insert.GetInsertResult(connection, transaction);
         }
@@ -567,6 +599,14 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.UserDesign == model.UserDesign);
                 }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    query.Where(p => p.AdminName == model.AdminName);
+                }
             }
             if (SelectFiled != null)
             {
@@ -666,6 +706,14 @@ namespace DbOpertion.Operation
                 if (SelectFiled.Contains("userdesign,"))
                 {
                     query.Select(p => new { p.UserDesign });
+                }
+                if (SelectFiled.Contains("isadmin,"))
+                {
+                    query.Select(p => new { p.IsAdmin });
+                }
+                if (SelectFiled.Contains("adminname,"))
+                {
+                    query.Select(p => new { p.AdminName });
                 }
             }
             return query.GetQueryList(connection, transaction);
@@ -778,6 +826,14 @@ namespace DbOpertion.Operation
                 if (!model.UserDesign.IsNullOrEmpty())
                 {
                     query.Where(p => p.UserDesign == model.UserDesign);
+                }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    query.Where(p => p.AdminName == model.AdminName);
                 }
             }
             return query.GetQueryCount(connection, transaction);
@@ -904,6 +960,14 @@ namespace DbOpertion.Operation
             {
                 query.Where(p => p.UserDesign.In(KeyIds));
             }
+            if("isadmin" == Key.ToLowerInvariant())
+            {
+                query.Where(p => p.IsAdmin.In(KeyIds));
+            }
+            if("adminname" == Key.ToLowerInvariant())
+            {
+                query.Where(p => p.AdminName.In(KeyIds));
+            }
             return query.GetQueryList(connection, transaction);
         }
 
@@ -1019,6 +1083,14 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.UserDesign == model.UserDesign);
                 }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
+                if (!model.AdminName.IsNullOrEmpty())
+                {
+                    query.Where(p => p.AdminName == model.AdminName);
+                }
             }
             if (SelectFiled != null)
             {
@@ -1118,6 +1190,14 @@ namespace DbOpertion.Operation
                 if (SelectFiled.Contains("userdesign,"))
                 {
                     query.Select(p => new { p.UserDesign });
+                }
+                if (SelectFiled.Contains("isadmin,"))
+                {
+                    query.Select(p => new { p.IsAdmin });
+                }
+                if (SelectFiled.Contains("adminname,"))
+                {
+                    query.Select(p => new { p.AdminName });
                 }
             }
             if (Key != null)

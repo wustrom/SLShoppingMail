@@ -71,17 +71,28 @@ var navs = [
                 "title": "手机订单列表",
                 "icon": "&#xe60a;",
                 "href": "../../Order/WechatOrder"
-                //},
-                //{
-                //    "title": "订单进度设置",
-                //    "icon": "&#xe620;",
-                //    "href": "button.html"
-                //},
-                //{
-                //    "title": "订单礼品管理",
-                //    "icon": "fa-gift",
-                //    "href": "button.html"
-            }
+            },
+            {
+                "title": "后台下单",
+                "icon": "&#xe60a;",
+                "href": "../../Order/BackstageOrder"
+            },
+            {
+                "title": "后台订单列表",
+                "icon": "&#xe60a;",
+                "href": "../../Order/BackstageOrderList"
+            },
+            //},
+            //{
+            //    "title": "订单进度设置",
+            //    "icon": "&#xe620;",
+            //    "href": "button.html"
+            //},
+            //{
+            //    "title": "订单礼品管理",
+            //    "icon": "fa-gift",
+            //    "href": "button.html"
+            //}
         ]
     }, {
         "title": "客服系统",
@@ -99,44 +110,44 @@ var navs = [
                 "href": "../../Service/ServiceInfo"
             }
         ]
-    //}, {
-    //    "title": "评价系统",
-    //    "icon": "fa-comments-o",
-    //    "spread": false,
-    //    "children": [
-    //        {
-    //            "title": "回复评价",
-    //            "icon": "fa-comment-o",
-    //            "href": "../../evaluate/Index"
-    //        }
-    //    ]
-    //}, {
-    //    "title": "消息管理",
-    //    "icon": " fa-comments",
-    //    "spread": false,
-    //    "children": [
-    //        {
-    //            "title": "消息管理",
-    //            "icon": "fa-comment",
-    //            "href": "../../message/Index"
-    //        },
-    //        {
-    //            "title": "新闻管理",
-    //            "icon": "fa-comment",
-    //            "href": "../../News/Index"
-    //        }
-    //    ]
-    //}, {
-    //    "title": "平台信息",
-    //    "icon": "fa-calculator",
-    //    "spread": false,
-    //    "children": [
-    //        {
-    //            "title": "平台链接",
-    //            "icon": "&#xe60a;",
-    //            "href": "../../Platform/Index"
-    //        }
-    //    ]
+        //}, {
+        //    "title": "评价系统",
+        //    "icon": "fa-comments-o",
+        //    "spread": false,
+        //    "children": [
+        //        {
+        //            "title": "回复评价",
+        //            "icon": "fa-comment-o",
+        //            "href": "../../evaluate/Index"
+        //        }
+        //    ]
+        //}, {
+        //    "title": "消息管理",
+        //    "icon": " fa-comments",
+        //    "spread": false,
+        //    "children": [
+        //        {
+        //            "title": "消息管理",
+        //            "icon": "fa-comment",
+        //            "href": "../../message/Index"
+        //        },
+        //        {
+        //            "title": "新闻管理",
+        //            "icon": "fa-comment",
+        //            "href": "../../News/Index"
+        //        }
+        //    ]
+        //}, {
+        //    "title": "平台信息",
+        //    "icon": "fa-calculator",
+        //    "spread": false,
+        //    "children": [
+        //        {
+        //            "title": "平台链接",
+        //            "icon": "&#xe60a;",
+        //            "href": "../../Platform/Index"
+        //        }
+        //    ]
     }, {
         "title": "平台概览统计",
         "icon": "fa-calculator",

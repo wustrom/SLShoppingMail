@@ -21,7 +21,7 @@ namespace AliyunHelper.SendMail
         /// <param name="PhoneNumbers">电话号码</param>
         /// <param name="code">验证码</param>
         /// <returns></returns>
-        public SendSmsResponse SendEmail(string PhoneNumbers, string code, Enum_SendEmailCode sendEmail)
+        public SendSmsResponse SendEmail(string PhoneNumbers, string codeString, Enum_SendEmailCode sendEmail)
         {
             String product = "Dysmsapi";//短信API产品名称
             String domain = "dysmsapi.aliyuncs.com";//短信API产品域名
@@ -40,7 +40,7 @@ namespace AliyunHelper.SendMail
                 //必填:短信模板-可在短信控制台中找到
                 request.TemplateCode = sendEmail.Enum_GetString();
                 //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
-                request.TemplateParam = new UserRegistrationVerification(code).GetString();
+                request.TemplateParam = codeString;
                 //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
                 request.OutId = "21212121211";
                 //请求失败这里会抛ClientException异常
@@ -83,7 +83,7 @@ namespace AliyunHelper.SendMail
                 //必填:短信签名-可在短信控制台中找到
                 request.SignName = AliyunVariable.AliyunSignName;
                 //必填:短信模板-可在短信控制台中找到
-                request.TemplateCode = Enum_SendEmailCode.UserRegistrationVerificationCode.Enum_GetString();
+                request.TemplateCode = Enum_SendEmailCode.AuthenticationCode.Enum_GetString();
                 //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
                 request.TemplateParam = new ModifyPasswordAuthentication(code).GetString();
                 //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者

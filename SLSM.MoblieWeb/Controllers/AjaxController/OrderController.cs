@@ -1,4 +1,5 @@
-﻿using Common.Extend;
+﻿using AliyunHelper.SendMail;
+using Common.Extend;
 using Common.Filter.WebApi;
 using Common.Helper;
 using Common.Result;
@@ -216,9 +217,13 @@ namespace SLSM.MoblieWeb.Controllers.AjaxController
             var result = OrderQuery.Instance.Run(null, request.OrderNo);
             var trade_state_desc = result.GetValue("trade_state_desc") == null ? null : result.GetValue("trade_state_desc").ToString();
             var order = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = request.OrderNo }).FirstOrDefault();
-
+            if (order.Status != 1)
+            {
+                return new ResultJson { HttpCode = 300, Message = "此订单并非微信订单！" };
+            }
             if (trade_state_desc == "支付成功")
             {
+                SendMail.Instance.SendEmail(order.Phone, "{\"code\":\"" + order.OrderNo + "\",\"code2\":\"" + order.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
                 if (OrderFunc.Instance.UpdateModel(new Order_Info { Id = order.Id, Status = 3, PayType = 3 }))
                 {
                     return new ResultJson { HttpCode = 200, Message = "该订单支付成功！" };
@@ -245,23 +250,13 @@ namespace SLSM.MoblieWeb.Controllers.AjaxController
         [HttpPost]
         public ResultJson SureWeiChatOrder(PayOrderRequest request)
         {
-            //创建日志记录组件实例
-            ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            //记录错误日志
-            log.Error($"OrderNo:{request.OrderNo}");
             var order = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = request.OrderNo }).FirstOrDefault();
-            //记录错误日志
-            log.Error($"2");
             if (OrderFunc.Instance.UpdateModel(new Order_Info { Id = order.Id, Status = 3, PayType = 3 }))
             {
-                //记录错误日志
-                log.Error($"3");
                 return new ResultJson { HttpCode = 200, Message = "该订单支付成功！" };
             }
             else
             {
-                //记录错误日志
-                log.Error($"4");
                 return new ResultJson { HttpCode = 300, Message = "该订单修改失败！" };
             }
 

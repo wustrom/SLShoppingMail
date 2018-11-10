@@ -49,7 +49,7 @@ namespace SLSM.AdminWeb.Model.Response.Table
             //订单类型
             this.OrderType = order_Allinfo.OrderType == 1 ? "网页订单" : "手机订单";
             //用户名称
-            this.Name = order_Allinfo.Name;
+            this.Name = order_Allinfo.Name == null ? (order_Allinfo.AdminName == null ? "" : order_Allinfo.AdminName) : "";
             //购买人姓名
             this.BuyName = order_Allinfo.BuyName;
             //地址区域
@@ -125,5 +125,13 @@ namespace SLSM.AdminWeb.Model.Response.Table
         /// 是否是Erp
         /// </summary>
         public bool ToErp { get; set; }
+        /// <summary>
+        /// 是否用户确认
+        /// </summary>
+        public bool UserSure { get; set; }
+        /// <summary>
+        /// 设计师提交
+        /// </summary>
+        public bool DesignCommit { get; set; }
     }
 }

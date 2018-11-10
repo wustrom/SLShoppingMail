@@ -291,6 +291,67 @@ namespace SLSM.AdminWeb.Controllers.AjaxController
             }
             return response;
         }
+
+        /// <summary>
+        /// 获得微信订单列表
+        /// </summary>
+        /// <param name="request">请求</param>
+        /// <returns></returns>
+        [HttpPost]
+        public LayUITableResponse<List<OrderInfoResponse>> GetAdminOrderList(LayTableOrderRequest request)
+        {
+            int? StatusType = null;
+            if (request.StatusType != 0)
+            {
+                StatusType = request.StatusType;
+            }
+            var List_Order = OrderListFunc.Instance.GetAdminOrderList((request.pageIndex - 1) * request.pageSize, request.pageSize, request.sort, request.order, request.name, StatusType);
+            var List_OrderDetail = Order_DetailFunc.Instance.SelectByKeys("OrderId", List_Order.Item1.Select(p => p.Id.ToString()).ToList());
+            var List_Commodity = CommodityFunc.Instance.SelectByKeys("Id", List_OrderDetail.Select(p => p.CommodityId.ToString()).ToList());
+            var List_Materials = Raw_MaterialsFunc.Instance.SelectByKeys("Id", List_Commodity.Select(p => p.MaterialId.ToString()).ToList());
+            LayUITableResponse<List<OrderInfoResponse>> response = new LayUITableResponse<List<OrderInfoResponse>>();
+            var payList = PayTypeFunc.Instance.GetAllPayTypeInfo();
+            var orderList = StatusFunc.Instance.GetAllStatusInfo();
+            foreach (var item in List_Order.Item1)
+            {
+                var order = new OrderInfoResponse(item, payList, orderList);
+                var this_OrderDetail = List_OrderDetail.Where(p => p.OrderId == item.Id).ToList();
+                order.ProductNum = "";
+                order.MaterName = "";
+                foreach (var orderdetailitem in this_OrderDetail)
+                {
+                    var commodity = List_Commodity.Where(p => p.Id == orderdetailitem.CommodityId).FirstOrDefault();
+                    if (commodity == null)
+                    {
+                        continue;
+                    }
+                    var Material = List_Materials.Where(p => p.Id == commodity.MaterialId).FirstOrDefault();
+                    if (Material == null)
+                    {
+                        continue;
+                    }
+                    if (orderdetailitem != this_OrderDetail[0])
+                    {
+                        order.ProductNum = $"{order.ProductNum},";
+                        order.MaterName = $"{order.MaterName},";
+                    }
+                    order.ProductNum = $"{order.ProductNum}{orderdetailitem.Amount}";
+                    order.MaterName = $"{order.MaterName}{Material.ProductNo}";
+                    order.UserSure = orderdetailitem.UserSure == true ? true : false;
+                    order.DesignCommit = orderdetailitem.DesignCommit == true ? true : false;
+                }
+                response.list.Add(order);
+            }
+            response.count = List_Order.Item2;
+            response.rel = true;
+            response.msg = "成功";
+            if (response.count == 0)
+            {
+                response.rel = false;
+                response.msg = "暂无数据";
+            }
+            return response;
+        }
         #endregion
 
         #region 回复评价表格

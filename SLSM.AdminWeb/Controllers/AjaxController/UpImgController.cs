@@ -17,6 +17,7 @@ using SLSM.AdminWeb.Models.Resquest.ShopCart;
 using Common.Result.LayUITable;
 using System.Drawing;
 using DbOpertion.Function;
+using Common.ThirdParty.KdGold;
 
 namespace SLSM.AdminWeb.Controllers.AjaxController
 {
@@ -411,6 +412,34 @@ namespace SLSM.AdminWeb.Controllers.AjaxController
             return new ResultJson { HttpCode = 200, Message = "删除成功！" };
         }
         #endregion
+        [HttpGet]
+        public ResultJson KdApiEOrder()
+        {
+            var result = KdApiEOrderDemo.Instance.orderTracesSubByJson();
+            result = result.Replace("\\n", "").Replace("\\r", "").Replace("\\", "");
+            return new ResultJson { HttpCode = 200, Message = result };
+        }
+
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        string FileUrl = System.Configuration.ConfigurationManager.AppSettings["FileUrl"];
+
+        /// <summary>
+        /// 上传图片
+        /// </summary>
+        /// <returns>图片路径</returns>
+        [HttpPost]
+        public string UpZiper()
+        {
+            var httpFile = HttpContext.Current.Request.Files;
+            string fileName = httpFile[0].FileName;
+            string newext = fileName.Substring(fileName.LastIndexOf("."));
+            string url = "/current/UpZiper/temp/" + RandHelper.Instance.Str(6) + DateTime.Now.ToString("yyyyMMddHHmmss") + newext;
+            FileHelper.Instance.checkDir(HttpContext.Current.Server.MapPath("/current/UpZiper/temp"));
+            httpFile[0].SaveAs(HttpContext.Current.Server.MapPath(url));
+            return AdminUrl + url;
+        }
 
         #region 私有方法
         /// <summary>

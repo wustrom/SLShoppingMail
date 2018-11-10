@@ -38,7 +38,7 @@ namespace DbOpertion.Function
         /// <returns></returns>
         public List<Carousel_Image> SelectTopMobileImages(int Start, int PageSize)
         {
-            return Carousel_ImageOper.Instance.SelectByPage("OrderId", Start, PageSize, true, new Carousel_Image { IsCarousel = true, IsPC = true });
+            return Carousel_ImageOper.Instance.SelectByPage("OrderId", Start, PageSize, true, new Carousel_Image { IsCarousel = true, IsPC = false });
         }
 
         /// <summary>

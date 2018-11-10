@@ -17,7 +17,7 @@
     })
     $('.btn-addAttr').click(function () {
         var str = $(this).prev().find('input').val();
-        if (str.trim() != '') {
+        if (str.trim() !== '') {
             var h = '<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin=""><span>' + str.trim() + '</span><i class="layui-icon btn-delAttr">&#x1006;</i></div>'
             $('.checkbox-add').before(h);
         }
@@ -32,7 +32,7 @@ function filechange(event) {
         var temp = obj.files[i].name;
         var fileTarr = temp.split('.');
         var filetype = fileTarr[fileTarr.length - 1];
-        if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+        if (filetype !== 'png' && filetype !== 'jpg' && filetype !== 'jpeg') {
             layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
             isPic = false;
         } else {
@@ -60,7 +60,7 @@ function fileSmallchange(event) {
         var temp = obj.files[i].name;
         var fileTarr = temp.split('.');
         var filetype = fileTarr[fileTarr.length - 1];
-        if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+        if (filetype !== 'png' && filetype !== 'jpg' && filetype !== 'jpeg') {
             layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
             isPic = false;
         } else {
@@ -83,13 +83,13 @@ function fileSmallchange(event) {
 function Save() {
     var gradeId = $('.grade').data('id')
     var img = $('#btn-Smallimg').attr('src');
-    img = img == '/Image/Grade/noImg.svg' ? '' : img;
+    img = img === '/Image/Grade/noImg.svg' ? '' : img;
     var Bigimg = $('#btn-Bigimg').attr('src');
-    Bigimg = Bigimg == '/Image/Grade/noImg.svg' ? '' : Bigimg;
+    Bigimg = Bigimg === '/Image/Grade/noImg.svg' ? '' : Bigimg;
     var gradeName = $('.grade').val();
     var IsScence = $('#IsScence').val();
     var CommdityList = $('#CommdityList').val();
-    if (gradeName == '') {
+    if (gradeName === '') {
         layer.msg('名称不能为空');
 
         return;
@@ -100,7 +100,7 @@ function Save() {
         attrs.push($(this).find('span').html());
     })
 
-    if (gradeId == '') {
+    if (gradeId === '') {
         var data = {
             gradeImg: img,
             gradeName: gradeName,

@@ -1,4 +1,5 @@
-﻿using Common.Extend;
+﻿using AliyunHelper.SendMail;
+using Common.Extend;
 using Common.Helper;
 using Common.ThirdParty;
 using Common.ThirdParty.AliPay;
@@ -347,6 +348,11 @@ namespace SLSM.Web.Controllers.PageController
                 var orderInfo = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = request.out_trade_no }).FirstOrDefault();
                 orderInfo.Status = 3;
                 orderInfo.PayType = 2;
+                if (orderInfo.Status != 1)
+                {
+                    return RedirectToAction("MyOrderList");
+                }
+                SendMail.Instance.SendEmail(orderInfo.Phone, "{\"code\":\"" + orderInfo.OrderNo + "\",\"code2\":\"" + orderInfo.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
                 if (Order_InfoFunc.Instance.Update(orderInfo))
                 {
                     return RedirectToAction("MyOrderList");

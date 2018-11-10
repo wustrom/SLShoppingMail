@@ -1,6 +1,7 @@
 ﻿
 @{
     Layout = null;
+    var OrderStatusList = (List<Tuple<string, string>>)ViewBag.OrderStatus;
 }
 
 <!DOCTYPE html>
@@ -23,24 +24,27 @@
 </head>
 
 <body>
-
-    <div style="margin:0px; background-color: white; margin:0 10px;">
+    <style>
+        .layui-table td, .layui-table th {
+            text-align: center;
+        }
+    </style>
+    <div style="margin:0px; background-color: white; margin:0 10px;min-width:1500px;">
         <blockquote class="layui-elem-quote">
             @*<button type="button" class="layui-btn layui-btn-small" id="getAll"><i class="fa fa-plus" aria-hidden="true"></i> 添加</button>*@
             <form class="layui-form title-part" style="">
                 <div class="layui-form-item">
-                    <a href="javascript:;" class="layui-btn layui-btn-small" id="add">
-                        <i class="layui-icon">&#xe608;</i> 添加信息
-                    </a>
-                    @*<a href="#" class="layui-btn layui-btn-small" id="import">
-                            <i class="layui-icon">&#xe608;</i> 导入信息
-                        </a>
-                        <a href="#" class="layui-btn layui-btn-small">
-                            <i class="fa fa-shopping-cart" aria-hidden="true"></i> 导出信息
-                        </a>
-                        <a href="#" class="layui-btn layui-btn-small" id="getSelected">
-                            <i class="fa fa-shopping-cart" aria-hidden="true"></i> 获取全选信息
-                        </a>*@
+                    <label class="layui-form-label">订单状态</label>
+                    <div class="layui-input-block">
+                        <select id="StatusType" name="StatusType" lay-filter="StatusType">
+                            <option value="0">全部订单</option>
+                            @foreach (var item in OrderStatusList)
+                            {
+                                <option value="@item.Item1">@item.Item2</option>
+                            }
+
+                        </select>
+                    </div>
                 </div>
                 <div class="layui-form-item" style="margin:0;float:right;clear: initial;">
                     <div class="layui-input-inline">
@@ -51,11 +55,12 @@
                     </div>
                 </div>
             </form>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" />
         </blockquote>
         <div id="content" style="width: 100%;height: 533px;"></div>
     </div>
-    <script src="~/plugins/layui/layui.js?version=20181017001"></script>
-    <script src="~/Current/Scripts/Commodity/Index.js?version=20181017001"></script>
+    <script src="~/plugins/layui/layui.js?version=2.00"></script>
+    <script src="~/Current/Scripts/Order/BackstageOrderList.js?version=201811101025"></script>
 </body>
+
 </html>

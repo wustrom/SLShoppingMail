@@ -1,4 +1,5 @@
-﻿using Common.Extend;
+﻿using AliyunHelper.SendMail;
+using Common.Extend;
 using Common.Filter.WebApi;
 using Common.Helper;
 using Common.Result;
@@ -140,10 +141,15 @@ namespace SLSM.Web.Controllers.AjaxContoller
             var order = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = OrderNo }).FirstOrDefault();
             if (order == null)
             {
-                return new ResultJson { HttpCode = 200, Message = "此订单并非微信订单！" };
+                return new ResultJson { HttpCode = 300, Message = "此订单并非微信订单！" };
+            }
+            if (order.Status != 1)
+            {
+                return new ResultJson { HttpCode = 300, Message = "此订单并非微信订单！" };
             }
             if (trade_state_desc == "支付成功")
             {
+                SendMail.Instance.SendEmail(order.Phone, "{\"code\":\"" + order.OrderNo + "\",\"code2\":\"" + order.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
                 if (OrderFunc.Instance.UpdateModel(new Order_Info { Id = order.Id, Status = 3, PayType = 3 }))
                 {
                     return new ResultJson { HttpCode = 200, Message = "该订单支付成功！" };
@@ -253,7 +259,7 @@ namespace SLSM.Web.Controllers.AjaxContoller
         /// <summary>
         /// 根据详情Id筛选设计
         /// </summary>
-        /// <param name="detaildInfoId">详情Id</param>
+        /// <param name="request">详情Id</param>
         /// <returns></returns>
 
         public ResultJson<OrderDetailDesignResponse> DetailDesign(IdRequest request)
@@ -710,7 +716,7 @@ namespace SLSM.Web.Controllers.AjaxContoller
                     production.DesignerStatus = "设计已完成";
                     if (ProductionFunc.Instance.Update(production))
                     {
-                         return new ResultJson { HttpCode = 200, Message = "提交成功" };
+                        return new ResultJson { HttpCode = 200, Message = "提交成功" };
                     }
                     else
                     {

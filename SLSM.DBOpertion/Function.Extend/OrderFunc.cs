@@ -351,6 +351,223 @@ namespace DbOpertion.Function
         }
         #endregion
 
+        /// <summary>
+        /// 后台订单创建
+        /// </summary>
+        /// <param name="orderType">订单类型：是否为PC订单</param>
+        /// <param name="address">地址</param>
+        /// <param name="name">用户名称</param>
+        /// <param name="Phone">用户电话</param>
+        /// <param name="invoice">发票信息</param>
+        /// <param name="commId">商品id</param>
+        /// <param name="PrintingMethod">印刷方式</param>
+        /// <param name="AmountNum">数目</param>
+        /// <param name="ColorId">颜色Id</param>
+        /// <returns></returns>
+        public bool CreateAdminOrder(int orderType, string address, string name, string Phone, string invoice, int commId, string PrintingMethod, int? AmountNum, int ColorId, string ErpUserName)
+        {
+            var MysqlHelper = SqlHelper.GetMySqlHelper("transaction");
+            var connection = MysqlHelper.CreatConn();
+            var transaction = MysqlHelper.GetTransaction();
+            try
+            {
+                #region 下单
+                var orderNo = DateTime.Now.ToString("yyMMdd") + (TodayorderOper.Instance.SelectAll(null, null, connection, transaction).FirstOrDefault().OrderCount + 1).ToString("000");
+
+                #region 订单信息处理
+                Order_Info info = new Order_Info
+                {
+                    Address = address,
+                    OrderNo = orderNo,
+                    OrderTime = DateTime.Now,
+                    OrderType = orderType,
+                    PayType = 1,
+                    Status = 1,
+                    UserId = 0,
+                    BuyName = name,
+                    Phone = Phone.Trim(),
+                    Invoice = invoice,
+                    LastCodeTime = DateTime.Now,
+                    IsAdmin = true,
+                    AdminName = ErpUserName
+                };
+
+                #endregion
+
+                #region 订单明细处理
+                #region 判断商品是否存在
+                var commdity = CommodityOper.Instance.SelectById(commId, connection, transaction);
+                if (commdity == null)
+                {
+                    transaction.Rollback();
+                    connection.Close();
+                    return false;
+                }
+                #endregion
+
+                var commdityList = new List<int?>();
+                commdityList.Add(commdity.Id);
+                var MaterialIdList = new List<string>();
+                MaterialIdList.Add(commdity.MaterialId.Value.ToString());
+                var StockList = Materials_Stock_ViewOper.Instance.SelectByKeys("Raw_materialsId", MaterialIdList, connection, transaction);
+                var materials = Raw_MaterialsOper.Instance.SelectById(commdity.MaterialId.Value, connection, transaction);
+                var StorageList = StorageOper.Instance.SelectByKeys("Raw_materialsId", MaterialIdList, connection, transaction);
+                var list = CommodityPriceFunc.Instance.SelectByIds(commdityList);
+                List<Order_Detail> listDetail = new List<Order_Detail>();
+                var priceArray = new List<Tuple<int?, decimal?>>();
+                #region 获取商品价格
+                if (materials.SalesInfoList == null)
+                {
+                    var priceItemList = list.Where(p => p.CommodityId == commdity.Id).OrderByDescending(p => p.StageAmount);
+                    foreach (var priceitem in priceItemList)
+                    {
+                        priceArray.Add(new Tuple<int?, decimal?>(item1: priceitem.StageAmount, item2: priceitem.StagePrice));
+                    }
+                }
+                else
+                {
+                    var saleinfo = materials.SalesInfoList.Split(';').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    foreach (var saleitem in saleinfo)
+                    {
+                        var saledetailInfo = saleitem.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                        if (PrintingMethod == "PrintFunc2")
+                        {
+                            priceArray.Add(new Tuple<int?, decimal?>(item1: saledetailInfo[0].ParseInt(), item2: saledetailInfo[2].ParseDecimal()));
+                        }
+                        else if (PrintingMethod == "PrintFunc3")
+                        {
+                            priceArray.Add(new Tuple<int?, decimal?>(item1: saledetailInfo[0].ParseInt(), item2: saledetailInfo[3].ParseDecimal()));
+                        }
+                        else
+                        {
+                            priceArray.Add(new Tuple<int?, decimal?>(item1: saledetailInfo[0].ParseInt(), item2: saledetailInfo[1].ParseDecimal()));
+                        }
+                    }
+                    var priceInfo = list.Where(p => p.StageAmount == 0).FirstOrDefault();
+                    if (priceInfo != null)
+                    {
+                        priceArray.Add(new Tuple<int?, decimal?>(item1: 0, item2: priceInfo.StagePrice));
+                    }
+                }
+                var price = priceArray.Where(p => p.Item1 < AmountNum).OrderByDescending(p => p.Item1).FirstOrDefault();
+                #endregion
+
+                #region 判断库存是否足够
+                var Stock = StockList.Where(p => p.ColorId == ColorId).FirstOrDefault();
+                if (Stock == null || (Stock.available_stock == null ? 0 : Stock.available_stock) < AmountNum)
+                {
+                    transaction.Rollback();
+                    connection.Close();
+                    return false;
+                }
+                var ThisStorageList = StorageList.Where(p => p.Color == Stock.SKU).ToList();
+                #region 修改库存数量
+                var Amount = AmountNum;
+                foreach (var Storage in ThisStorageList)
+                {
+                    if (Storage.stock > Storage.freeze_stock)
+                    {
+                        if ((Amount + Storage.freeze_stock) < Storage.stock)
+                        {
+                            Storage.freeze_stock = Storage.freeze_stock + Amount;
+                            Amount = 0;
+                            if (!StorageOper.Instance.Update(Storage, connection, transaction))
+                            {
+                                transaction.Rollback();
+                                connection.Close();
+                                return false;
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            Amount = Amount - Storage.stock + Storage.freeze_stock;
+                            Storage.freeze_stock = Storage.stock;
+                            if (!StorageOper.Instance.Update(Storage, connection, transaction))
+                            {
+                                transaction.Rollback();
+                                connection.Close();
+                                return false;
+                            }
+                        }
+                    }
+                }
+                #endregion
+                #endregion
+
+                if (price != null && AmountNum != null)
+                {
+                    decimal? payMoney = 0;
+                    payMoney = AmountNum * price.Item2.Value;
+                    Order_Detail detail = new Order_Detail
+                    {
+                        Color = ColorId,
+                        CommodityId = commId,
+                        Amount = AmountNum,
+                        PayMoney = payMoney,
+                        PrintingMethod = PrintingMethod
+                    };
+                    listDetail.Add(detail);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    connection.Close();
+                    return false;
+                }
+
+                #endregion
+
+                #region 添加方法
+                info.TotalPrice = listDetail.Sum(p => p.PayMoney);
+                if (info.TotalPrice < 10)
+                {
+                    info.TotalPrice = 10;
+                    info.Freight = "10";
+                }
+                else if (info.TotalPrice > 10 && info.TotalPrice < 100)
+                {
+                    info.TotalPrice = info.TotalPrice + 10;
+                    info.Freight = "10";
+                }
+                var OrderKey = Order_InfoOper.Instance.InsertReturnKey(info, connection, transaction);
+                if (OrderKey <= 0)
+                {
+                    transaction.Rollback();
+                    connection.Close();
+                    return false;
+                }
+                info.Id = OrderKey;
+                if (listDetail.Count == 0)
+                {
+                    transaction.Rollback();
+                    connection.Close();
+                    return false;
+                }
+                foreach (var item in listDetail)
+                {
+                    item.OrderId = OrderKey;
+                    if (!Order_DetailOper.Instance.Insert(item, connection, transaction))
+                    {
+                        transaction.Rollback();
+                        connection.Close();
+                        return false;
+                    }
+                }
+                #endregion
+
+                #endregion
+                transaction.Commit();
+                connection.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                connection.Close();
+                return false;
+            }
+        }
         #region 订单量
         /// <summary>
         /// 今日订单量

@@ -62,7 +62,7 @@ namespace SLSM.MoblieWeb.Controllers.AjaxController
         public ResultJson UpAddrTime(UpdateAddrRTimeRequest request)
         {
             ResultJson result = new ResultJson();
-            var Addressresult = AddressFunc.Instance.Update(new DbOpertion.Models.Address { Id = request.Id, DefaultTime = DateTime.Now });
+            var Addressresult = AddressFunc.Instance.Update(new Address { Id = request.Id, DefaultTime = DateTime.Now });
             if (Addressresult)
             {
                 result.HttpCode = 200;
@@ -132,7 +132,7 @@ namespace SLSM.MoblieWeb.Controllers.AjaxController
         public ResultJsonModel<AddressByPageResponse> UpdateAddrr(UpdateAddressRequest request)
         {
             ResultJsonModel<AddressByPageResponse> result = new ResultJsonModel<AddressByPageResponse>();
-            var Addressresult = AddressFunc.Instance.Update(new DbOpertion.Models.Address { Id = request.Id, ContactName = request.ContactName, ContactPhone = request.ContactPhone, AddrArea = request.AddrArea, AddrDetail = request.AddrDetail,DefaultTime= DateTime.Now });
+            var Addressresult = AddressFunc.Instance.Update(new Address { Id = request.Id, ContactName = request.ContactName, ContactPhone = request.ContactPhone, AddrArea = request.AddrArea, AddrDetail = request.AddrDetail,DefaultTime= DateTime.Now });
             if (Addressresult)
             {
                 result.HttpCode = 200;

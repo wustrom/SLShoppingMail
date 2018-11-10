@@ -16,10 +16,10 @@ $(function () {
      * errorfn 失败回调函数
      */
     jQuery.ax = function (url, data, async, type, dataType, successfn) {
-        async = (async == null || async == "" || typeof (async) == "undefined") ? "true" : async;
-        type = (type == null || type == "" || typeof (type) == "undefined") ? "post" : type;
-        dataType = (dataType == null || dataType == "" || typeof (dataType) == "undefined") ? "json" : dataType;
-        data = (data == null || data == "" || typeof (data) == "undefined") ? { "date": new Date().getTime() } : data;
+        async = (async === null || async === "" || typeof (async) === "undefined") ? "true" : async;
+        type = (type === null || type === "" || typeof (type) === "undefined") ? "post" : type;
+        dataType = (dataType === null || dataType === "" || typeof (dataType) === "undefined") ? "json" : dataType;
+        data = (data === null || data === "" || typeof (data) === "undefined") ? { "date": new Date().getTime() } : data;
         $.ajax({
             type: type,
             async: async,
@@ -28,8 +28,8 @@ $(function () {
             dataType: dataType,
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                if (data.HttpCode != 200) {
-                    if (data.Message == null || data.Message == "") {
+                if (data.HttpCode !== 200) {
+                    if (data.Message === null || data.Message === "") {
                         layer.msg("程序出现问题！");
                     }
                     else {
@@ -52,7 +52,7 @@ $(function () {
      * successfn 成功回调函数
      */
     jQuery.axpost = function (url, data, successfn) {
-        data = (data == null || data == "" || typeof (data) == "undefined") ? { "date": new Date().getTime() } : data;
+        data = (data === null || data === "" || typeof (data) === "undefined") ? { "date": new Date().getTime() } : data;
         $.ajax({
             type: "post",
             data: data,
@@ -60,8 +60,8 @@ $(function () {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                if (data.HttpCode != 200) {
-                    if (data.Message == null || data.Message == "") {
+                if (data.HttpCode !== 200) {
+                    if (data.Message === null || data.Message === "") {
                         layer.msg("程序出现问题！");                       
                     }
                     else {
@@ -80,7 +80,7 @@ $(function () {
 
     //直传data对象
     jQuery.axpost2 = function (url, data, successfn) {
-        data = (data == null || data == "" || typeof (data) == "undefined") ? { "date": new Date().getTime() } : data;
+        data = (data === null || data === "" || typeof (data) === "undefined") ? { "date": new Date().getTime() } : data;
         $.ajax({
             type: "post",
             data: data,
@@ -88,8 +88,8 @@ $(function () {
             dataType: "json",
             //contentType: "application/json; charset=utf-8",
             success: function (data) {
-                if (data.HttpCode != 200) {
-                    if (data.Message == null || data.Message == "") {
+                if (data.HttpCode !== 200) {
+                    if (data.Message === null || data.Message === "") {
                         layer.msg("程序出现问题！");
                     }
                     else {
@@ -113,7 +113,7 @@ $(function () {
      * successfn 成功回调函数
      */
     jQuery.axpostlayer = function (LayerTips, url, data, successfn) {
-        data = (data == null || data == "" || typeof (data) == "undefined") ? { "date": new Date().getTime() } : data;
+        data = (data === null || data === "" || typeof (data) === "undefined") ? { "date": new Date().getTime() } : data;
         $.ajax({
             type: "post",
             data: data,
@@ -121,8 +121,8 @@ $(function () {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                if (data.HttpCode != 200) {
-                    if (data.Message == null || data.Message == "") {
+                if (data.HttpCode !== 200) {
+                    if (data.Message === null || data.Message === "") {
                         LayerTips.alert("程序出现问题！");
                     }
                     else {

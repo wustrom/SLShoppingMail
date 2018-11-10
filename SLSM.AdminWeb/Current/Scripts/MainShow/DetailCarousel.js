@@ -17,7 +17,7 @@ function filechange(event) {
         var temp = obj.files[i].name;
         var fileTarr = temp.split('.');
         var filetype = fileTarr[fileTarr.length - 1];
-        if (filetype != 'png' && filetype != 'jpg' && filetype != 'jpeg') {
+        if (filetype !== 'png' && filetype !== 'jpg' && filetype !== 'jpeg') {
             layer.msg('上传文件必须为图片(后缀名为png,jpg,jpeg)');
             isPic = false;
         } else {

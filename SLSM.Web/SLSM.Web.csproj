@@ -15,7 +15,7 @@
     <RootNamespace>SLSM.Web</RootNamespace>
     <AssemblyName>SLSM.Web</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -716,6 +716,7 @@
     <Content Include="Views\Helper\PurchaseGuide.cshtml" />
     <Content Include="Views\Helper\AboutUs.cshtml" />
     <Content Include="Views\PayPage\OrderPayPage.cshtml" />
+    <Content Include="Views\PayPage\OrderPaySuccessPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -727,6 +728,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AliyunHelper\AliyunHelper.csproj">
+      <Project>{C64FA6E4-F74F-468A-9692-BBDA8F55DC29}</Project>
+      <Name>AliyunHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{81030aab-08dd-4cd9-833c-65fdab99cb0d}</Project>
       <Name>Common</Name>
@@ -758,7 +763,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8053</IISUrl>
+          <IISUrl>http://localhost/8053</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

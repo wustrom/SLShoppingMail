@@ -143,6 +143,29 @@ namespace DbOpertion.Function
         }
 
         /// <summary>
+        /// 获得网站订单列表
+        /// </summary>
+        /// <param name="start">开始数据条数</param>
+        /// <param name="PageSize">页面大小</param>
+        /// <param name="sort">排序方式</param>
+        /// <param name="order">升序还是降序</param>
+        /// <param name="SearchName">搜索内容</param>
+        /// <param name="StatusType">订单状态</param>
+        /// <returns></returns>
+        public Tuple<List<Order_Allinfo>, int> GetAdminOrderList(int start, int PageSize, string sort, string order, string SearchName, int? StatusType)
+        {
+            if (sort == null)
+            {
+                return new Tuple<List<Order_Allinfo>, int>(item1: Order_AllinfoOper.Instance.SelectByVaguePage("Id", start, PageSize, true, new Order_Allinfo { Status = StatusType, IsDelete = false, IsAdmin = true }, SearchName), item2: Order_AllinfoOper.Instance.SelectByVagueCount(new Order_Allinfo { Status = StatusType, IsDelete = false, IsAdmin = true }, SearchName));
+            }
+            else
+            {
+                bool desc = order.ToLower() == "desc" ? true : false;
+                return new Tuple<List<Order_Allinfo>, int>(item1: Order_AllinfoOper.Instance.SelectByVaguePage(sort, start, PageSize, true, new Order_Allinfo { Status = StatusType, IsDelete = false, IsAdmin = true }, SearchName), item2: Order_AllinfoOper.Instance.SelectByVagueCount(new Order_Allinfo { Status = StatusType, IsDelete = false, IsAdmin = true }, SearchName));
+            }
+        }
+
+        /// <summary>
         /// 获得网站订单计数
         /// </summary>
         /// <param name="OrderType">订单类型</param>

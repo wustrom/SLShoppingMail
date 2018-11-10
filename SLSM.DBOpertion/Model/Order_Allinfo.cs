@@ -102,6 +102,14 @@ namespace DbOpertion.Models
         /// </summary>
         public String UserDesign { get; set; }
         /// <summary>
+        /// 是否后台添加0为否1为是
+        /// </summary>
+        public Boolean? IsAdmin { get; set; }
+        /// <summary>
+        /// 管理员名称
+        /// </summary>
+        public String AdminName { get; set; }
+        /// <summary>
         /// 用户名称
         /// </summary>
         public String Name { get; set; }

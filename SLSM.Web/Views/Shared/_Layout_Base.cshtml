@@ -82,7 +82,12 @@
                                         @foreach (var item in ListHisdesign)
                                         {
                                             var thisColor = colorList.Where(p => p.ChinaDescribe == item.Color && p.ParentId != 0).FirstOrDefault();
-                                            var ImageList = item.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList();
+                                            var ImageList = new List<string>();
+                                            if (item.ImageList != null && thisColor != null)
+                                            {
+
+                                                ImageList = item.ImageList.Split('|').Where(p => p.Contains($"{thisColor.Id};")).ToList();
+                                            }
                                             string Image = "";
                                             foreach (var ImageInfo in ImageList)
                                             {

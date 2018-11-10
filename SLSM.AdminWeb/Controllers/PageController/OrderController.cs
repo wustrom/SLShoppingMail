@@ -14,6 +14,7 @@ namespace SLSM.AdminWeb.Controllers.PageController
 {
     public class OrderController : BaseMvcMasterController
     {
+        #region 订单详情
         /// <summary>
         /// 网站订单
         /// </summary>
@@ -35,7 +36,7 @@ namespace SLSM.AdminWeb.Controllers.PageController
         }
 
         /// <summary>
-        /// 微信订单
+        /// 订单详情
         /// </summary>
         /// <returns></returns>
         public ActionResult OrderDetail(IdRequest request)
@@ -58,7 +59,7 @@ namespace SLSM.AdminWeb.Controllers.PageController
 
             return View();
         }
-        
+
         /// <summary>
         /// 确定发货
         /// </summary>
@@ -73,5 +74,78 @@ namespace SLSM.AdminWeb.Controllers.PageController
             }
             return View();
         }
+        #endregion
+
+        #region 后台下单
+        /// <summary>
+        /// 后台下单
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BackstageOrder()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 后台下单详情
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BackstageOrderDetail(IdRequest request)
+        {
+            var colorList = ColorinfoFunc.Instance.GetAllColorListBase();
+            ViewBag.colorList = colorList;
+            if (request.Id != 0)
+            {
+                var comm = CommodityFunc.Instance.SelectById(request.Id);
+                if (comm != null)
+                {
+                    var Mater = Raw_MaterialsFunc.Instance.SelectById(comm.MaterialId.Value);
+                    ViewBag.Raw_Material = Mater;
+                }
+                ViewBag.Commodity = comm;
+            }
+            return View();
+        }
+
+        /// <summary>
+        /// 后台下单列表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BackstageOrderList()
+        {
+            ViewBag.OrderStatus = StatusFunc.Instance.GetAllStatusInfo();
+            return View();
+        }
+
+        /// <summary>
+        /// 上传Logo
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UpLoadLogo(IdRequest request)
+        {
+            ViewBag.OrderInfo = Order_InfoFunc.Instance.SelectById(request.Id);
+            return View();
+        }
+
+        /// <summary>
+        /// 确定设计师
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SureDesign(IdRequest request)
+        {
+            var OrderInfo = Order_InfoFunc.Instance.SelectById(request.Id);
+            var OrderDetailInfo = Order_DetailFunc.Instance.SelectByModel(new Order_Detail { OrderId = request.Id }).FirstOrDefault();
+            var Comm = CommodityFunc.Instance.SelectById(OrderDetailInfo.CommodityId.Value);
+            var materials_colorinfo = Materials_ColorinfoFunc.Instance.SelectByModel(new Materials_Colorinfo { MaterialsId = Comm.MaterialId, ColorId = OrderDetailInfo.Color }).FirstOrDefault();
+            ViewBag.OrderInfo = OrderInfo;
+            ViewBag.OrderDetailInfo = OrderDetailInfo;
+            ViewBag.Commodity = Comm;
+            ViewBag.materials = Raw_MaterialsFunc.Instance.SelectById(Comm.MaterialId.Value);
+            ViewBag.materials_colorinfo = materials_colorinfo;
+            ViewBag.ColorInfo = ColorinfoFunc.Instance.SelectById(materials_colorinfo.ColorId.Value);
+            ViewBag.production = ProductionFunc.Instance.SelectByModel(new Production { order_detailId = OrderDetailInfo.Id }).FirstOrDefault();
+            return View();
+        }
+        #endregion
     }
 }

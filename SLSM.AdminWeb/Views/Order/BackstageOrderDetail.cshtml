@@ -1,0 +1,197 @@
+﻿@{
+    Layout = null;
+    var commodity = ViewBag.Commodity == null ? new DbOpertion.Models.Commodity() : (DbOpertion.Models.Commodity)ViewBag.Commodity;
+    var material = ViewBag.Raw_Material == null ? new DbOpertion.Models.Raw_Materials() : (DbOpertion.Models.Raw_Materials)ViewBag.Raw_Material;
+    var colorList = ViewBag.colorList == null ? new List<DbOpertion.Models.Colorinfo>() : (List<DbOpertion.Models.Colorinfo>)ViewBag.colorList;
+}
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="CommID"  value="@commodity.Id" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品货号</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommProductNo" placeholder="请输入商品货号" readonly="readonly" autocomplete="off" class="layui-input" value="@material.ProductNo">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品颜色</label>
+            <div class="layui-input-block">
+                <select name="CommColor" lay-verify="selectItem">
+                    <option value=""></option>
+                    @{
+                        var commList = commodity.ImageList.Split('|').Where(p => p.Contains(';')).ToList();
+                        foreach (var item in commList)
+                        {
+                            var colorId = item.Split(';')[0];
+                            var colorinfo = colorList.Where(p => p.Id.ToString() == colorId).FirstOrDefault();
+                            <option value="@colorinfo.Id">@colorinfo.ChinaDescribe</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">印刷方式</label>
+            <div class="layui-input-block">
+                <select name="CommPrint" lay-verify="selectItem">
+                    <option value=""></option>
+                    @{
+                        var PrintFuncList = material.PrintFuncInfo.Split('|').Where(p => p.Contains(':')).ToList();
+                        foreach (var item in PrintFuncList)
+                        {
+                            var PrintFuncArray = item.Split(':');
+                            <option value="@PrintFuncArray[0]">@PrintFuncArray[1]</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品数量</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommNum" placeholder="请输入商品数量" lay-verify="number" autocomplete="off" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommName" placeholder="请输入收货人姓名" lay-verify="required" autocomplete="off" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人手机</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommPhone" placeholder="请输入收货人手机" lay-verify="required" autocomplete="off" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人地区</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommArea" placeholder="请输入收货人地区" lay-verify="required" autocomplete="off" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px;margin-left: -20px;">收货人详细地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="CommDetailArea" placeholder="请输入收货人详细地址" lay-verify="required" autocomplete="off" class="layui-input" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发票信息</label>
+            <div class="layui-input-block">
+                <select name="InvoiceInfo" lay-filter="InvoiceInfo">
+                    <option value="0">不需要发票</option>
+                    <option value="1">个人</option>
+                    <option value="2">单位</option>
+                </select>
+            </div>
+        </div>
+        <div class="CompanyInfo" style="display:none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">发票抬头</label>
+                <div class="layui-input-block">
+                    <input type="text" name="InvoicesRaised" placeholder="请输入发票抬头" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">企业税号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="EnterpriseTaxNumber" placeholder="请输入企业税号" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单类型</label>
+            <div class="layui-input-block">
+                <select name="OrderType">
+                    <option value="1">电脑订单</option>
+                    <option value="2">手机订单</option>
+                </select>
+            </div>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+
+</div>
+
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js?version=2.00"></script>
+<script>
+    // #endregion
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form(),
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            },
+            pass: [/(.+){6,12}$/, '密码必须6到12位'],
+            float: function (value) {
+                if (isNaN(value)) {
+                    return '只能填写数字';
+                }
+                else if (value < 0) {
+                    return '填写数字请不小于0';
+                }
+            },
+            nannum: function (value) {
+                debugger;
+                
+                if (value != "" && value != undefined) {
+                    if (isNaN(value)) {
+                        return '只能填写数字';
+                    }
+                    else if (value < 0) {
+                        return '填写数字请不小于0';
+                    }
+                    else if (parseInt(value) != value) {
+                        return '请输入整数';
+                    }
+                }
+            },
+            nanfloat: function (value) {
+                if (value != "" && value != undefined) {
+                    if (isNaN(value)) {
+                        return '只能填写数字';
+                    }
+                    else if (value < 0) {
+                        return '填写数字请不小于0';
+                    }
+                }
+            },
+            selectItem: function (value) {
+                if (value == "" || value == undefined) {
+                    return '请进行选择';
+                }
+            }
+        });
+    });
+
+    $(function () {
+        layui.use('form', function () {
+            var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+            debugger;
+            form.on('select(InvoiceInfo)', function (data) {
+                debugger;
+                if (data.value == "2") {
+                    $(".CompanyInfo").show();
+                }
+                else {
+                    $(".CompanyInfo").hide();
+                }
+            });
+        });
+    })
+
+</script>
+<style>
+</style>

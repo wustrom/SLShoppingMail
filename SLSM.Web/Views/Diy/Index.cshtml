@@ -267,6 +267,10 @@
             }
             datas.Amount = num;
             datas.Color = $('input[name="颜色"]:checked').val();
+            if ($('input[name="颜色"]:checked').val() == undefined) {
+                layer.msg("请选择颜色！");
+                return;
+            }
             datas.PrintingMethod = $("input[name='printFunc']:checked").val();
             //datas.Attr = $('.height2 .right select option:selected').html();
             datas.ShopCartId = $("#hidShopCartId").val();
@@ -659,7 +663,7 @@
                                                                                                 active = " style__active___1aTdn";
                                                                                             }
                                                                                             <li class="style__slide-item___24smX @active" roleIndex="@count" @ColorIndex>
-                                                                                                <a class="product-img" rel="group" role="presentation">
+                                                                                                <a class="product-img" >
                                                                                                     <img src="@AdminUrl@ImageUrl" class="img-rounded img-responsive">
                                                                                                 </a>
                                                                                             </li>

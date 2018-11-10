@@ -246,6 +246,8 @@
     <Content Include="Current\Scripts\News\News.js" />
     <Content Include="Current\Scripts\Message\SendMessage.js" />
     <Content Include="Current\Scripts\Message\Message.js" />
+    <Content Include="Current\Scripts\Order\BackstageOrder.js" />
+    <Content Include="Current\Scripts\Order\BackstageOrderList.js" />
     <Content Include="Current\Scripts\Order\WechatOrder.js" />
     <Content Include="Current\Scripts\Order\WebOrder.js" />
     <Content Include="Current\Scripts\Service\Index.js" />
@@ -676,8 +678,10 @@
     <Compile Include="Model\Request\MainShow\CarouselInfoRequest.cs" />
     <Compile Include="Model\Request\Message\SendMessageRequest.cs" />
     <Compile Include="Model\Request\Message\MessageRequest.cs" />
+    <Compile Include="Model\Request\Order\AdminBackOrderRequest.cs" />
     <Compile Include="Model\Request\Order\OrderChangePriceRequest.cs" />
     <Compile Include="Model\Request\Order\OrderChangeRequest.cs" />
+    <Compile Include="Model\Request\Order\OrderDesignRequest.cs" />
     <Compile Include="Model\Request\Reply\ReplyRequest.cs" />
     <Compile Include="Model\Request\Service\AddServiceRequest.cs" />
     <Compile Include="Model\Request\Service\ServiceInfoRequest.cs" />
@@ -781,6 +785,11 @@
     <Content Include="plugins\web-im\sdk\README.md" />
     <Content Include="plugins\web-im\webrtc\.DS_Store" />
     <Content Include="plugins\web-im\webrtc\dist\.DS_Store" />
+    <Content Include="Views\Order\BackstageOrder.cshtml" />
+    <Content Include="Views\Order\BackstageOrderDetail.cshtml" />
+    <Content Include="Views\Order\BackstageOrderList.cshtml" />
+    <Content Include="Views\Order\UpLoadLogo.cshtml" />
+    <Content Include="Views\Order\SureDesign.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,126 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var orderinfo = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
+}
+
+<div style="margin: 15px;">
+    <form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpZiper" style="display:none;">
+        <input name="upZiper" type="file" id="upZiper" onchange="fileZiperchange(this)" accept=".zip,.rar,.7z,.jpg,.jpeg,.png">
+    </form>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding-left:0px;width:95px;padding-right:0px;">上传Logo</label>
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" id="SureUpload">上传Logo</button>
+                <button class="layui-btn" type="button" id="OKUpload">确定上传</button>
+                <input id="UpFileAddr" name="UpFileAddr" type="hidden" value="" />
+            </div>
+        </div>
+    </div>
+
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="Id" id="Id" value="@orderinfo.Id" />
+        </div>
+
+        <div class="layui-form-item uploadItem" style="margin-left: 40px;">
+            @{
+                var ImageList = orderinfo.UserDesign == null ? new List<string>() : orderinfo.UserDesign.Split('|').Where(p => !string.IsNullOrEmpty(p));
+                foreach (var item in ImageList)
+                {
+                    <div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">
+                        <span onclick="DownUpFileAddr(this)">
+                            <a href="@ViewBag.AdminUrl@item" download="@item.Split('/').LastOrDefault()"> @item.Split('/').LastOrDefault()</a>
+                        </span>
+                        <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>
+                        <input type="hidden" class="hiddenUpFileAddr" value="@item" />
+                    </div>
+                }
+            }
+
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script src="~/Current/Scripts/jquery-form.js"></script>
+<script src="~/Current/Scripts/ajax.js"></script>
+<script>
+    $(function () {
+        $('#SureUpload').click(function () {
+            $('#upZiper').trigger('click');
+        })
+
+        $('#OKUpload').click(function () {
+            var obj = new Object();
+            obj.OrderId = $('#Id').val();
+            obj.DesignImage = $("#UpFileAddr").val();
+            jQuery.axpost('../../Api/Order/SureUploadOrder', JSON.stringify(obj), function (data) {
+                $(".layui-layer-btn0").trigger("click")
+            });
+        })
+    })
+
+
+     function fileZiperchange(that) {
+        var that = that;
+        var obj = $(that)[0];
+        var length = obj.files.length;
+        var isPic = true;
+        for (var i = 0; i < obj.files.length; i++) {
+            var temp = obj.files[i].name;
+            var fileTarr = temp.split('.');
+            var filetype = fileTarr[fileTarr.length - 1];
+            var size = obj.files[i].size / 1024;
+            if (parseInt(size) > 1024 * 50) {
+                layer.msg("上传文件不能大于50MB");
+                isPic = false;
+            }
+            if (!isPic)
+                break;
+        }
+        if (!isPic)
+            return;
+        $(that).parent().ajaxSubmit(function (res) {
+            var fileName = res.split('/')[res.split('/').length - 1];
+            $('.UpFileAddr').attr('download', fileName);
+            $('.UpFileAddr').attr('href', res);
+            $('.UpFileAddr').html(fileName);
+            $('.UpFileAddr').parent().find('input').val(res.replace('@ViewBag.AdminUrl', ''));
+            $('.layui-form-item.uploadItem').append('<div class="layui-form-selected layui-form-checkbox layui-form-checked attr" lay-skin="">\
+                                                        <span onclick="DownUpFileAddr(this)"><a href="'+ res + '" download="' + fileName + '">' + fileName + '</a></span>\
+                                                        <i class="layui-icon btn-delAttr" onclick="delUpFileAddr(this)">ဆ</i>\
+                                                        <input type="hidden" class="hiddenUpFileAddr" value="'+ res + '" />\
+                                                    </div >');
+            $('#upZiper').val('');
+            resetUpFileAddr();
+        });
+    }
+
+    function delUpFileAddr(that) {
+        $(that).parent().remove();
+
+        resetUpFileAddr();
+    }
+
+    function resetUpFileAddr() {
+        var UpFileAddr = "";
+        $(".hiddenUpFileAddr").each(function () {
+            /**/
+            UpFileAddr = UpFileAddr + $(this).val().replace('@ViewBag.AdminUrl', '') + "|";
+            /**/
+        })
+        $("#UpFileAddr").val(UpFileAddr);
+    }
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+    }
+
+    a {
+        color: white;
+    }
+</style>

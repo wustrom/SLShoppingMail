@@ -41,9 +41,13 @@ namespace AliyunHelper.SendMail
         /// </summary>
         MessageChangeVerificationCode = 6,
         /// <summary>
-        /// 健康饮食app用户注册
+        /// 支付通知
         /// </summary>
-        HealthyEatingAppUserRegistration = 7,
+        NoticeOfPaymentCode = 8,
+        /// <summary>
+        /// 发货通知
+        /// </summary>
+        NoticeOfDeliveryCode = 9
     }
 
     public static partial class GetString
@@ -123,8 +127,11 @@ namespace AliyunHelper.SendMail
                 case Enum_SendEmailCode.MessageChangeVerificationCode:
                     result = "SMS_130800020";
                     break;
-                case Enum_SendEmailCode.HealthyEatingAppUserRegistration:
-                    result = "SMS_78365027";
+                case Enum_SendEmailCode.NoticeOfPaymentCode:
+                    result = "SMS_150576962";
+                    break;
+                case Enum_SendEmailCode.NoticeOfDeliveryCode:
+                    result = "SMS_150572032";
                     break;
                 default:
                     result = "";

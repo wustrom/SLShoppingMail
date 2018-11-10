@@ -125,9 +125,9 @@ $(document).ready(function () {
     })
 
     $('body').keydown(function (e) {
-        if (e.keyCode == 13)
+        if (e.keyCode === 13)
             $('.btn-save').trigger("click");
-        if (e.keyCode == 27)
+        if (e.keyCode === 27)
             $('.layui-layer-close1').trigger("click");
     })
 
@@ -304,14 +304,14 @@ function collapse() {
 //function clickOrDblClick(n) {
 //    clickIndex = n;
 //    var val = setTimeout("call();", 250);
-//    if (clickIndex == 2) {
+//    if (clickIndex === 2) {
 //        clearTimeout(val);
 //    }
 //}
 //function call() {
-//    if (clickIndex == 1) {
+//    if (clickIndex === 1) {
 //        layer.msg('click');
-//    } else if (clickIndex == 2) {
+//    } else if (clickIndex === 2) {
 //        layer.msg('dblclick');
 //    }
 //} 

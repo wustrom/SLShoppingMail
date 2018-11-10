@@ -47,6 +47,7 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="aliyun-net-sdk-dysmsapi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -290,6 +291,7 @@
     <Content Include="Current\images\icon-03.png" />
     <Content Include="Current\images\icon-04.png" />
     <Content Include="Current\images\icon-05.png" />
+    <Content Include="Current\images\icon\OK.png" />
     <Content Include="Current\images\icon_close.png" />
     <Content Include="Current\images\icon_phone.png" />
     <Content Include="Current\images\img_31.png" />
@@ -735,6 +737,7 @@
     <Content Include="Views\Helper\AboutUs.cshtml" />
     <Content Include="Views\Shared\_LayoutHelper.cshtml" />
     <Content Include="Views\PayPage\OrderPayPage.cshtml" />
+    <Content Include="Views\PayPage\OrderPaySuccessPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

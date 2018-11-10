@@ -639,45 +639,63 @@
                                 </h3>
                             </div>
                         </div>
-                        @if (item.Status == "待付款")
-                        {
-                            xiadan = "active";
-                            <div class="col-xs-7">
-                                <div class="row">
-                                    &nbsp;&nbsp;
+                        <div class="col-xs-7">
+                            <div class="row">
+                                &nbsp;&nbsp;
+                                @if (item.Status == "待付款")
+                                {
+                                    xiadan = "";
                                     <a class="btn btn-primary" href="javascript:;" style="float:right;margin-left:10px;" onclick="ToCancel(@item.Id)">取消</a>
                                     <a class="btn btn-primary" href="javascript:;" style="float:right;margin-left:10px;" onclick="ToPay(@item.Id)">支付</a>
                                     <a class="btn btn-primary" href="javascript:;" style="float:right" onclick="UploadDesign(@item.Id)">上传Logo</a>
+                                }
+                                else if (item.Status == "待收货")
+                                {
 
-                                </div>
-                            </div>
-                        }
-                        else if (item.Status == "待收货")
-                        {
-                            shenhe = "active";
-                            <div class="col-xs-7">
-                                <div class="row">
-                                    &nbsp;&nbsp;
+                                    shenhe = "active";
                                     <a class="btn btn-primary" href="javascript:;" style="float:right" onclick="ToConfirm(@item.Id)">确认收货</a>
-                                </div>
+                                    foreach (var detailItem in item.ListDetail)
+                                    {
+                                        <a class="btn btn-primary" href="javascript:;" style="float:right;margin-right:10px;" onclick="SureDesign(this,@detailItem.Id)">产品效果图</a>
+                                    }
+                                }
+                                else if (item.Status == "待发货")
+                                {
+                                    
+                                    var detailList = item.ListDetail.Where(p => p.DesignCommit == true).ToList();
+                                    var UserdetailList = item.ListDetail.Where(p => p.UserSure == false || p.UserSure == null).ToList();
+                                    if (detailList.Count == 0)
+                                    {
+                                        xiadan = "active";
+                                    }
+                                    else if (UserdetailList.Count == 0)
+                                    {
+                                        zhifu = "active";
+                                    }
+                                    else
+                                    {
+                                        changping = "active";
+                                    }
+                                    foreach (var detailItem in detailList)
+                                    {
+                                        <a class="btn btn-primary" href="javascript:;" style="float:right;margin-right:10px;" onclick="SureDesign(this,@detailItem.Id)">产品效果图</a>
+                                    }
+                                    <a class="btn btn-primary" href="javascript:;" style="float:right" onclick="UploadDesign(@item.Id)">上传Logo</a>
+                                }
+                                else if (item.Status == "待评价")
+                                {
+                                    chenggong = "active";
+                                    foreach (var detailItem in item.ListDetail)
+                                    {
+                                        <a class="btn btn-primary" href="javascript:;" style="float:right;margin-right:10px;" onclick="SureDesign(this,@detailItem.Id)">产品效果图</a>
+                                    }
+                                }
+                                else
+                                {
+                                    xiadan = "";
+                                }
                             </div>
-                        }
-                        else if (item.Status == "待发货")
-                        {
-                            changping = "active";
-                        }
-                        else if (item.Status == "待评价")
-                        {
-                            chenggong = "active";
-                        }
-                        else if (item.Status == "待发货")
-                        {
-                            zhifu = "active";
-                        }
-                        else
-                        {
-                            xiadan = "active";
-                        }
+                        </div>
                     </div>
                     <div style="clear:both;"></div>
                 </div>
@@ -686,11 +704,11 @@
                         <ul>
                             <li class="@xiadan" style="width:19%">
                                 <span class="icon">1</span>
-                                <div class="order-status">下单</div>
+                                <div class="order-status">付款</div>
                             </li>
                             <li class="@zhifu" style="width:19%">
                                 <span class="icon">2</span>
-                                <div class="order-status">支付成功</div>
+                                <div class="order-status">确认效果</div>
                             </li>
                             <li class="@changping" style="width:19%">
                                 <span class="icon">3</span>
@@ -698,11 +716,11 @@
                             </li>
                             <li class="@shenhe" style="width:19%">
                                 <span class="icon">4</span>
-                                <div class="order-status">已发货</div>
+                                <div class="order-status">发货</div>
                             </li>
                             <li class="@chenggong" style="width:19%">
                                 <span class="icon">5</span>
-                                <div class="order-status">订单成功</div>
+                                <div class="order-status">订单完成</div>
                             </li>
                         </ul>
                     </div>
@@ -719,8 +737,8 @@
                                 <th style="width:10%;">支付方式</th>
                                 <th style="width:10%;">总金额</th>
                                 <th style="width:10%;">下单时间</th>
-                                <th style="width:35%;">收货地址</th>
-                                <th style="width:10%;">发票抬头</th>
+                                <th style="width:20%;">收货地址</th>
+                                <th style="width:25%;">发票抬头</th>
                                 <th style="width:15%;">企业税号</th>
                             </tr>
                             <tr>
@@ -794,7 +812,6 @@
                                         else if (item.IsErp == true && detail.DesignCommit == true)
                                         {
                                             @*<a class="btn btn-primary" href="javascript:;" style="float: right;margin-top: 10px;color:white;background-color:#008376" onclick="LookDesign(this,@detail.Id)">查看设计</a>*@
-                                            <a class="btn btn-primary" href="javascript:;" style="float: right;margin-top: 10px;color:white;background-color:#008376" onclick="SureDesign(this,@detail.Id)">产品效果图</a>
                                         }
                                     </td>
                                     <td style="vertical-align: middle !important;text-align: center;">@detail.PrintFuncInfo</td>
@@ -1244,7 +1261,7 @@
 <!-- 定制结束 -->
 <!-- 消息框 -->
 <form id="filechange" method="post" enctype="multipart/form-data" action="/api/UpImg/UpZiper" style="display:none;">
-    <input name="upZiper" type="file" id="upZiper" onchange="fileZiperchange(this)" accept=".zip,.rar,.7z">
+    <input name="upZiper" type="file" id="upZiper" onchange="fileZiperchange(this)" accept=".zip,.rar,.7z,.jpg,.jpeg,.png">
 </form>
 <script src="~/Current/js/jquery-form.js"></script>
 <div class="dealert upload" style="display: none;">

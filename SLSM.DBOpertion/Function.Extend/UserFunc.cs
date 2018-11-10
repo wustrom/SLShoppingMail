@@ -168,7 +168,7 @@ namespace DbOpertion.Function
             {
                 var randNum = RandHelper.Instance.Number(4);
                 //发送手机验证码
-                SendSmsResponse Email = SendMail.Instance.SendEmail(Phone, randNum, Enum_SendEmailCode.AuthenticationCode);
+                SendSmsResponse Email = SendMail.Instance.SendResetEmail(Phone, randNum);
                 if (Email.Code.ToUpper() == "OK")
                 {
                     //储存手机验证码
@@ -258,7 +258,8 @@ namespace DbOpertion.Function
                 {
                     return new Tuple<User, string, bool>(item1: null, item2: "请发送手机验证码！", item3: false);
                 }
-                else{
+                else
+                {
                     return new Tuple<User, string, bool>(item1: null, item2: "请输入手机验证码！", item3: false);
                 }
             }

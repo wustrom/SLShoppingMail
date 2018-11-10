@@ -57,7 +57,7 @@ $(document).ready(function () {
                     names += n + ',';
                 }
             });
-            if (names != '') {
+            if (names !== '') {
                 SendMessage(names);
             }
 

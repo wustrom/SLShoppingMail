@@ -1,0 +1,253 @@
+﻿@using DbOpertion.Models;
+@{
+    Layout = null;
+    var orderinfo = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
+    var OrderDetailInfo = ViewBag.OrderDetailInfo == null ? new Order_Detail() : (Order_Detail)ViewBag.OrderDetailInfo;
+    var commodity = ViewBag.commodity == null ? new Commodity() : (Commodity)ViewBag.Commodity;
+    var materials_colorinfo = ViewBag.materials_colorinfo == null ? new Materials_Colorinfo() : (Materials_Colorinfo)ViewBag.materials_colorinfo;
+    var materials = ViewBag.materials == null ? new Raw_Materials() : (Raw_Materials)ViewBag.materials;
+    var ColorInfo = ViewBag.ColorInfo == null ? new Colorinfo() : (Colorinfo)ViewBag.ColorInfo;
+    var production = ViewBag.production == null ? new Production() : (Production)ViewBag.production;
+
+}
+
+<div style="margin: 15px;">
+    <form class="layui-form">
+        <div style="display:none">
+            <input type="hidden" name="Id" id="Id" value="@orderinfo.Id" />
+        </div>
+        <div class="效果确认单" style="overflow: scroll;height: 100%;overflow-x: hidden;">
+            <style>
+                .ConfirmationSheet {
+                    font-family: 'Microsoft YaHei';
+                    font-size: 14px;
+                    border-collapse: collapse;
+                }
+
+                    .ConfirmationSheet .titletd td {
+                        height: 70px;
+                        background-color: #008375;
+                        color: white;
+                        padding-left: 91px;
+                        font-size: 21px;
+                        font-weight: 500;
+                        padding-left: 91px;
+                        padding-bottom: 20px;
+                    }
+
+                    .ConfirmationSheet .blanktd {
+                        height: 7px;
+                    }
+
+                    .ConfirmationSheet .titlebasetd {
+                        height: 24px;
+                    }
+
+                    .ConfirmationSheet .basebrodertd {
+                        height: 31px;
+                    }
+
+                        .ConfirmationSheet .basebrodertd td {
+                            border: 1px solid black;
+                            text-align: center;
+                        }
+            </style>
+            <table class="ConfirmationSheet" cellpadding="0" cellspacing="0" style="width:780px;">
+                <colgroup>
+                    <col style="width: 58px" />
+                    <col style="width: 91px" />
+                    <col style="width: 372px" />
+                    <col style="width: 210px" />
+                    <col style="width: 49px" />
+                </colgroup>
+                <tbody>
+                    <tr class="titletd">
+                        <td colspan="5" style="">
+                            产品效果图<br>
+                            Product & Artwork Proof
+                        </td>
+                    </tr>
+                    <!--工单信息开始-->
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            订单编号：
+                        </td>
+                        <td>
+                            <label class="orderNo">@orderinfo.OrderNo</label>
+                        </td>
+                        <td style="float: right;">
+                            客服电话：4008580505
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            SKU#:
+                        </td>
+                        <td>
+                            <label class="SKUNO">@materials_colorinfo.SKU</label>
+                        </td>
+                        <td style="float: right;">
+                            客服邮箱：service@syloon.cn
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            产品名称：
+                        </td>
+                        <td>
+                            <label class="CommdityName">@commodity.Name</label>
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            颜色：
+                        </td>
+                        <td>
+                            <label class="ColorName">@ColorInfo.ChinaDescribe</label>
+                        </td>
+                    </tr>
+                    <tr class="titlebasetd">
+                        <td></td>
+                        <td>
+                            印刷方式：
+                        </td>
+                        <td>
+                            @{
+                                string PrintingFunc = "";
+                                if (materials.PrintFuncInfo != null)
+                                {
+                                    var printFuncList = materials.PrintFuncInfo.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                    foreach (var item in printFuncList)
+                                    {
+                                        var arry = item.Split(':').ToList();
+                                        if (arry.Count == 2)
+                                        {
+                                            if (arry[0].ToLower() == OrderDetailInfo.PrintingMethod.ToLower())
+                                            {
+                                                PrintingFunc = arry[1];
+                                            }
+                                            else if (arry[0].ToLower() == OrderDetailInfo.PrintingMethod.ToLower())
+                                            {
+                                                PrintingFunc = arry[1];
+                                            }
+                                            else if (arry[0].ToLower() == OrderDetailInfo.PrintingMethod.ToLower())
+                                            {
+                                                PrintingFunc = arry[1];
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                            <label class="PrintFunc">@PrintingFunc</label>
+                        </td>
+                        <td style="float: right;">
+                            效果图比例：80%
+                        </td>
+                    </tr>
+                    <tr class="blanktd">
+                        <td></td>
+                    </tr>
+                    <!--工单信息结束-->
+                    <!--工单信息明细开始-->
+                    <tr style="height: 441px;">
+                        <td></td>
+                        <td colspan="3" style="border: 1px solid black;">
+                            @{
+                                string SKUImage = "";
+                                if (OrderDetailInfo.DesignerImage != null)
+                                {
+                                    var designerImage = OrderDetailInfo.DesignerImage.Split('|').Where(p => !string.IsNullOrEmpty(p)).ToList().FirstOrDefault();
+                                    if (designerImage != null)
+                                    {
+                                        var arry = designerImage.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
+                                        if (arry.Count == 2)
+                                        {
+                                            SKUImage = arry[1];
+                                        }
+                                    }
+                                }
+                            }
+                            <img class="WorkSheetImg" src="@ViewBag.AdminUrl@SKUImage" style="width: 100%;height: 441px;">
+                        </td>
+                    </tr>
+                    <tr class="blanktd">
+                        <td></td>
+                    </tr>
+                    <tr style="height: 83px;">
+                        <td></td>
+                        <td colspan="3" style="border: 1px solid black;" valign="top">
+                            <div style="font-style: italic;padding-left: 5px;">
+                                我司对该订单及贵司印刷内容的建议：<label class="proposal">@production.InspectionContext</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="height: 230px;">
+                        <td></td>
+                        <td colspan="3" style="font-size: 12px;vertical-align: top;padding-left:7px;">
+                            <strong>尊敬的客户，请仔细阅读以下条款：</strong><br /><br />
+                            1，请您在收到该效果图后请仔细审阅，检查效果图中的各项细节，包括产品、产品颜色、印刷位置、印刷内容、印刷颜色等
+                            <br />
+                            是否满足您的要求，若有任何地方需要修改请及时联系我司客服人员，以便做进一步的修改从而满足您的要求。<br /><br />
+                            2，该效果图所展示的颜色包括产品颜色和印刷颜色仅供参考，可能和实际的产品颜色有轻微的色差。印刷的颜色由于产品背
+                            <br />
+                            景的颜色影响可能和效果图的颜色有细小的区别。该效果图的目的是为了让客户清楚的了解所采购的产品以及其定制化印刷
+                            <br />
+                            的内容所在的位置、和产品的比例以及颜色参考。<br /><br />
+                            3，一旦该效果图被确认，您的订单将会按照上述效果图所示内容进行生产。除非我们的产品质量问题或印刷错误，一旦产品
+                            <br />
+                            按照上述效果图进行生产，我司恕不接受退货。若因产品质量问题或印刷错误，宁波赛龙礼品有限公司接受客户索赔或退货，
+                            <br />但我司要求将索赔货物寄回宁波赛龙礼品有限公司并由我司承担运费。
+                        </td>
+                    </tr>
+                    <!--工单信息明细结束-->
+                    <tr style="height: 44px;">
+                        <td colspan="5" style="background-color: #D9D9D9;text-align: center;font-size:12px;" valign="top">
+                            <strong>宁波赛龙礼品有限公司</strong><br />
+                            www.syloon.cn
+                        </td>
+                    </tr>
+                    <tr class="blanktd" style="height:30px;">
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align:center;">
+                            <a class="SureInfoBtn" style="margin-top: 10px;color: white;background-color: #008376;padding: 7px 12px;border-radius: 2px;cursor:pointer;display: inline-block;" onclick="sureDesignConfirm();">确认效果图</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button lay-filter="edit" lay-submit style="display: none;"></button>
+    </form>
+</div>
+<script src="~/Current/Scripts/jquery-1.10.2.js?version=2.00"></script>
+<script src="~/Current/Scripts/ajax.js"></script>
+<script>
+    function sureDesignConfirm() {
+        layer.confirm('确认效果图无误？', {
+            btn: ['确定', '取消']//按钮
+        }, function (index) {
+            debugger;
+            var obj = new Object();
+            obj.Id = $('#Id').val();
+            jQuery.axpost('../../Api/Order/SureOrdersubmit', JSON.stringify(obj), function (data) {
+                layer.msg("效果图已确认，订单转入生产");
+                layer.close(index);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            });
+        });
+    }
+</script>
+<style>
+    img {
+        width: 80px;
+        height: 80px;
+    }
+</style>

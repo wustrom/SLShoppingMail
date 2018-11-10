@@ -103,5 +103,34 @@ namespace SLSM.Web.Controllers.PageController
             }
             return View();
         }
+
+        /// <summary>
+        /// 订单支付成功页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult OrderPaySuccessPage()
+        {
+            var OrderId = Request.QueryString["OrderId"].ParseInt();
+            if (OrderId == null)
+            {
+                OrderId = (this.TempData["OrderId"] as string).ParseInt();
+            }
+            if (OrderId != null)
+            {
+                #region 订单信息
+                var OrderInfo = Order_InfoFunc.Instance.SelectById(OrderId.Value);
+                ViewBag.OrderInfo = OrderInfo;
+                if (OrderInfo.Status == 1)
+                {
+                    return RedirectToAction("MyOrderList", "UserInfo");
+                }
+                var OrderDetailInfo = Order_Detail_ViewFunc.Instance.SelectByModel(new Order_Detail_View { OrderId = OrderId.Value });
+                ViewBag.OrderDetailInfo = OrderDetailInfo;
+                #endregion
+                ViewBag.OrderNo = OrderInfo.OrderNo;
+                ViewBag.OrderInfoId = OrderId;
+            }
+            return View();
+        }
     }
 }

@@ -61,7 +61,6 @@
                 "paySign": json.paySign //微信签名
             },
             function (res) {
-                //alert(JSON.stringify(res));
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
                     $.ajax({
                         type: "post",
@@ -70,7 +69,7 @@
                         success: function (json) {
                         }
                     })
-                    location.href = "../../UserInfo/MyOrderList";
+                    location.href = "../../PayPage/OrderPaySuccessPage?OrderId=@OrderInfo.Id";
                 }
             }
         );
@@ -78,12 +77,20 @@
 
     function WechatPay() {
         $('.backgroundpage').hide();
+        $('.TransferPayment').hide();
         $('.wecharPayPage').show();
         fCharge();
     }
 
     function OtherPay() {
         $('.backgroundpage').show();
+        $('.TransferPayment').hide();
+        $('.wecharPayPage').hide();
+    }
+
+    function TransferPaymentPay() {
+        $('.backgroundpage').hide();
+        $('.TransferPayment').show();
         $('.wecharPayPage').hide();
     }
 
@@ -186,7 +193,7 @@
                     </div>
                     <div class="weui-cell-ft"></div>
                 </li>
-                <li class="weui-cell weui-cell-access" data-ga-event-label="rmb_transfer_payment" data-payment-id="42">
+                <li class="weui-cell weui-cell-access" onclick="TransferPaymentPay()">
                     <div class="weui-cell-hd"><img src="https://pay.djicdn.com/assets/payments/rmb_transfer-fde5924e5df3d238c5023f033d06333cd289af30044706249433efd003d4257a.png" alt="Rmb transfer"></div>
                     <div class="weui-cell-bd"><p>银行转账</p></div><div class="weui-cell-ft"></div>
                 </li>
@@ -705,10 +712,10 @@
             height: 180px
         }
 </style>
-<div class="TransferPayment">
+<div class="TransferPayment" style="display:none;">
     <div class="page-heading">
         <span>转账付款</span>
-        <a class="pull-right" onclick="if(window.GA_TRACK_LINK){window.GA_TRACK_LINK('click_button_to_reselect_payment', '', '/zh-CN/orders/dd9e47f0c39f0136674a12ae9608b6c2/transactions/new?_m=dji-online-store&amp;_p=h5');return false;}" href="/zh-CN/orders/dd9e47f0c39f0136674a12ae9608b6c2/transactions/new?_m=dji-online-store&amp;_p=h5">更换支付方式</a>
+        <a class="pull-right" onclick="OtherPay()">更换支付方式</a>
     </div>
     <div class="page-body">
         <div class="installment-notice-wrapper">
@@ -720,15 +727,15 @@
             <ul class="account-infos">
                 <li>
                     <label>户名：</label>
-                    <p>深圳市大疆百旺科技有限公司</p>
+                    <p>宁波赛龙礼品有限公司</p>
                 </li>
                 <li>
                     <label>账号：</label>
-                    <p>7559 2510 0410 901</p>
+                    <p>5005 0122 0000 60194</p>
                 </li>
                 <li>
                     <label>开户行：</label>
-                    <p>招商银行深圳科技园支行</p>
+                    <p>宁波银行股份有限公司小港支行</p>
                 </li>
             </ul>
         </div>
@@ -736,21 +743,17 @@
             <h1>第二步：发送邮件</h1>
             <p>
                 <span>汇款完成后请将您的汇款信息以邮件的形式发送至&nbsp;</span>
-                <span style="color:#008375;">banktransfer@dji.com</span>
+                <a href="mailto:lp@syloon.com" class="color-blue">lp@syloon.com</a>
                 <span>，邮件格式如下：</span>
             </p>
             <ul class="account-infos"></ul>
             <p>邮件标题</p>
-            <p style="color:#333;">0866658000539</p>
+            <p style="color:#333;">@OrderInfo.OrderNo</p>
             <p>邮件内容（例）：</p>
             <ul class="account-infos lg-label">
                 <li>
                     <label>订单号：</label>
-                    <p>0866658000539</p>
-                </li>
-                <li>
-                    <label>DJI账号：</label>
-                    <p>d9f152b590014540b2c43a22c9ac7b85@sudo8diov.dji.com</p>
+                    <p>@OrderInfo.OrderNo</p>
                 </li>
                 <li>
                     <label>汇款人姓名：</label>
@@ -762,21 +765,13 @@
                 </li>
                 <li>
                     <label>汇款金额：</label>
-                    <p>RMB: ¥3,199.00</p>
+                    <p>RMB: ¥@OrderInfo.TotalPrice</p>
                 </li>
                 <li>
                     <label>汇款银行支行：</label>
-                    <p>中国建设银行深圳科技园支行</p>
+                    <p>宁波银行股份有限公司小港支行</p>
                 </li>
             </ul>
-        </div>
-        <div class="transfer-payment-clipboard-wrapper">
-            <a class="color-blue" data-clipboard-action="copy" data-clipboard-text="订单号：0866658000539
-      DJI账号：d9f152b590014540b2c43a22c9ac7b85@sudo8diov.dji.com
-      汇款人姓名：张三
-      汇款卡号：622202154889036523
-      汇款金额：RMB: ¥3,199.00
-      汇款银行支行：中国建设银行深圳科技园支行" id="btn-copy-example">复制邮件格式</a>
         </div>
     </div>
     <br>

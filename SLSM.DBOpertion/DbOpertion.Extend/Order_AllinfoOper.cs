@@ -82,6 +82,10 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.IsDelete == model.IsDelete);
                 }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
+                }
             }
             if (SearchName != null)
             {
@@ -161,6 +165,10 @@ namespace DbOpertion.Operation
                 if (!model.IsDelete.IsNullOrEmpty())
                 {
                     query.Where(p => p.IsDelete == model.IsDelete);
+                }
+                if (!model.IsAdmin.IsNullOrEmpty())
+                {
+                    query.Where(p => p.IsAdmin == model.IsAdmin);
                 }
             }
             if (SearchName != null)
