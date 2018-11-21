@@ -251,8 +251,19 @@ namespace SLSM.MoblieWeb.Controllers.AjaxController
         public ResultJson SureWeiChatOrder(PayOrderRequest request)
         {
             var order = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = request.OrderNo }).FirstOrDefault();
+            //创建日志记录组件实例
+            ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            //记录错误日志
+            log.Error("error1231");
             if (OrderFunc.Instance.UpdateModel(new Order_Info { Id = order.Id, Status = 3, PayType = 3 }))
             {
+                //记录错误日志
+                log.Error("SendMail");
+                SendMail.Instance.SendEmail(order.Phone, "{\"code\":\"" + order.OrderNo + "\",\"code2\":\"" + order.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
+                //记录错误日志
+                log.Error("SendMailSuccess");
+                //记录错误日志
+                log.Error(order.Phone);
                 return new ResultJson { HttpCode = 200, Message = "该订单支付成功！" };
             }
             else

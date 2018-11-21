@@ -346,15 +346,16 @@ namespace SLSM.Web.Controllers.PageController
             if (request.app_id == AlipayHelper.Instance.app_id)
             {
                 var orderInfo = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = request.out_trade_no }).FirstOrDefault();
-                orderInfo.Status = 3;
-                orderInfo.PayType = 2;
+
                 if (orderInfo.Status != 1)
                 {
                     return RedirectToAction("MyOrderList");
                 }
-                SendMail.Instance.SendEmail(orderInfo.Phone, "{\"code\":\"" + orderInfo.OrderNo + "\",\"code2\":\"" + orderInfo.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
+                orderInfo.Status = 3;
+                orderInfo.PayType = 2;
                 if (Order_InfoFunc.Instance.Update(orderInfo))
                 {
+                    SendMail.Instance.SendEmail(orderInfo.Phone, "{\"code\":\"" + orderInfo.OrderNo + "\",\"code2\":\"" + orderInfo.TotalPrice + "\"}", Enum_SendEmailCode.NoticeOfPaymentCode);
                     this.TempData["OrderId"] = orderInfo.Id;
                     return RedirectToAction("OrderPaySuccessPage", "PayPage");
                 }

@@ -87,11 +87,13 @@ namespace SLSM.Web.Controllers.PageController
                 {
                     return RedirectToAction("MyOrderList", "UserInfo");
                 }
+                OrderInfo.WechatTime = DateTime.Now;
+                Order_InfoFunc.Instance.Update(OrderInfo);
                 var OrderDetailInfo = Order_Detail_ViewFunc.Instance.SelectByModel(new Order_Detail_View { OrderId = OrderInfoId.Value });
                 ViewBag.OrderDetailInfo = OrderDetailInfo;
                 #endregion
                 #region 支付信息
-                var WechatOrder = NativePay.Instance.GetPayUrl(OrderInfo.OrderNo, OrderInfo.TotalPrice.Value);
+                var WechatOrder = NativePay.Instance.GetPayUrl($"{OrderInfo.OrderNo}_{OrderInfo.WechatTime.Value.ToString("yyyyMMddHHmmss")}", OrderInfo.TotalPrice.Value);
                 ViewBag.WechatOrder = WechatOrder;
                 var aliOrder = AlipayHelper.Instance.CreateAlipayPageOrder(OrderInfo.TotalPrice.Value.ToString("0.00"), OrderInfo.OrderNo, "http://www.syloon.cn/UserInfo/AliPayOrder", "", "赛龙商城");
                 aliOrder = aliOrder.Replace("name='alipaysubmit'", " name='alipaysubmit' target='_blank' ");

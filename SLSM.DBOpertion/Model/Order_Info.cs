@@ -109,6 +109,10 @@ namespace DbOpertion.Models
         /// 管理员名称
         /// </summary>
         public String AdminName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? WechatTime { get; set; }
 
     }
 }

@@ -231,25 +231,7 @@
                                 </table>
                             </div>
                         </div>
-                        <script type="text/javascript">
-                            $(function () {
-
-                                $('.logistics').on('click',
-                                    function (event) {
-                                        var $nextDiv = $(this).next("div");
-                                        var isVisible = !$nextDiv.hasClass("hidden")
-
-                                        if (isVisible) {
-                                            $nextDiv.addClass('hidden');
-                                            $(this).find("img").attr("src", '//asset1.djicdn.com/assets/mobile/direction_down-bdea691624224ee035ac208acb5d2b1f.png');
-                                        } else {
-                                            $nextDiv.removeClass('hidden');
-                                            $(this).find("img").attr("src", '//asset1.djicdn.com/assets/mobile/direction_up-9c3a6bfd247410cd67c56cbcec80e25e.png');
-                                        }
-                                        event.stopPropagation();
-
-                                    });
-                            })</script>
+                        
                     </li>
                 }
             </ul>
@@ -297,7 +279,24 @@
                 }
             });
         }
-                                                                                                            // #endregion
+        // #endregion
+        $(function () {
+            
+            $('.logistics').click(function (event) {
+                    var $nextDiv = $(this).next("div");
+                    var isVisible = !$nextDiv.hasClass("hidden")
+
+                    if (isVisible) {
+                        $nextDiv.addClass('hidden');
+                        $(this).find("img").attr("src", '//asset1.djicdn.com/assets/mobile/direction_down-bdea691624224ee035ac208acb5d2b1f.png');
+                    } else {
+                        $nextDiv.removeClass('hidden');
+                        $(this).find("img").attr("src", '//asset1.djicdn.com/assets/mobile/direction_up-9c3a6bfd247410cd67c56cbcec80e25e.png');
+                    }
+                    event.stopPropagation();
+
+                });
+        })
 
     </script>
 }

@@ -30,7 +30,7 @@ namespace Common.ThirdParty.KdGold
         //请求url
 
         //测试环境地址
-        private string ReqURL = "http://testapi.kdniao.cc:8081/api/EOrderService";
+        private string ReqURL = "http://testapi.kdniao.com:8081/api/EOrderService";
 
         /// <summary>
         /// Post方式提交数据，返回网页的源代码

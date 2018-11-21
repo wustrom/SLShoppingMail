@@ -157,7 +157,7 @@ namespace WxPayAPI
         {
             //统一下单
             WxPayData data = new WxPayData();
-            data.SetValue("out_trade_no", out_trade_no);
+            data.SetValue("out_trade_no", $"{out_trade_no}_{DateTime.Now.ToString("yyyyMMddhhmmss")}");
             data.SetValue("body", strBody);
             data.SetValue("attach", "test");
             data.SetValue("total_fee", total_fee);

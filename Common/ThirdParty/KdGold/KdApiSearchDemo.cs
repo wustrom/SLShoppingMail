@@ -16,7 +16,7 @@ namespace Common.ThirdParty.KdGold
         //电商加密私钥，快递鸟提供，注意保管，不要泄漏
         private string AppKey = "7bfcab49-26e1-4356-8adf-1a0cd3f611d2";
         //请求url
-        private string ReqURL = "http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx";
+        private string ReqURL = "http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx";
 
         /// <summary>
         /// Json方式 查询订单物流轨迹

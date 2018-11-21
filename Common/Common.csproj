@@ -236,6 +236,7 @@
     <Compile Include="Result\Token.cs" />
     <Compile Include="SingleTon.cs" />
     <Compile Include="ThirdParty\AliPay\AlipayHelper.cs" />
+    <Compile Include="ThirdParty\KdGold\Model\KdApiEOrderResponseModel.cs" />
     <Compile Include="ThirdParty\KdGold\Model\KdApiEOrderModel.cs" />
     <Compile Include="ThirdParty\Qisuso\QisusoHelper.cs" />
     <Compile Include="ThirdParty\WeChatLogin\WeChatAccessToken.cs" />

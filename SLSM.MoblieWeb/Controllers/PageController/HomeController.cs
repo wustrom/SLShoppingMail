@@ -79,7 +79,6 @@ namespace SLSM.MoblieWeb.Controllers.PageController
             //若传递了相关参数，则调统一下单接口，获得后续相关接口的入口参数
             jsApiPay.openid = Session["openid"].ToString();
             jsApiPay.total_fee = int.Parse(strFee);
-            log.Error($"out_trade_no:{strOut_trade_no}");
             //JSAPI支付预处理
             try
             {

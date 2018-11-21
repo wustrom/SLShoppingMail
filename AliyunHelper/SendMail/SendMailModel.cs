@@ -119,7 +119,7 @@ namespace AliyunHelper.SendMail.SendEmailModel
         public string Code { get; set; }
         public string GetString()
         {
-            return "{\"Code\":\"" + Code + "\"}";
+            return "{\"code\":\"" + Code + "\"}";
         }
     }
     /// <summary>

@@ -1,5 +1,7 @@
 ﻿@using DbOpertion.Models;
 @{
+    /**/
+
     ViewBag.Title = "OrderPayPage";
     Layout = "~/Views/Shared/_Layout_Base.cshtml";
     var OrderInfo = ViewBag.OrderInfo == null ? new Order_Info() : (Order_Info)ViewBag.OrderInfo;
@@ -431,42 +433,42 @@
             </div>
 
             <div class="modal dji-modal fade  problem" style="display:none;">
-                <div class="modal-dialog" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button aria-label="Close" data-dismiss="modal" type="button" class="close" onclick="$('.modal-backdrop.fade.in').hide(); $(this).parent().parent().parent().parent().hide();">
-                            <img alt="x" src="https://pay.djicdn.com/assets/btn-close-icon-5a3a0e84a3d75839253ea0a2e56809709a1a3485d083e2023dbbd25e2297dc8f.svg" class="btn-icon-dji-modal-close">
-                        </button>
-                        <h4 class="modal-title">正在支付...</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <h6 class="fs-16 fw-bold">支付遇到问题？没关系，您可以尝试以下方案：</h6>
-                            <ul class="retry-tips-list">
-                                <li>
-                                    <a href="javascript:void(0)" onclick="$('.modal-backdrop.fade.in').hide();$(this).parent().parent().parent().parent().parent().parent().parent().hide();" class="fs-14 color-blue">选择其他支付方式再试试 &gt;</a>
-                                </li>
-                                <li>
-                                    <a class="fs-14 color-blue pointer" onclick="$('.modal-backdrop.fade.in').hide();$(this).parent().parent().parent().parent().parent().parent().parent().hide();$('#page-root .BankPayPage').show(); $('#page-root .PayMainInfo').hide(); $('#page-root .WechatPayPage').hide();">选择银行转账 &gt;</a>
-                                    <p class="fs-12">转账后，一般1-3个工作日到账</p>
-                                </li>
-                            </ul>
-                            <p class="fs-14">温馨提示：不同的支付平台和银行一般都有支付限额，如遇限额问题，建议您拨打银行客服热线提高支付限额。</p>
-                            <br>
-                            <p class="fs-14">
-                                <span>如有其他支付问题，您可以随时点击右下方</span>联系在线客服&nbsp;&gt;
-                            </p>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-label="Close" data-dismiss="modal" type="button" class="close" onclick="$('.modal-backdrop.fade.in').hide(); $(this).parent().parent().parent().parent().hide();">
+                                <img alt="x" src="https://pay.djicdn.com/assets/btn-close-icon-5a3a0e84a3d75839253ea0a2e56809709a1a3485d083e2023dbbd25e2297dc8f.svg" class="btn-icon-dji-modal-close">
+                            </button>
+                            <h4 class="modal-title">正在支付...</h4>
                         </div>
-                    </div>
-                    <div class="modal-footer" style="display: none;">
-                        <button type="primary" class="btn dji-btn-ask">付款遇到问题</button>
-                        <button data-dismiss="modal" type="button" class="btn dji-btn-ask">已完成此次支付</button>
+                        <div class="modal-body">
+                            <div>
+                                <h6 class="fs-16 fw-bold">支付遇到问题？没关系，您可以尝试以下方案：</h6>
+                                <ul class="retry-tips-list">
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="$('.modal-backdrop.fade.in').hide();$(this).parent().parent().parent().parent().parent().parent().parent().hide();" class="fs-14 color-blue">选择其他支付方式再试试 &gt;</a>
+                                    </li>
+                                    <li>
+                                        <a class="fs-14 color-blue pointer" onclick="$('.modal-backdrop.fade.in').hide();$(this).parent().parent().parent().parent().parent().parent().parent().hide();$('#page-root .BankPayPage').show(); $('#page-root .PayMainInfo').hide(); $('#page-root .WechatPayPage').hide();">选择银行转账 &gt;</a>
+                                        <p class="fs-12">转账后，一般1-3个工作日到账</p>
+                                    </li>
+                                </ul>
+                                <p class="fs-14">温馨提示：不同的支付平台和银行一般都有支付限额，如遇限额问题，建议您拨打银行客服热线提高支付限额。</p>
+                                <br>
+                                <p class="fs-14">
+                                    <span>如有其他支付问题，您可以随时点击右下方</span>联系在线客服&nbsp;&gt;
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: none;">
+                            <button type="primary" class="btn dji-btn-ask">付款遇到问题</button>
+                            <button data-dismiss="modal" type="button" class="btn dji-btn-ask">已完成此次支付</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
 
-            
+
         </div>
     </div>
 </div>
@@ -520,6 +522,14 @@
             function () {
                 layer.msg("复制失败");
             });
+        setInterval(function () {
+            $.get("../../api/Order/WeiChatOrder?OrderNo=@OrderInfo.OrderNo", function (result) {
+                if (result.Message == "该订单支付成功！") {
+                    window.location.href = "../../PayPage/OrderPaySuccessPage?OrderId=@OrderInfo.Id";
+                }
+            });
+        }, 1000)
+
     });
 </script>
 

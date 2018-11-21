@@ -136,16 +136,18 @@ namespace SLSM.Web.Controllers.AjaxContoller
         [HttpGet]
         public ResultJson WeiChatOrder(string OrderNo)
         {
-            var result = OrderQuery.Instance.Run(null, OrderNo);
-            var trade_state_desc = result.GetValue("trade_state_desc") == null ? null : result.GetValue("trade_state_desc").ToString();
             var order = Order_InfoFunc.Instance.SelectByModel(new Order_Info { OrderNo = OrderNo }).FirstOrDefault();
+            var orderNoinfo = (order != null && order.WechatTime != null) ? $"{OrderNo}_{order.WechatTime.Value.ToString("yyyyMMddHHmmss")}" : $"{OrderNo}";
+            var result = OrderQuery.Instance.Run(null, orderNoinfo);
+            var trade_state_desc = result.GetValue("trade_state_desc") == null ? null : result.GetValue("trade_state_desc").ToString();
+
             if (order == null)
             {
-                return new ResultJson { HttpCode = 300, Message = "此订单并非微信订单！" };
+                return new ResultJson { HttpCode = 200, Message = "此订单并非微信订单！" };
             }
             if (order.Status != 1)
             {
-                return new ResultJson { HttpCode = 300, Message = "此订单并非微信订单！" };
+                return new ResultJson { HttpCode = 200, Message = "该订单支付成功！" };
             }
             if (trade_state_desc == "支付成功")
             {

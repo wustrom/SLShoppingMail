@@ -77,6 +77,7 @@ namespace SLSM.MoblieWeb.Common.BaseController
                         }
                     }
                 }
+
                 result.Message = result.Message.Remove(result.Message.Count() - 1, 1);
                 var JsonString = JsonHelper.Instance.SerializeObject(result);
                 JsonResult jsonResult = new JsonResult();

@@ -144,6 +144,10 @@ namespace DbOpertion.Operation
                 {
                     delete.Where(p => p.AdminName == model.AdminName);
                 }
+                if (!model.WechatTime.IsNullOrEmpty())
+                {
+                    delete.Where(p => p.WechatTime == model.WechatTime);
+                }
             }
             return delete.GetDeleteResult(connection, transaction);
         }
@@ -262,6 +266,10 @@ namespace DbOpertion.Operation
             {
                 update.Set(p => p.AdminName == model.AdminName);
             }
+            if (!model.WechatTime.IsNullOrEmpty())
+            {
+                update.Set(p => p.WechatTime == model.WechatTime);
+            }
             return update.GetUpdateResult(connection, transaction);
         }
 
@@ -375,6 +383,10 @@ namespace DbOpertion.Operation
             {
                 insert.Insert(p => p.AdminName == model.AdminName);
             }
+            if (!model.WechatTime.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.WechatTime == model.WechatTime);
+            }
             return insert.GetInsertResult(connection, transaction) >= 0;
         }
 
@@ -487,6 +499,10 @@ namespace DbOpertion.Operation
             if (!model.AdminName.IsNullOrEmpty())
             {
                 insert.Insert(p => p.AdminName == model.AdminName);
+            }
+            if (!model.WechatTime.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.WechatTime == model.WechatTime);
             }
             return insert.GetInsertResult(connection, transaction);
         }
@@ -607,6 +623,10 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.AdminName == model.AdminName);
                 }
+                if (!model.WechatTime.IsNullOrEmpty())
+                {
+                    query.Where(p => p.WechatTime == model.WechatTime);
+                }
             }
             if (SelectFiled != null)
             {
@@ -714,6 +734,10 @@ namespace DbOpertion.Operation
                 if (SelectFiled.Contains("adminname,"))
                 {
                     query.Select(p => new { p.AdminName });
+                }
+                if (SelectFiled.Contains("wechattime,"))
+                {
+                    query.Select(p => new { p.WechatTime });
                 }
             }
             return query.GetQueryList(connection, transaction);
@@ -834,6 +858,10 @@ namespace DbOpertion.Operation
                 if (!model.AdminName.IsNullOrEmpty())
                 {
                     query.Where(p => p.AdminName == model.AdminName);
+                }
+                if (!model.WechatTime.IsNullOrEmpty())
+                {
+                    query.Where(p => p.WechatTime == model.WechatTime);
                 }
             }
             return query.GetQueryCount(connection, transaction);
@@ -968,6 +996,10 @@ namespace DbOpertion.Operation
             {
                 query.Where(p => p.AdminName.In(KeyIds));
             }
+            if("wechattime" == Key.ToLowerInvariant())
+            {
+                query.Where(p => p.WechatTime.In(KeyIds));
+            }
             return query.GetQueryList(connection, transaction);
         }
 
@@ -1091,6 +1123,10 @@ namespace DbOpertion.Operation
                 {
                     query.Where(p => p.AdminName == model.AdminName);
                 }
+                if (!model.WechatTime.IsNullOrEmpty())
+                {
+                    query.Where(p => p.WechatTime == model.WechatTime);
+                }
             }
             if (SelectFiled != null)
             {
@@ -1198,6 +1234,10 @@ namespace DbOpertion.Operation
                 if (SelectFiled.Contains("adminname,"))
                 {
                     query.Select(p => new { p.AdminName });
+                }
+                if (SelectFiled.Contains("wechattime,"))
+                {
+                    query.Select(p => new { p.WechatTime });
                 }
             }
             if (Key != null)

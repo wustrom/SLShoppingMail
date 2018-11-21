@@ -61,6 +61,10 @@ namespace Common.ThirdParty.KdGold.Model
         /// </summary>
         public KdApiEOrderSenderModel Sender { get; set; }
         /// <summary>
+        /// 商品模型
+        /// </summary>
+        public List<KdApiEOrderCommodityModel> Commodity { get; set; }
+        /// <summary>
         /// 包裹总重量kg 当为快运的订单时必填，不填时快递鸟将根据各个快运公司要求传对应的默认值
         /// </summary>
         public double Weight { get; set; }

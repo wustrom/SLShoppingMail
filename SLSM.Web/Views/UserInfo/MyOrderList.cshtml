@@ -746,7 +746,7 @@
                                     var InvoiceArray = item.Invoice == null ? new List<string>() : item.Invoice.Split(',').Where(p => !string.IsNullOrEmpty(p)).ToList();
                                 }
                                 <td>@item.Status</td>
-                                <td>@item.PayType</td>
+                                <td>@(item.Status=="待付款"?"-":item.PayType)</td>
                                 <td><div>¥@item.TotalPrice</div></td>
                                 <td>@item.OrderTime</td>
                                 <td>@item.Address @item.BuyName @item.Phone</td>

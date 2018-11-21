@@ -413,11 +413,10 @@ namespace SLSM.AdminWeb.Controllers.AjaxController
         }
         #endregion
         [HttpGet]
-        public ResultJson KdApiEOrder()
+        public string KdApiEOrder()
         {
             var result = KdApiEOrderDemo.Instance.orderTracesSubByJson();
-            result = result.Replace("\\n", "").Replace("\\r", "").Replace("\\", "");
-            return new ResultJson { HttpCode = 200, Message = result };
+            return result.PrintTemplate;
         }
 
         /// <summary>
